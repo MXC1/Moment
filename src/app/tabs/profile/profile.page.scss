@@ -1,0 +1,35 @@
+ion-col {
+  // border: solid black;
+  border: solid white;
+  border-width: thin;
+  padding: 0;
+}
+
+ion-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit:cover;
+}
+
+ion-avatar {
+  margin: auto;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
+}
+
+.title-name {
+  font-size: larger;
+  font-weight: 900;
+}
+
+.subtitle {
+  font-weight: 500;
+}
+
+.bio {
+  color: black;
+  font-weight: 100;
+  // font-family: sans-serif;
+}

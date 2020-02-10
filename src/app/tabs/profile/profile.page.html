@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Moment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-margin">
+    <ion-card class="ion-no-margin">
+      <ion-row>
+        <ion-col class="ion-align-self-center">
+          <ion-avatar>
+            <img [src]="getUserImage()">
+          </ion-avatar>
+        </ion-col>
+        <ion-col class="ion-no-margin">
+        </ion-col>
+      </ion-row>
+      <ion-row style="padding-left: 6.25%; padding-top: 2.5%;">
+        <ion-col>
+          <ion-row *ngIf="user.fullName.length !== 0">
+            <ion-card-title class="title-name">{{ user.fullName }}</ion-card-title>
+          </ion-row>
+          <ion-row *ngIf="user.fullName.length !== 0">
+            <ion-card-subtitle style="padding-top: 8px">{{ user.username }}</ion-card-subtitle>
+          </ion-row>
+          <ion-row *ngIf="user.fullName.length === 0">
+            <ion-card-title class="title-name">{{ user.username }}</ion-card-title>
+          </ion-row>
+          <ion-row>
+            <p class="bio">{{ user.bio }}</p>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+    <ion-row style="padding-top:8px">
+      <ion-col size="4" *ngFor="let post of posts">
+          <ion-img style="background-size: cover;" [src]="post.content" [routerLink]=""></ion-img>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

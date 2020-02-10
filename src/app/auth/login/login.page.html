@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Log in</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <p>Sign in to see the latest content</p>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="6">
+          <ion-item>
+            <ion-label class="ion-text-center" position="floating">Email/Username</ion-label>
+            <ion-input type="text" formControlName="login"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="6">
+          <ion-item>
+            <ion-label class="ion-text-center" position="floating">Password</ion-label>
+            <ion-input type="password" formControlName="password"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-text-center" style="padding-top: 10px;">
+        <ion-col>
+          <ion-button type="submit" (click)="onLogin()">Log in</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
