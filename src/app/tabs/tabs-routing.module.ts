@@ -21,8 +21,8 @@ const routes: Routes = [
         loadChildren: () => import('./feed/feed.module').then( m => m.FeedPageModule)
       },
       {
-        path: 'profile',
-        loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
+        path: 'events',
+        loadChildren: () => import('./events/events.module').then( m => m.EventsPageModule)
       }
     ]
   }

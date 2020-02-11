@@ -27,14 +27,13 @@ export class NewPostPage implements OnInit {
   }
 
   onPost() {
-    const title = this.form.value.title;
     const caption = this.form.value.caption;
 
     if (!this.form.valid) {
       return;
     }
 
-    this.postsService.newPost(this.authService.getUserId, '', caption, '');
+    this.postsService.newPost(this.authService.getUserId, '', caption, '').subscribe();
   }
 
 }

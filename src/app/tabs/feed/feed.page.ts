@@ -19,10 +19,15 @@ export class FeedPage implements OnInit, OnDestroy {
   loadedUsers: User[];
   private postsSubscription: Subscription;
   private usersSubscription: Subscription;
+  isLoading = false;
 
   currentUser: User;
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.postsSubscription = this.postsService.getPosts.subscribe(posts => {
+      this.loadedPosts = posts;
+    });
+  }
 
   ngOnDestroy() {
     if (this.postsSubscription) {
@@ -34,12 +39,10 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.postsSubscription = this.postsService.getPosts.subscribe(posts => {
-      this.loadedPosts = posts;
+    this.isLoading = true;
+    this.postsService.fetchPosts().subscribe(() => {
+      this.isLoading = false;
     });
-    // this.usersSubscription = this.usersService.getUsers.subscribe(users => {
-    //   this.loadedUsers = users;
-    // });
   }
 
   getUser(id: string): User {
@@ -58,10 +61,10 @@ export class FeedPage implements OnInit, OnDestroy {
     return thisEvent;
   }
 
-  onPostLike(id: string) {}
+  onPostLike(id: string) { }
 
-  onPostComment(id: string) {}
+  onPostComment(id: string) { }
 
-  onPostShare(id: string) {}
+  onPostShare(id: string) { }
 
 }
