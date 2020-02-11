@@ -1,6 +1,5 @@
 export class User {
 
-    public bio: string;
     public postIds: string[];
     public friendIds: string[];
 
@@ -8,6 +7,9 @@ export class User {
                 public username: string,
                 public email: string,
                 public image: string,
-                public fullName: string
-    ) { }
+                public fullName: string,
+                public bio: string) {
+        this.postIds = [''];
+        this.friendIds = [''];
+    }
 }

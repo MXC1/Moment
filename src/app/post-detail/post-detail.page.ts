@@ -44,9 +44,7 @@ export class PostDetailPage implements OnInit {
         this.user = user;
       });
       this.commentsSubscription = this.commentsService.getComments().subscribe(comments => {
-        this.comments = comments;
-        console.log(comments);
-        
+        this.comments = comments.filter(comment => this.post.id === comment.postId);
       });
     });
   }

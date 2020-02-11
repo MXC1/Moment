@@ -8,5 +8,9 @@ export class Post {
                 public userId: string,
                 public eventId: string,
                 public caption: string,
-                public content: string) { }
+                public content: string) {
+        this.likes = 0;
+        this.commentIds = [''];
+        this.shares = 0;
+    }
 }

@@ -14,26 +14,21 @@ export class UsersService {
       'rig@email.com',
       'https://i1.sndcdn.com/artworks-000260625248-3xsfb1-t500x500.jpg',
       '',
-      'Eggtek last week was a madness',
-      ['p1'],
-      ['u2']),
+      'Eggtek last week was a madness'
+      ),
     new User('u2',
       'heavymetaldude',
       'metal@email.com',
       'https://i.pinimg.com/originals/e9/01/ca/e901ca35a83758be3ed29dc97d9f7f9f.jpg',
       'Jake Walton',
-      'I\'m a heavy metal and hard rock songwriter from Son, Norway. My music draws inspiration from various genres including power metal, 80s-era glam, folk, classical and traditional Japanese and Chinese music.',
-      ['p2'],
-      ['u1']),
+      'I\'m a heavy metal and hard rock songwriter from Son, Norway. My music draws inspiration from various genres including power metal, 80s-era glam, folk, classical and traditional Japanese and Chinese music.'
+    ),
     new User('u3',
       'sophisticatedbloke123',
       'james@email.com',
       'https://cunto.org/wp-content/uploads/2018/07/jacob-rees-mogg-square-1024x1024.jpg',
       'Jacob Rees-Mogg',
-      'I love long walks and turning my nose up at poor people',
-      ['p3'],
-      []),
-  ]);
+      'I love long walks and turning my nose up at poor people')]);
 
   get getUsers() {
     return this.users.asObservable();
@@ -46,7 +41,7 @@ export class UsersService {
   }
 
   addUser(email: string, fullname: string, username: string, password: string) {
-    const newUser = new User('', username, email, '', fullname, '', [''], ['']);
+    const newUser = new User('', username, email, '', fullname, '');
     let userId;
     return this.http.post<{name: string}>('https://moment48.firebaseio.com/users.json', {...newUser, id: null})
     .pipe(take(1), switchMap(resData => {

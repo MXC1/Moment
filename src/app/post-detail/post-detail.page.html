@@ -37,10 +37,12 @@
         <p *ngIf="post.shares !== 0">{{ post.shares }}</p>
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let comment of comments">
-      <ion-col>
-        {{comment.content}}
-      </ion-col>
-    </ion-row>
+    <ion-list *ngFor="let comment of comments">
+      <ion-row>
+        <ion-item>
+          <p>{{ comment.content }}</p>
+        </ion-item>
+      </ion-row>
+    </ion-list>
   </ion-grid>
 </ion-content>
