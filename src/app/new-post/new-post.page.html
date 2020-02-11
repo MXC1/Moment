@@ -5,11 +5,37 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="8">
+          <ion-item class="ion-justify-content-center" class="ion-text-center">
+            <ion-label class="ion-text-center" position="floating">Title</ion-label>
+            <ion-input type="text" formControlName="title"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="8">
+          <ion-item>
+            <ion-label class="ion-text-center" position="floating">Content</ion-label>
+            <ion-input type="image" formControlName="content"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="8">
+          <ion-item>
+            <ion-label class="ion-text-center" position="floating">Caption</ion-label>
+            <ion-input type="text" formControlName="caption"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-text-center" style="padding-top: 10px;">
+        <ion-col>
+          <ion-button type="submit" (click)="onPost()">Post</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

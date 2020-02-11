@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PostsService } from '../posts.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-new-post',
@@ -6,10 +9,32 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./new-post.page.scss'],
 })
 export class NewPostPage implements OnInit {
+  form: FormGroup;
 
-  constructor() { }
+  constructor(private postsService: PostsService, private authService: AuthService) { }
 
   ngOnInit() {
+    this.form = new FormGroup({
+      title: new FormControl(null, {
+        updateOn: 'blur',
+        validators: [Validators.required, Validators.maxLength(255)]
+      }),
+      caption: new FormControl(null, {
+        updateOn: 'blur',
+        validators: [Validators.required, Validators.maxLength(255)]
+      })
+    });
+  }
+
+  onPost() {
+    const title = this.form.value.title;
+    const caption = this.form.value.caption;
+
+    if (!this.form.valid) {
+      return;
+    }
+
+    this.postsService.newPost(this.authService.getUserId, '', caption, '');
   }
 
 }
