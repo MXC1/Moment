@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { User } from './user';
 import { BehaviorSubject } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { take, map, switchMap, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -45,8 +46,18 @@ export class UsersService {
   }
 
   addUser(email: string, fullname: string, username: string, password: string) {
-
+    const newUser = new User('', username, email, '', fullname, '', [''], ['']);
+    let userId;
+    return this.http.post<{name: string}>('https://moment48.firebaseio.com/users.json', {...newUser, id: null})
+    .pipe(take(1), switchMap(resData => {
+      userId = resData.name;
+      return this.users;
+    }), take(1),
+    tap(users => {
+      newUser.id = userId;
+      this.users.next(users.concat(newUser));
+    }));
   }
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 }

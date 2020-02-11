@@ -38,4 +38,6 @@ export class LoginPage implements OnInit {
     this.form.reset();
     this.router.navigateByUrl('/tabs/feed');
   }
+
+  onChooseRegister() {}
 }

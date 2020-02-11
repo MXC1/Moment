@@ -26,7 +26,8 @@ export class RegisterPage implements OnInit {
       username: new FormControl(null, {
         updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(255)]
-      }),
+      })
+      ,
       password: new FormControl(null, {
         updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(255)]
@@ -42,9 +43,9 @@ onRegister() {
     const password = this.form.value.password;
     const verifyPassword = this.form.value.verifyPassword;
 
-    if (password !== verifyPassword) {
-      this.form.controls.verifyPassword.setErrors({incorrect: true});
-    }
+    // if (password !== verifyPassword) {
+    //   this.form.controls.verifyPassword.setErrors({incorrect: true});
+    // }
 
     if (!this.form.valid) {
       return;
@@ -54,8 +55,8 @@ onRegister() {
     const fullName = this.form.value.fullName;
     const username = this.form.value.username;
 
-    this.usersService.addUser(email, fullName, username, password);
+    this.usersService.addUser(email, fullName, username, password).subscribe();
     this.form.reset();
-    this.router.navigateByUrl('/auth/login');
+    // this.router.navigateByUrl('/auth/login');
   }
 }
