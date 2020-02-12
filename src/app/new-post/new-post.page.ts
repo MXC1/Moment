@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { AuthService } from '../auth/auth.service';
 import { NavController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-post',
@@ -11,8 +13,9 @@ import { NavController } from '@ionic/angular';
 })
 export class NewPostPage implements OnInit {
   form: FormGroup;
+  eventsSubscription: Subscription;
 
-  constructor(private postsService: PostsService, private authService: AuthService, private navController: NavController) { }
+  constructor(private postsService: PostsService, private authService: AuthService, private navController: NavController, private router: Router) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -31,7 +34,9 @@ export class NewPostPage implements OnInit {
     }
 
     this.postsService.newPost(this.authService.getUserId, '', caption, '').subscribe();
-    this.navController.navigateBack('/tabs/feed');
+    this.router.navigateByUrl('/');
   }
+
+  searchEvents() { }
 
 }

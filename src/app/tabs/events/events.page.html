@@ -13,9 +13,14 @@
 
 <ion-content>
   <ion-grid>
+    <ion-row *ngIf="isLoading" class="ion-justify-content-center">
+      <ion-col class="ion-text-center">
+        <ion-spinner></ion-spinner>
+      </ion-col>
+    </ion-row>
     <ion-row style="padding-top:8px">
-      <ion-col size="4" *ngFor="let event of loadedEvents" [routerLink]="['/event-detail', event.id]">
-        <ion-img style="background-size: cover;" [src]="event.headerImage"></ion-img>
+      <ion-col size="4" *ngFor="let event of loadedEvents">
+        <ion-img style="background-size: cover;" [src]="event.headerImage" [routerLink]="['/event-detail', event.id]"></ion-img>
         <p>{{event.name}}</p>
       </ion-col>
     </ion-row>

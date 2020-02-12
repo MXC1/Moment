@@ -9,7 +9,7 @@ interface EventData {
   location: string;
   creatorId: string;
   postIds: string[];
-  headerIds: string[];
+  followerIds: string[];
   headerImage: string;
 }
 
@@ -39,7 +39,7 @@ export class EventsService {
         const events = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
-            events.push(new EventContent(key, resData[key].name, resData[key].location, resData[key].creatorId, resData[key].postIds, resData[key].headerIds, resData[key].headerImage));
+            events.push(new EventContent(key, resData[key].name, resData[key].location, resData[key].creatorId, resData[key].postIds, resData[key].followerIds, resData[key].headerImage));
           }
         }
         return events;
@@ -54,8 +54,9 @@ export class EventsService {
   }
 
   getEvent(id: string) {
-    return this.events.pipe(take(1), map(events => {
-      return { ...events.find(e => e.id === id) };
+    return this.http.get<EventData>(`https://mmnt-io.firebaseio.com/events/${id}.json`)
+    .pipe(map(resData => {
+      return new EventContent(id, resData.name, resData.location, resData.creatorId, resData.postIds, resData.followerIds, resData.headerImage);
     }));
   }
 

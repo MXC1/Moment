@@ -25,6 +25,7 @@ export class PostDetailPage implements OnInit {
   private eventsSubscription: Subscription;
   private usersSubscription: Subscription;
   private commentsSubscription: Subscription;
+  isLoading = false;
 
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private commentsService: PostCommentService, private route: ActivatedRoute, private navCtrl: NavController) { }
 
@@ -34,6 +35,7 @@ export class PostDetailPage implements OnInit {
         this.navCtrl.navigateBack('/tabs/feed');
         return;
       }
+      this.isLoading = true;
       this.postsSubscription = this.postsService.getPost(paramMap.get('postId')).subscribe(post => {
         this.post = post;
       });
@@ -45,6 +47,7 @@ export class PostDetailPage implements OnInit {
       });
       this.commentsSubscription = this.commentsService.getComments().subscribe(comments => {
         this.comments = comments.filter(comment => this.post.id === comment.postId);
+        this.isLoading = false;
       });
     });
   }

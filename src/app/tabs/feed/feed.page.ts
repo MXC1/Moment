@@ -23,11 +23,7 @@ export class FeedPage implements OnInit, OnDestroy {
 
   currentUser: User;
 
-  ngOnInit() {
-    this.postsSubscription = this.postsService.getPosts.subscribe(posts => {
-      this.loadedPosts = posts;
-    });
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     if (this.postsSubscription) {
@@ -40,8 +36,12 @@ export class FeedPage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.isLoading = true;
-    this.postsService.fetchPosts().subscribe(() => {
+    this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
+      this.loadedPosts = posts;
       this.isLoading = false;
+    });
+    this.postsService.getPosts.subscribe(posts => {
+      this.loadedPosts = posts;
     });
   }
 
@@ -55,6 +55,7 @@ export class FeedPage implements OnInit, OnDestroy {
 
   getEvent(id: string): EventContent {
     let thisEvent: EventContent;
+    this.isLoading = true;
     this.eventsService.getEvent(id).subscribe(event => {
       thisEvent = event;
     });

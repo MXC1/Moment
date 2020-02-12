@@ -1,5 +1,8 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/feed"></ion-back-button>
+    </ion-buttons>
     <ion-title>New Post</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="onPost()">
@@ -17,6 +20,14 @@
           <ion-item>
             <ion-label class="ion-text-center" position="floating">Caption</ion-label>
             <ion-input type="text" formControlName="caption"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="8">
+          <ion-item>
+            <ion-label class="ion-text-center" position="floating">Event</ion-label>
+            <ion-input (input)="searchEvents()"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
