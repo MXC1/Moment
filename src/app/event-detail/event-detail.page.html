@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/events"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Moment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-margin">
+    <ion-card class="ion-no-margin">
+      <ion-row>
+        <ion-col class="ion-align-self-center">
+          <ion-avatar>
+            <img [src]="event.headerImage">
+          </ion-avatar>
+        </ion-col>
+        <ion-col class="ion-no-margin">
+        </ion-col>
+      </ion-row>
+      <ion-row style="padding-left: 6.25%; padding-top: 2.5%;">
+        <ion-col>
+         <h1>{{event.name}}</h1>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+    <ion-row style="padding-top:8px">
+      <ion-col size="4" *ngFor="let post of eventPosts">
+          <ion-img style="background-size: cover;" [src]="post.content" [routerLink]="['/post-detail', post.id]"></ion-img>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

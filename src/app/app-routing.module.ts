@@ -25,6 +25,19 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'event-detail',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+      },
+      {
+        path: ':eventId',
+        loadChildren: () => import('./event-detail/event-detail.module').then(m => m.EventDetailPageModule)
+      }
+    ]
+  },
+  {
     path: 'new-post',
     loadChildren: () => import('./new-post/new-post.module').then( m => m.NewPostPageModule)
   },
@@ -32,6 +45,11 @@ const routes: Routes = [
     path: 'new-event',
     loadChildren: () => import('./new-event/new-event.module').then( m => m.NewEventPageModule)
   },
+  {
+    path: 'event-detail',
+    loadChildren: () => import('./event-detail/event-detail.module').then( m => m.EventDetailPageModule)
+  },
+
 ];
 
 @NgModule({
