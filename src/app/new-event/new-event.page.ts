@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
 import { EventsService } from '../events.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-new-post',
@@ -11,7 +12,7 @@ import { EventsService } from '../events.service';
 export class NewEventPage implements OnInit {
   form: FormGroup;
 
-  constructor(private eventsService: EventsService, private authService: AuthService) { }
+  constructor(private eventsService: EventsService, private authService: AuthService, private navController: NavController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -34,7 +35,8 @@ export class NewEventPage implements OnInit {
       return;
     }
 
-    this.eventsService.addEvent(title, userId);
+    this.eventsService.addEvent(title, userId).subscribe();
+    this.navController.navigateBack('/tabs/events');
   }
 
 }
