@@ -15,7 +15,7 @@
   <ion-grid>
     <ion-row style="padding-top:8px">
       <ion-col size="4" *ngFor="let event of loadedEvents">
-        <ion-img style="background-size: cover;" [src]="event.name" [routerLink]=""></ion-img>
+        <ion-img style="background-size: cover;" [src]="event.headerImage" [routerLink]=""></ion-img>
         <p>{{event.name}}</p>
       </ion-col>
     </ion-row>
