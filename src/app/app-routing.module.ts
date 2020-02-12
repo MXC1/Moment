@@ -28,6 +28,10 @@ const routes: Routes = [
     path: 'new-post',
     loadChildren: () => import('./new-post/new-post.module').then( m => m.NewPostPageModule)
   },
+  {
+    path: 'new-event',
+    loadChildren: () => import('./new-event/new-event.module').then( m => m.NewEventPageModule)
+  },
 ];
 
 @NgModule({

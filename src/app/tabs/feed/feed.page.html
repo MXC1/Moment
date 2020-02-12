@@ -12,12 +12,12 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
+  <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-sm="6" class="ion-text-center">
         <ion-spinner *ngIf="isLoading" class="ion-text-center"></ion-spinner>
         <ion-list *ngIf="!isLoading">
-          <ion-card *ngFor="let post of loadedPosts">
+          <ion-card *ngFor="let post of loadedPosts" class="ion-no-padding">
             <div [routerLink]="['/post-detail', post.id]">
               <ion-card-header style="padding:4%">
                 <ion-card-title>{{ getEvent(post.eventId).name }}</ion-card-title>

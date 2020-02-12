@@ -43,7 +43,7 @@ export class UsersService {
   addUser(email: string, fullname: string, username: string, password: string) {
     const newUser = new User('', username, email, '', fullname, '');
     let userId;
-    return this.http.post<{name: string}>('https://moment48.firebaseio.com/users.json', {...newUser, id: null})
+    return this.http.post<{name: string}>('https://momentio.firebaseio.com/users.json', {...newUser, id: null})
     .pipe(take(1), switchMap(resData => {
       userId = resData.name;
       return this.users;

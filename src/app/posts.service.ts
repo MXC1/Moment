@@ -19,7 +19,6 @@ interface PostData {
 })
 export class PostsService {
   private posts = new BehaviorSubject<Post[]>([
-    // tslint:disable-next-line: max-line-length
     new Post(
       'p1',
       'u1',
@@ -72,7 +71,7 @@ export class PostsService {
   ]);
 
   fetchPosts() {
-    return this.http.get<{ [key: string]: PostData }>('https://moment48.firebaseio.com/posts.json')
+    return this.http.get<{ [key: string]: PostData }>('https://momentfuckyou.firebaseio.com/posts.json')
       .pipe(map(resData => {
         const posts = [];
         for (const key in resData) {
@@ -95,7 +94,7 @@ export class PostsService {
     const newPost = new Post('', userId, eventId, caption, 'https://www.visit-hampshire.co.uk/dbimgs/Wickham%20Festival%202019.jpg');
     let postId;
 
-    return this.http.post<{ name: string }>('https://moment48.firebaseio.com/posts.json', { ...newPost, id: null })
+    return this.http.post<{ name: string }>('https://momentio.firebaseio.com/posts.json', { ...newPost, id: null })
       .pipe(take(1), switchMap(resData => {
         postId = resData.name;
         return this.posts;
