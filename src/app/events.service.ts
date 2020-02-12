@@ -29,7 +29,7 @@ export class EventsService {
   addEvent(name: string, creatorId: string) {
     const newEvent = new EventContent('', name, creatorId);
     let eventId;
-    return this.http.post<{name: string}>('https://momentio.firebaseio.com/events.json', {...newEvent, id: null})
+    return this.http.post<{name: string}>('https://mmnt-io.firebaseio.com/events.json', {...newEvent, id: null})
     .pipe(take(1), switchMap(resData => {
       eventId = resData.name;
       return this.events;
