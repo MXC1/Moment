@@ -35,7 +35,7 @@
     </ion-card>
     <ion-row style="padding-top:8px">
       <ion-col size="4" *ngFor="let post of posts">
-          <ion-img style="background-size: cover;" [src]="post.content" [routerLink]=""></ion-img>
+          <ion-img style="background-size: cover;" [src]="post.content" [routerLink]="['/post-detail', post.id]"></ion-img>
       </ion-col>
     </ion-row>
   </ion-grid>
