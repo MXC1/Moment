@@ -71,7 +71,7 @@ export class PostsService {
   ]);
 
   fetchPosts() {
-    return this.http.get<{ [key: string]: PostData }>('https://momentfuckyou.firebaseio.com/posts.json')
+    return this.http.get<{ [key: string]: PostData }>('https://momentio.firebaseio.com/posts.json')
       .pipe(map(resData => {
         const posts = [];
         for (const key in resData) {
