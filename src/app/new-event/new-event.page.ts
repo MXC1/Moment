@@ -16,9 +16,12 @@ export class NewEventPage implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      title: new FormControl(null, {
+      name: new FormControl(null, {
         updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(255)]
+      }),
+      location: new FormControl(null, {
+        updateOn: 'blur'
       }),
       type: new FormControl(null, {
         updateOn: 'blur',
@@ -28,14 +31,15 @@ export class NewEventPage implements OnInit {
   }
 
   onCreate() {
-    const title = this.form.value.title;
+    const name = this.form.value.name;
+    const location = this.form.value.location;
     const userId = this.authService.getUserId;
 
     if (!this.form.valid) {
       return;
     }
 
-    this.eventsService.addEvent(title, userId).subscribe();
+    this.eventsService.addEvent(name, location, userId).subscribe();
     this.navController.navigateBack('/tabs/events');
   }
 

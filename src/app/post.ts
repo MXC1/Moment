@@ -10,7 +10,7 @@ export class Post {
                 public caption: string,
                 public content: string) {
         this.likes = 0;
-        this.commentIds = [''];
+        this.commentIds = [];
         this.shares = 0;
     }
 }

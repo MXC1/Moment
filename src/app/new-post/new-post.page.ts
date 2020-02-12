@@ -16,10 +16,6 @@ export class NewPostPage implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      title: new FormControl(null, {
-        updateOn: 'blur',
-        validators: [Validators.required, Validators.maxLength(255)]
-      }),
       caption: new FormControl(null, {
         updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(255)]

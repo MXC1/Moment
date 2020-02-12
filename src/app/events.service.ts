@@ -15,18 +15,21 @@ interface EventData {
 export class EventsService {
   private events = new BehaviorSubject<EventContent[]>([]);
 
-  addEvent(name: string, creatorId: string) {
+  addEvent(name: string, location: string, creatorId: string) {
     const newEvent = new EventContent('', name, creatorId);
+    if (location) {
+      newEvent.setLocation(location);
+    }
     let eventId;
-    return this.http.post<{name: string}>('https://mmnt-io.firebaseio.com/events.json', {...newEvent, id: null})
-    .pipe(take(1), switchMap(resData => {
-      eventId = resData.name;
-      return this.events;
-    }), take(1),
-    tap(users => {
-      newEvent.id = eventId;
-      this.events.next(users.concat(newEvent));
-    }));
+    return this.http.post<{ name: string }>('https://mmnt-io.firebaseio.com/events.json', { ...newEvent, id: null })
+      .pipe(take(1), switchMap(resData => {
+        eventId = resData.name;
+        return this.events;
+      }), take(1),
+        tap(users => {
+          newEvent.id = eventId;
+          this.events.next(users.concat(newEvent));
+        }));
   }
 
   fetchEvents() {
