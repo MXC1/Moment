@@ -23,7 +23,11 @@ export class FeedPage implements OnInit, OnDestroy {
 
   currentUser: User;
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.postsService.getPosts.subscribe(posts => {
+      this.loadedPosts = posts;
+    });
+  }
 
   ngOnDestroy() {
     if (this.postsSubscription) {
@@ -39,9 +43,6 @@ export class FeedPage implements OnInit, OnDestroy {
     this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
       this.loadedPosts = posts;
       this.isLoading = false;
-    });
-    this.postsService.getPosts.subscribe(posts => {
-      this.loadedPosts = posts;
     });
   }
 
