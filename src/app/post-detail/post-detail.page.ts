@@ -25,7 +25,7 @@ export class PostDetailPage implements OnInit {
   private eventsSubscription: Subscription;
   private usersSubscription: Subscription;
   private commentsSubscription: Subscription;
-  isLoading = false;
+  isLoading = true;
 
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private commentsService: PostCommentService, private route: ActivatedRoute, private navCtrl: NavController) { }
 
@@ -35,29 +35,31 @@ export class PostDetailPage implements OnInit {
         this.navCtrl.navigateBack('/tabs/feed');
         return;
       }
+      const postId = paramMap.get('postId');
+
       this.isLoading = true;
-      this.postsSubscription = this.postsService.getPost(paramMap.get('postId')).subscribe(post => {
+      this.postsSubscription = this.postsService.getPost(postId).subscribe(post => {
         this.post = post;
-      });
-      this.eventsSubscription = this.eventsService.getEvent(this.post.eventId).subscribe(event => {
-        this.event = event;
-      });
-      this.usersSubscription = this.usersService.getUser(this.post.userId).subscribe(user => {
-        this.user = user;
-      });
-      this.commentsSubscription = this.commentsService.getComments().subscribe(comments => {
-        this.comments = comments.filter(comment => this.post.id === comment.postId);
+        this.eventsSubscription = this.eventsService.getEvent(this.post.eventId).subscribe(event => {
+          this.event = event;
+        });
+        this.usersSubscription = this.usersService.getUser(this.post.userId).subscribe(user => {
+          this.user = user;
+        });
+        this.commentsSubscription = this.commentsService.getComments().subscribe(comments => {
+          this.comments = comments.filter(comment => this.post.id === comment.postId);
+        });
         this.isLoading = false;
       });
     });
   }
 
-  onPostLike(id: string) {}
+  onPostLike(id: string) { }
 
-  onPostComment(id: string) {}
+  onPostComment(id: string) { }
 
-  onPostShare(id: string) {}
+  onPostShare(id: string) { }
 
-  ionViewWillEnter() {}
+  ionViewWillEnter() { }
 
 }

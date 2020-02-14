@@ -16,8 +16,10 @@ export class EventsPage implements OnInit, OnDestroy {
   constructor(private eventsService: EventsService) { }
 
   ngOnInit() {
-    this.eventsSubscription = this.eventsService.getEvents.subscribe(events => {
+    this.isLoading = true;
+    this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
       this.loadedEvents = events;
+      this.isLoading = false;
     });
   }
 
@@ -28,9 +30,8 @@ export class EventsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.isLoading = true;
-    this.eventsService.fetchEvents().subscribe(() => {
-      this.isLoading = false;
+    this.eventsService.getEvents.subscribe(events => {
+      this.loadedEvents = events;
     });
   }
 

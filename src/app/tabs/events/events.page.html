@@ -18,9 +18,9 @@
         <ion-spinner></ion-spinner>
       </ion-col>
     </ion-row>
-    <ion-row style="padding-top:8px">
+    <ion-row *ngIf="!isLoading" style="padding-top:8px">
       <ion-col size="4" *ngFor="let event of loadedEvents">
-        <ion-img style="background-size: cover;" [src]="event.headerImage" [routerLink]="['/event-detail', event.id]"></ion-img>
+        <ion-img [src]="event.headerImage" [routerLink]="['/event-detail', event.id]"></ion-img>
         <p>{{event.name}}</p>
       </ion-col>
     </ion-row>

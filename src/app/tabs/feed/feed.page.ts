@@ -17,15 +17,22 @@ export class FeedPage implements OnInit, OnDestroy {
   constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService) { }
   loadedPosts: Post[];
   loadedUsers: User[];
+  loadedEvents: EventContent[];
   private postsSubscription: Subscription;
   private usersSubscription: Subscription;
+  private eventsSubscription: Subscription;
   isLoading = false;
 
   currentUser: User;
 
   ngOnInit() {
-    this.postsService.getPosts.subscribe(posts => {
+    this.isLoading = true;
+    this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
       this.loadedPosts = posts;
+      this.isLoading = false;
+    });
+    this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
+      this.loadedEvents = events;
     });
   }
 
@@ -36,13 +43,14 @@ export class FeedPage implements OnInit, OnDestroy {
     if (this.usersSubscription) {
       this.usersSubscription.unsubscribe();
     }
+    if (this.eventsSubscription) {
+      this.eventsSubscription.unsubscribe();
+    }
   }
 
   ionViewWillEnter() {
-    this.isLoading = true;
-    this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
+    this.postsService.getPosts.subscribe(posts => {
       this.loadedPosts = posts;
-      this.isLoading = false;
     });
   }
 
@@ -55,12 +63,9 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   getEvent(id: string): EventContent {
-    let thisEvent: EventContent;
-    this.isLoading = true;
-    this.eventsService.getEvent(id).subscribe(event => {
-      thisEvent = event;
-    });
-    return thisEvent;
+    if (this.loadedEvents) {
+      return this.loadedEvents.find(event => event.id === id);
+    }
   }
 
   onPostLike(id: string) { }

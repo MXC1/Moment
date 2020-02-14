@@ -23,5 +23,7 @@ export class AuthService {
     this.authenticated = false;
   }
 
+  register() {}
+
   constructor() { }
 }

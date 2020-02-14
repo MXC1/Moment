@@ -26,17 +26,17 @@ export class EventDetailPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('eventId')) {
-        console.log('!paramMap.has(eventId)');
         this.navCtrl.navigateBack('/tabs/events');
         return;
       }
+      const eventId = paramMap.get('eventId');
       this.isLoading = true;
       this.eventsSubscription = this.eventsService.getEvent(paramMap.get('eventId')).subscribe(event => {
         this.event = event;
         this.isLoading = false;
       });
       this.postsSubscription = this.postsService.getPosts.subscribe(posts => {
-        posts.filter(post => post.eventId = this.event.id);
+        posts.filter(post => post.eventId === eventId);
       });
     });
   }

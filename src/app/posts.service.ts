@@ -21,8 +21,6 @@ export class PostsService {
   private posts = new BehaviorSubject<Post[]>([]);
 
   fetchPosts() {
-    console.log('fetchposts');
-    
     return this.http.get<{ [key: string]: PostData }>('https://mmnt-io.firebaseio.com/posts.json')
       .pipe(map(resData => {
         const posts = [];
@@ -62,8 +60,10 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.posts.pipe(take(1), map(posts => {
-      return { ...posts.find(post => post.id === id) };
+    return this.http.get<PostData>(`https://mmnt-io.firebaseio.com/posts/${id}.json`)
+    .pipe(map(resData => {
+      const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content);
+      return newPost;
     }));
   }
 

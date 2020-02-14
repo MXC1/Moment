@@ -17,14 +17,10 @@ export class NewEventPage implements OnInit {
   ngOnInit() {
     this.form = new FormGroup({
       name: new FormControl(null, {
-        updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(255)]
       }),
-      location: new FormControl(null, {
-        updateOn: 'blur'
-      }),
+      location: new FormControl(null, {}),
       type: new FormControl(null, {
-        updateOn: 'blur',
         validators: [Validators.required]
       })
     });

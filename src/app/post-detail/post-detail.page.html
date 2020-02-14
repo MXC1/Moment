@@ -8,14 +8,14 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid class="ion-no-padding" *ngIf="!isLoading">
+  <ion-grid *ngIf="!isLoading" class="ion-no-padding">
     <ion-row>
       <ion-col>
         <ion-img [src]="post.content"></ion-img>
       </ion-col>
     </ion-row>
     <ion-row style="padding-top: 10px" class="ion-justify-content-center">
-      <ion-card-title>{{ event.name }}</ion-card-title>
+      <ion-card-title>{{ event?.name }}</ion-card-title>
     </ion-row>
     <ion-row style="padding-top: 5px" class="ion-justify-content-center">
       <ion-card-subtitle>{{ user.username }}</ion-card-subtitle>

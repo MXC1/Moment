@@ -39,7 +39,13 @@ export class EventsService {
         const events = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
-            events.push(new EventContent(key, resData[key].name, resData[key].location, resData[key].creatorId, resData[key].postIds, resData[key].followerIds, resData[key].headerImage));
+            events.push(new EventContent(key,
+              resData[key].name,
+              resData[key].location,
+              resData[key].creatorId,
+              resData[key].postIds,
+              resData[key].followerIds,
+              resData[key].headerImage));
           }
         }
         return events;
@@ -49,15 +55,28 @@ export class EventsService {
       );
   }
 
-  get getEvents() {
-    return this.events.asObservable();
-  }
-
   getEvent(id: string) {
     return this.http.get<EventData>(`https://mmnt-io.firebaseio.com/events/${id}.json`)
     .pipe(map(resData => {
       return new EventContent(id, resData.name, resData.location, resData.creatorId, resData.postIds, resData.followerIds, resData.headerImage);
     }));
+
+    // this.fetchEvents().subscribe();
+
+    // return this.events.pipe(take(1), map(events => {
+    //   return { ...events.find(e => e.id === id) };
+    // }));
+
+    // return this.http.get<EventData>(`https://mmnt-io.firebaseio.com/events/${id}.json`)
+    // .pipe(map(resData => {
+    //   const newEvent = new EventContent(id, resData.name, resData.location, resData.creatorId, resData.postIds, resData.followerIds, resData.headerImage);
+    //   return newEvent;
+    // })
+    // );
+  }
+
+  get getEvents() {
+    return this.events.asObservable();
   }
 
   constructor(private http: HttpClient) { }
