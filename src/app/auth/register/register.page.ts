@@ -10,30 +10,26 @@ import { Router } from '@angular/router';
 })
 export class RegisterPage implements OnInit {
   form: FormGroup;
+  passwordMismatch = false;
 
   constructor(private usersService: UsersService, private router: Router) { }
 
   ngOnInit() {
     this.form = new FormGroup({
       email: new FormControl(null, {
-        updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(255), Validators.email]
       }),
       fullName: new FormControl(null, {
-        updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(255)]
       }),
       username: new FormControl(null, {
-        updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(255)]
       })
       ,
       password: new FormControl(null, {
-        updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(255)]
       }),
       verifyPassword: new FormControl(null, {
-        updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(255)]
       })
     });
@@ -43,9 +39,10 @@ onRegister() {
     const password = this.form.value.password;
     const verifyPassword = this.form.value.verifyPassword;
 
-    // if (password !== verifyPassword) {
-    //   this.form.controls.verifyPassword.setErrors({incorrect: true});
-    // }
+    if (password !== verifyPassword) {
+      this.form.controls.verifyPassword.setErrors({incorrect: true});
+      this.passwordMismatch = true;
+    }
 
     if (!this.form.valid) {
       return;

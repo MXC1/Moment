@@ -7,8 +7,12 @@ export class EventContent {
                 public postIds: string[],
                 public followerIds: string[],
                 public headerImage: string) {
-        this.postIds = [];
-        this.followerIds = [];
+        if (!this.postIds) {
+            this.postIds = [];
+        }
+        if (!this.followerIds) {
+            this.followerIds = [];
+        }
         this.headerImage = 'https://www.dailydot.com/wp-content/uploads/2019/07/netflix-family-reunion-show.jpg';
     }
 }

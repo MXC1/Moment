@@ -50,7 +50,7 @@
           <ion-label class="ion-text-center" position="floating">Verify Password</ion-label>
           <ion-input type="password" formControlName="verifyPassword"></ion-input>
         </ion-item>
-        <p *ngIf="form.controls.verifyPassword.valid" class="ion-text-center" color="danger">Two passwords don't match</p>
+        <p *ngIf="passwordMismatch" class="ion-text-center" color="danger">Two passwords don't match</p>
       </ion-col>
     </ion-row>
     <ion-row class="ion-text-center" style="padding-top: 10px;">

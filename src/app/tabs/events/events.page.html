@@ -13,6 +13,11 @@
 
 <ion-content>
   <ion-grid>
+    <ion-row *ngIf="!isLoading && loadedEvents.length === 0" class="ion-text-center">
+      <ion-col>
+        <p>You don't follow any events yet!</p>
+      </ion-col>
+    </ion-row>
     <ion-row *ngIf="isLoading" class="ion-justify-content-center">
       <ion-col class="ion-text-center">
         <ion-spinner></ion-spinner>

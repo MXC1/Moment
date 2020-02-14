@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EventContent } from 'src/app/event';
 import { Subscription } from 'rxjs';
 import { EventsService } from 'src/app/events.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-events',
@@ -13,14 +14,26 @@ export class EventsPage implements OnInit, OnDestroy {
   private eventsSubscription: Subscription;
   isLoading = false;
 
-  constructor(private eventsService: EventsService) { }
+  constructor(private eventsService: EventsService, private authService: AuthService) { }
 
   ngOnInit() {
     this.isLoading = true;
     this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
-      this.loadedEvents = events;
+      this.loadedEvents = events.filter(event => {
+        let followedByUser = false;
+        event.followerIds.forEach(followerId => {
+          followedByUser = followerId === this.authService.getUserId;
+        });
+        return followedByUser;
+      });
       this.isLoading = false;
     });
+
+    // this.isLoading = true;
+    // this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
+    //   this.loadedEvents = events;
+    //   this.isLoading = false;
+    // });
   }
 
   ngOnDestroy() {
@@ -30,8 +43,14 @@ export class EventsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.eventsService.getEvents.subscribe(events => {
-      this.loadedEvents = events;
+    this.eventsSubscription = this.eventsService.getEvents.subscribe(events => {
+      this.loadedEvents = events.filter(event => {
+        let followedByUser = false;
+        event.followerIds.forEach(followerId => {
+          followedByUser = followerId === this.authService.getUserId;
+        });
+        return followedByUser;
+      });
     });
   }
 
