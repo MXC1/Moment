@@ -34,7 +34,7 @@ export class LoginPage implements OnInit {
     const login = this.form.value.login;
     const password = this.form.value.password;
 
-    this.authService.login();
+    this.authService.login(login, password);
     this.form.reset();
     this.router.navigateByUrl('/tabs/feed');
   }

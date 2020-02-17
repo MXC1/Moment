@@ -24,8 +24,7 @@ export class RegisterPage implements OnInit {
       }),
       username: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(255)]
-      })
-      ,
+      }),
       password: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(255)]
       }),

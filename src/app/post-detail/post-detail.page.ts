@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Post } from '../post';
 import { PostsService } from '../posts.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { EventsService } from '../events.service';
 import { UsersService } from '../users.service';
 import { EventContent } from '../event';
@@ -16,7 +16,7 @@ import { PostComment } from '../post-comment';
   templateUrl: './post-detail.page.html',
   styleUrls: ['./post-detail.page.scss'],
 })
-export class PostDetailPage implements OnInit {
+export class PostDetailPage implements OnInit, OnDestroy {
   post: Post;
   event: EventContent;
   user: User;
@@ -27,12 +27,12 @@ export class PostDetailPage implements OnInit {
   private commentsSubscription: Subscription;
   isLoading = true;
 
-  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private commentsService: PostCommentService, private route: ActivatedRoute, private navCtrl: NavController) { }
+  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private commentsService: PostCommentService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('postId')) {
-        this.navCtrl.navigateBack('/tabs/feed');
+        this.navController.navigateBack('/tabs/feed');
         return;
       }
       const postId = paramMap.get('postId');
@@ -50,8 +50,29 @@ export class PostDetailPage implements OnInit {
           this.comments = comments.filter(comment => this.post.id === comment.postId);
         });
         this.isLoading = false;
+      }, error => {
+        this.alertController.create({header: 'An Error Occurred', message: 'Post could not be found. Please try again later.', buttons: [{text: 'Okay', handler: () => {
+          this.navController.navigateBack('/tabs/feed');
+        }}]}).then(alertElement => {
+          alertElement.present();
+        });
       });
     });
+  }
+
+  ngOnDestroy() {
+    if (this.postsSubscription) {
+      this.postsSubscription.unsubscribe();
+    }
+    if (this.eventsSubscription) {
+      this.eventsSubscription.unsubscribe();
+    }
+    if (this.usersSubscription) {
+      this.usersSubscription.unsubscribe();
+    }
+    if (this.commentsSubscription) {
+      this.commentsSubscription.unsubscribe();
+    }
   }
 
   onPostLike(id: string) { }

@@ -5,7 +5,7 @@ import { PostsService } from '../posts.service';
 import { EventsService } from '../events.service';
 import { UsersService } from '../users.service';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { Post } from '../post';
 
 @Component({
@@ -21,12 +21,12 @@ export class EventDetailPage implements OnInit, OnDestroy {
   private usersSubscription: Subscription;
   isLoading = false;
 
-  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private route: ActivatedRoute, private navCtrl: NavController) { }
+  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('eventId')) {
-        this.navCtrl.navigateBack('/tabs/events');
+        this.navController.navigateBack('/tabs/events');
         return;
       }
       const eventId = paramMap.get('eventId');
@@ -34,6 +34,12 @@ export class EventDetailPage implements OnInit, OnDestroy {
       this.eventsSubscription = this.eventsService.getEvent(paramMap.get('eventId')).subscribe(event => {
         this.event = event;
         this.isLoading = false;
+      }, error => {
+        this.alertController.create({header: 'An Error Occurred', message: 'Event could not be found. Please try again later.', buttons: [{text: 'Okay', handler: () => {
+          this.navController.navigateBack('/tabs/events');
+        }}]}).then(alertElement => {
+          alertElement.present();
+        });
       });
       this.postsSubscription = this.postsService.getPosts.subscribe(posts => {
         posts.filter(post => post.eventId === eventId);
@@ -42,6 +48,8 @@ export class EventDetailPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.eventsSubscription.unsubscribe();
+    if (this.eventsSubscription) {
+      this.eventsSubscription.unsubscribe();
+    }
   }
 }
