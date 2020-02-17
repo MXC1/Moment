@@ -1,5 +1,7 @@
 {
   "name": "moment-1",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
