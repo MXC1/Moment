@@ -6,4 +6,4 @@
     <ion-label>Add an image</ion-label>
   </ion-button>
 </div>
-<input type="file" accept="image/jpeg" *ngIf="useChooser" #fileChooser (change)="onFileChosen($event)" />
+<input type="file" accept="image/*,video/*" *ngIf="useChooser" #fileChooser (change)="onFileChosen($event)" />

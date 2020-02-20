@@ -48,6 +48,9 @@ export class NewPostPage implements OnInit {
   }
 
   onPost() {
+    console.log('onpost');
+    console.log(this.form.get('image').value);
+
     const caption = this.form.value.caption;
 
     if (!this.form.valid || !this.form.get('image').value) {
@@ -55,7 +58,8 @@ export class NewPostPage implements OnInit {
     }
 
     this.postsService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
-      return this.postsService.newPost(this.authService.getUserId, '', caption, uploadRes.imageUrl);
+      const type = this.form.get('image').value.type.includes('image') ? 'image' : 'video';
+      return this.postsService.newPost(this.authService.getUserId, '', caption, uploadRes.imageUrl, type);
     })).subscribe();
 
     this.router.navigateByUrl('/tabs/feed');

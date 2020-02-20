@@ -6,6 +6,7 @@ import { UsersService } from 'src/app/users.service';
 import { User } from 'src/app/user';
 import { EventsService } from 'src/app/events.service';
 import { EventContent } from 'src/app/event';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-feed',
@@ -14,7 +15,7 @@ import { EventContent } from 'src/app/event';
 })
 export class FeedPage implements OnInit, OnDestroy {
 
-  constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService) { }
+  constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router) { }
   loadedPosts: Post[];
   loadedUsers: User[];
   loadedEvents: EventContent[];
@@ -65,6 +66,14 @@ export class FeedPage implements OnInit, OnDestroy {
   getEvent(id: string): EventContent {
     if (this.loadedEvents) {
       return this.loadedEvents.find(event => event.id === id);
+    }
+  }
+
+  playPause(thisVideo) {
+    if (thisVideo.paused) {
+      thisVideo.play();
+    } else {
+      thisVideo.pause();
     }
   }
 

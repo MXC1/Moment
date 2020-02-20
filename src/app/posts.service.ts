@@ -12,6 +12,7 @@ interface PostData {
   likes: number;
   shares: number;
   userId: string;
+  type: 'image' | 'video';
 }
 
 @Injectable({
@@ -30,7 +31,8 @@ export class PostsService {
               resData[key].userId,
               resData[key].eventId,
               resData[key].caption,
-              resData[key].content));
+              resData[key].content,
+              resData[key].type));
           }
         }
         return posts;
@@ -40,9 +42,8 @@ export class PostsService {
       );
   }
 
-  newPost(userId: string, eventId: string, caption: string, content: string) {
-
-    const newPost = new Post('', userId, eventId, caption, content);
+  newPost(userId: string, eventId: string, caption: string, content: string, type: 'image' | 'video') {
+    const newPost = new Post('', userId, eventId, caption, content, type);
     let postId: string;
 
     return this.http.post<{ name: string }>('https://mmnt-io.firebaseio.com/posts.json', { ...newPost, id: null })
@@ -63,7 +64,7 @@ export class PostsService {
   getPost(id: string) {
     return this.http.get<PostData>(`https://mmnt-io.firebaseio.com/posts/${id}.json`)
       .pipe(map(resData => {
-        const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content);
+        const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type);
         return newPost;
       }));
   }

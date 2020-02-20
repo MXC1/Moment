@@ -29,7 +29,10 @@
           <ion-card-title>{{ getEvent(post.eventId)?.name }}</ion-card-title>
           <ion-card-subtitle>{{ getUser(post.userId).username }}</ion-card-subtitle>
         </ion-card-header>
-        <ion-img [src]="post.content"></ion-img>
+        <video *ngIf="post.type === 'video'" style="max-width: 100%; max-height: 100%;" (click)="playPause(thisvideo)" #thisvideo disabled>
+          <source type="video/mp4" [src]="post.content">
+        </video>
+        <ion-img *ngIf="post.type === 'image'" [src]="post.content"></ion-img>
         <ion-row class="ion-text-center" class="ion-padding-top">
           <ion-col>
             {{ post.caption }}
