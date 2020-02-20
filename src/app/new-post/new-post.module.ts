@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { NewPostPageRoutingModule } from './new-post-routing.module';
 
 import { NewPostPage } from './new-post.page';
+import { ImageChooserComponent } from '../image-picker/image-chooser.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,6 @@ import { NewPostPage } from './new-post.page';
     IonicModule,
     NewPostPageRoutingModule
   ],
-  declarations: [NewPostPage]
+  declarations: [NewPostPage, ImageChooserComponent]
 })
 export class NewPostPageModule {}

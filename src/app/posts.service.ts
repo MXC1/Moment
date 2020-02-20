@@ -41,7 +41,8 @@ export class PostsService {
   }
 
   newPost(userId: string, eventId: string, caption: string, content: string) {
-    const newPost = new Post('', userId, eventId, caption, 'https://www.visit-hampshire.co.uk/dbimgs/Wickham%20Festival%202019.jpg');
+
+    const newPost = new Post('', userId, eventId, caption, content);
     let postId: string;
 
     return this.http.post<{ name: string }>('https://mmnt-io.firebaseio.com/posts.json', { ...newPost, id: null })
@@ -61,10 +62,19 @@ export class PostsService {
 
   getPost(id: string) {
     return this.http.get<PostData>(`https://mmnt-io.firebaseio.com/posts/${id}.json`)
-    .pipe(map(resData => {
-      const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content);
-      return newPost;
-    }));
+      .pipe(map(resData => {
+        const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content);
+        return newPost;
+      }));
+  }
+
+  uploadImage(image: File) {
+
+    const uploadData = new FormData();
+
+    uploadData.append('image', image);
+
+    return this.http.post<{ imageUrl: string, imagePath: string }>('https://us-central1-mmnt-io.cloudfunctions.net/storeImage', uploadData);
   }
 
   constructor(private http: HttpClient) { }
