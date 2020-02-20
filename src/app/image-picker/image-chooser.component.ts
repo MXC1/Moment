@@ -11,6 +11,7 @@ import { Platform } from '@ionic/angular';
 export class ImageChooserComponent implements OnInit {
   @Output() chosenImage = new EventEmitter<string | File>();
   selectedImage: string;
+  type: 'image' | 'video';
 
   useChooser = false;
   @ViewChild('fileChooser', { static: false }) fileChooserRef: ElementRef<HTMLInputElement>;
@@ -38,6 +39,8 @@ export class ImageChooserComponent implements OnInit {
     }).then(image => {
       this.selectedImage = image.dataUrl;
       this.chosenImage.emit(image.dataUrl);
+      this.type = this.selectedImage.includes('image') ? 'image' : 'video';
+
     }).catch(error => {
       console.log(error);
       return false;
@@ -54,7 +57,16 @@ export class ImageChooserComponent implements OnInit {
       const dataUrl = fileReader.result.toString();
       this.selectedImage = dataUrl;
       this.chosenImage.emit(chosenFile);
+      this.type = chosenFile.type.includes('image') ? 'image' : 'video';
     };
     fileReader.readAsDataURL(chosenFile);
+  }
+
+  playPause(thisVideo) {
+    if (thisVideo.paused) {
+      thisVideo.play();
+    } else {
+      thisVideo.pause();
+    }
   }
 }

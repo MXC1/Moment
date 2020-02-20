@@ -83,6 +83,14 @@ export class NewPostPage implements OnInit {
     this.form.patchValue({ image: imageFile.target.files[0] });
   }
 
+  playPause(thisVideo) {
+    if (thisVideo.paused) {
+      thisVideo.play();
+    } else {
+      thisVideo.pause();
+    }
+  }
+
   searchEvents() { }
 
 }

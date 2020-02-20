@@ -78,5 +78,29 @@ export class PostsService {
     return this.http.post<{ imageUrl: string, imagePath: string }>('https://us-central1-mmnt-io.cloudfunctions.net/storeImage', uploadData);
   }
 
+  public generateThumbnail(videoFile: Blob) {
+    let video: HTMLVideoElement;
+    let canvas: HTMLCanvasElement;
+    let context: CanvasRenderingContext2D;
+    new Promise<string>((resolve, reject) => {
+      canvas.addEventListener('error',  reject);
+      video.addEventListener('error',  reject);
+      video.addEventListener('canplay', event => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        resolve(canvas.toDataURL());
+      });
+      if (videoFile.type) {
+        video.setAttribute('type', videoFile.type);
+      }
+      video.preload = 'auto';
+      video.src = window.URL.createObjectURL(videoFile);
+      video.load();
+    }).then(thumbnailData => {
+      return thumbnailData;
+    });
+  }
+
   constructor(private http: HttpClient) { }
 }

@@ -75,6 +75,14 @@ export class PostDetailPage implements OnInit, OnDestroy {
     }
   }
 
+  playPause(thisVideo) {
+    if (thisVideo.paused) {
+      thisVideo.play();
+    } else {
+      thisVideo.pause();
+    }
+  }
+
   onPostLike(id: string) { }
 
   onPostComment(id: string) { }

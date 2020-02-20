@@ -11,7 +11,10 @@
   <ion-grid *ngIf="!isLoading" class="ion-no-padding">
     <ion-row>
       <ion-col>
-        <ion-img [src]="post.content"></ion-img>
+        <video *ngIf="post.type === 'video'" style="max-width: 100%; max-height: 100%;" (click)="playPause(thisvideo)" #thisvideo disabled>
+          <source type="video/mp4" [src]="post.content">
+        </video>
+        <ion-img *ngIf="post.type === 'image'" [src]="post.content"></ion-img>
       </ion-col>
     </ion-row>
     <ion-row style="padding-top: 10px" class="ion-justify-content-center">

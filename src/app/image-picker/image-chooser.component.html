@@ -1,6 +1,8 @@
 <div class="picker">
-  <ion-img role="button" class="" (click)="onChooseImage()" [src]="selectedImage" *ngIf="selectedImage">
-  </ion-img>
+  <video *ngIf="type === 'video'" style="max-width: 100%; max-height: 100%;" (click)="playPause(thisvideo)" #thisvideo disabled>
+    <source type="video/mp4" [src]="selectedImage">
+  </video>
+  <ion-img *ngIf="selectedImage && type === 'image'" [src]="selectedImage"></ion-img>
   <ion-button (click)="onChooseImage()" expand="block" fill="clear">
     <ion-icon name="camera" slot="start"></ion-icon>
     <ion-label>Add an image</ion-label>
