@@ -11,9 +11,13 @@
   <ion-grid *ngIf="!isLoading" class="ion-no-padding">
     <ion-row>
       <ion-col>
-        <video *ngIf="post.type === 'video'" style="max-width: 100%; max-height: 100%;" (click)="playPause(thisvideo)" #thisvideo disabled>
-          <source type="video/mp4" [src]="post.content">
-        </video>
+        <div (click)="playPause(thisVideo)" #thisVideo>
+          <video *ngIf="post.type === 'video'" style="max-width: 100%; max-height: 100%; position: relative" id="video">
+            <source type="video/mp4" [src]="post.content">
+          </video>
+          <ion-icon *ngIf="post.type === 'video'" name="ios-arrow-dropright" class="play-button" slot="icon-only" id="playButton">
+          </ion-icon>
+        </div>
         <ion-img *ngIf="post.type === 'image'" [src]="post.content"></ion-img>
       </ion-col>
     </ion-row>

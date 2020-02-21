@@ -34,8 +34,12 @@
       </ion-row>
     </ion-card>
     <ion-row style="padding-top:8px">
-      <ion-col size="4" *ngFor="let post of posts">
-          <ion-img style="background-size: cover;" [src]="post.content" [routerLink]="['/post-detail', post.id]"></ion-img>
+      <ion-col size="4" *ngFor="let post of posts" [routerLink]="['/post-detail', post.id]">
+        <video *ngIf="post.type === 'video'" style="max-width: 100%; max-height: 100%;"
+          #thisvideo>
+          <source type="video/mp4" [src]="post.content">
+        </video>
+        <ion-img *ngIf="post.type === 'image'" [src]="post.content"></ion-img>
       </ion-col>
     </ion-row>
   </ion-grid>

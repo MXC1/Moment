@@ -1,11 +1,15 @@
 <div class="picker">
-  <video *ngIf="type === 'video'" style="max-width: 100%; max-height: 100%;" (click)="playPause(thisvideo)" #thisvideo disabled>
-    <source type="video/mp4" [src]="selectedImage">
-  </video>
+  <div (click)="playPause(thisDiv)" #thisDiv>
+    <video *ngIf="selectedImage && type === 'video'" style="max-width: 100%; max-height: 100%; position: relative" id="video">
+      <source type="video/mp4" [src]="selectedImage">
+    </video>
+    <ion-icon *ngIf="type === 'video'" name="ios-arrow-dropright" class="play-button" slot="icon-only" id="playButton">
+    </ion-icon>
+  </div>
   <ion-img *ngIf="selectedImage && type === 'image'" [src]="selectedImage"></ion-img>
   <ion-button (click)="onChooseImage()" expand="block" fill="clear">
     <ion-icon name="camera" slot="start"></ion-icon>
-    <ion-label>Add an image</ion-label>
+    <ion-label>Add Content</ion-label>
   </ion-button>
 </div>
 <input type="file" accept="image/*,video/*" *ngIf="useChooser" #fileChooser (change)="onFileChosen($event)" />

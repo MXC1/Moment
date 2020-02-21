@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { UsersService } from 'src/app/users.service';
 import { Subscription } from 'rxjs';
@@ -18,6 +18,7 @@ export class ProfilePage implements OnInit {
   private userId: string;
   user: User;
   posts: Post[];
+  isLoading = false;
 
   constructor(private authService: AuthService, private usersService: UsersService, private postsService: PostsService) { }
 
@@ -30,15 +31,18 @@ export class ProfilePage implements OnInit {
   }
 
   ngOnInit() {
+    this.isLoading = true;
     this.userId = this.authService.getUserId;
     this.usersSubscription = this.usersService.getUser(this.userId).subscribe(user => {
       this.user = user;
+
+      this.postsService.getPosts.pipe(map(posts => posts.filter(
+        post => post.userId === this.userId))).subscribe(posts => {
+          this.posts = posts;
+          this.isLoading = false;
+        });
     });
 
-    this.postsService.getPosts.pipe(map(posts => posts.filter(
-      post => post.userId === this.userId))).subscribe(posts => {
-        this.posts = posts;
-      });
   }
 
   postDetail(post: Post) {}

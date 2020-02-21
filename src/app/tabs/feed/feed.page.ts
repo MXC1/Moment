@@ -69,11 +69,16 @@ export class FeedPage implements OnInit, OnDestroy {
     }
   }
 
-  playPause(thisVideo) {
+  playPause(thisDiv) {
+    const thisVideo = thisDiv.children[0];
+    const thisButton = thisDiv.children[1];
+
     if (thisVideo.paused) {
       thisVideo.play();
+      thisButton.style = 'display: none';
     } else {
       thisVideo.pause();
+      thisButton.style = 'display: inline';
     }
   }
 

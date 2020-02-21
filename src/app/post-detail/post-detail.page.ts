@@ -74,12 +74,18 @@ export class PostDetailPage implements OnInit, OnDestroy {
       this.commentsSubscription.unsubscribe();
     }
   }
+  playPause(thisDiv) {
+    console.log(thisDiv);
+    
+    const thisVideo = thisDiv.children[0];
+    const thisButton = thisDiv.children[1];
 
-  playPause(thisVideo) {
     if (thisVideo.paused) {
       thisVideo.play();
+      thisButton.style = 'display: none';
     } else {
       thisVideo.pause();
+      thisButton.style = 'display: inline';
     }
   }
 
