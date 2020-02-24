@@ -3,6 +3,27 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
 import { EventsService } from '../events.service';
 import { NavController } from '@ionic/angular';
+import { switchMap } from 'rxjs/operators';
+
+const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
+  const byteCharacters = atob(b64Data);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  const blob = new Blob(byteArrays, { type: contentType });
+  return blob;
+};
 
 @Component({
   selector: 'app-new-post',
@@ -22,7 +43,8 @@ export class NewEventPage implements OnInit {
       location: new FormControl(null, {}),
       type: new FormControl(null, {
         validators: [Validators.required]
-      })
+      }),
+      image: new FormControl(null)
     });
   }
 
@@ -30,14 +52,35 @@ export class NewEventPage implements OnInit {
     const name = this.form.value.name;
     const location = this.form.value.location;
     const type = this.form.value.type;
+    const headerImage = this.form.get('image').value;
     const userId = this.authService.getUserId;
 
     if (!this.form.valid) {
       return;
     }
 
-    this.eventsService.addEvent(name, location, type, userId).subscribe();
+    this.eventsService.uploadImage(headerImage).pipe(switchMap(uploadRes => {
+      return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId);
+    })).subscribe();
+
     this.navController.navigateBack('/tabs/events');
+  }
+
+  onImageChosen(imageData: string) {
+    let imageFile;
+    if (typeof imageData === 'string') {
+      try {
+        // imageFile = b64toBlob(imageData.replace('data:image/jpeg;base64,', ''), 'image/jpeg');
+        imageFile = b64toBlob(imageData);
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    } else {
+      imageFile = imageData;
+    }
+
+    this.form.patchValue({ image: imageFile.target.files[0] });
   }
 
 }

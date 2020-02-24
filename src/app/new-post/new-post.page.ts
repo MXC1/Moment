@@ -48,9 +48,6 @@ export class NewPostPage implements OnInit {
   }
 
   onPost() {
-    console.log('onpost');
-    console.log(this.form.get('image').value);
-
     const caption = this.form.value.caption;
 
     if (!this.form.valid || !this.form.get('image').value) {
@@ -78,7 +75,6 @@ export class NewPostPage implements OnInit {
     } else {
       imageFile = imageData;
     }
-
 
     this.form.patchValue({ image: imageFile.target.files[0] });
   }

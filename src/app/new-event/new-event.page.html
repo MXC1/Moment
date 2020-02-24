@@ -68,7 +68,7 @@
       <ion-row class="ion-justify-content-center" style="padding-top: 10px;">
         <ion-col class="ion-text-center" size="8">
           <ion-label>Cover Image:</ion-label>
-          <app-image-chooser message="Add a Cover Image"></app-image-chooser>
+          <app-image-chooser (change)="onImageChosen($event)" message="Add a Cover Image"></app-image-chooser>
         </ion-col>
       </ion-row>
     </ion-grid>

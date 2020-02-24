@@ -19,8 +19,8 @@ interface EventData {
 export class EventsService {
   private events = new BehaviorSubject<EventContent[]>([]);
 
-  addEvent(name: string, location: string, type: string, creatorId: string) {
-    const newEvent = new EventContent('', name, location, creatorId, [], [creatorId], '');
+  addEvent(name: string, location: string, type: string, headerImage: string, creatorId: string) {
+    const newEvent = new EventContent('', name, location, creatorId, [], [creatorId], headerImage);
     let eventId;
     return this.http.post<{ name: string }>('https://mmnt-io.firebaseio.com/events.json', { ...newEvent, id: null })
       .pipe(take(1), switchMap(resData => {
@@ -31,6 +31,15 @@ export class EventsService {
           newEvent.id = eventId;
           this.events.next(users.concat(newEvent));
         }));
+  }
+
+  uploadImage(image: File) {
+
+    const uploadData = new FormData();
+
+    uploadData.append('image', image);
+
+    return this.http.post<{ imageUrl: string, imagePath: string }>('https://us-central1-mmnt-io.cloudfunctions.net/storeImage', uploadData);
   }
 
   fetchEvents() {
@@ -57,9 +66,9 @@ export class EventsService {
 
   getEvent(id: string) {
     return this.http.get<EventData>(`https://mmnt-io.firebaseio.com/events/${id}.json`)
-    .pipe(map(resData => {
-      return new EventContent(id, resData.name, resData.location, resData.creatorId, resData.postIds, resData.followerIds, resData.headerImage);
-    }));
+      .pipe(map(resData => {
+        return new EventContent(id, resData.name, resData.location, resData.creatorId, resData.postIds, resData.followerIds, resData.headerImage);
+      }));
 
     // this.fetchEvents().subscribe();
 
