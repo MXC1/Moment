@@ -13,6 +13,5 @@ export class EventContent {
         if (!this.followerIds) {
             this.followerIds = [];
         }
-        this.headerImage = 'https://www.dailydot.com/wp-content/uploads/2019/07/netflix-family-reunion-show.jpg';
     }
 }

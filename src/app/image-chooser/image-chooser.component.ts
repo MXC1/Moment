@@ -1,14 +1,15 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 
 import { Plugins, Capacitor, CameraSource, Camera, CameraResultType } from '@capacitor/core';
 import { Platform } from '@ionic/angular';
 
 @Component({
-  selector: 'app-image-picker',
+  selector: 'app-image-chooser',
   templateUrl: './image-chooser.component.html',
   styleUrls: ['./image-chooser.component.scss'],
 })
 export class ImageChooserComponent implements OnInit {
+  @Input() public message;
   @Output() chosenImage = new EventEmitter<string | File>();
   selectedImage: string;
   type: 'image' | 'video';

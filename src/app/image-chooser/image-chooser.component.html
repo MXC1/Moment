@@ -9,7 +9,7 @@
   <ion-img *ngIf="selectedImage && type === 'image'" [src]="selectedImage"></ion-img>
   <ion-button (click)="onChooseImage()" expand="block" fill="clear">
     <ion-icon name="camera" slot="start"></ion-icon>
-    <ion-label>Add Content</ion-label>
+    <ion-label>{{ message }}</ion-label>
   </ion-button>
 </div>
 <input type="file" accept="image/*,video/*" *ngIf="useChooser" #fileChooser (change)="onFileChosen($event)" />

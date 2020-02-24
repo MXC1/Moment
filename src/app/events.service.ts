@@ -19,7 +19,7 @@ interface EventData {
 export class EventsService {
   private events = new BehaviorSubject<EventContent[]>([]);
 
-  addEvent(name: string, location: string, creatorId: string) {
+  addEvent(name: string, location: string, type: string, creatorId: string) {
     const newEvent = new EventContent('', name, location, creatorId, [], [creatorId], '');
     let eventId;
     return this.http.post<{ name: string }>('https://mmnt-io.firebaseio.com/events.json', { ...newEvent, id: null })

@@ -29,13 +29,14 @@ export class NewEventPage implements OnInit {
   onCreate() {
     const name = this.form.value.name;
     const location = this.form.value.location;
+    const type = this.form.value.type;
     const userId = this.authService.getUserId;
 
     if (!this.form.valid) {
       return;
     }
 
-    this.eventsService.addEvent(name, location, userId).subscribe();
+    this.eventsService.addEvent(name, location, type, userId).subscribe();
     this.navController.navigateBack('/tabs/events');
   }
 

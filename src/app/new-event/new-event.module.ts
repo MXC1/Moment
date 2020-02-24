@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { NewEventPageRoutingModule } from './new-event-routing.module';
 
 import { NewEventPage } from './new-event.page';
+import { NewPostPageModule } from '../new-post/new-post.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { NewEventPage } from './new-event.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    NewEventPageRoutingModule
+    NewEventPageRoutingModule,
+    NewPostPageModule
   ],
   declarations: [NewEventPage]
 })
