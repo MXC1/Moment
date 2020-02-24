@@ -8,21 +8,26 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ContentComponent implements OnInit {
   @Input() public content;
   @Input() public type;
+  @Input() public playable;
+  @Input() public square;
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+   }
 
   playPause(thisDiv) {
-    const thisVideo = thisDiv.children[0];
-    const thisButton = thisDiv.children[1];
+    if (this.playable !== 'false') {
+      const thisVideo = thisDiv.children[0];
+      const thisButton = thisDiv.children[1];
 
-    if (thisVideo.paused) {
-      thisVideo.play();
-      thisButton.style = 'display: none';
-    } else {
-      thisVideo.pause();
-      thisButton.style = 'display: inline';
+      if (thisVideo.paused) {
+        thisVideo.play();
+        thisButton.style = 'display: none';
+      } else {
+        thisVideo.pause();
+        thisButton.style = 'display: inline';
+      }
     }
   }
 

@@ -1,8 +1,6 @@
-<div (click)="playPause(thisVideo)" #thisVideo>
-  <video *ngIf="content.type === 'video'" style="max-width: 100%; max-height: 100%; position: relative" id="video">
-    <source type="video/mp4" [src]="content.content">
-  </video>
-  <ion-icon *ngIf="content.type === 'video'" name="ios-arrow-dropright" class="play-button" slot="icon-only" id="playButton">
+<div (click)="playPause(thisVideo)" [class]="square" #thisVideo>
+  <video *ngIf="content.type === 'video'" id="video" [src]="content.content"></video>
+  <ion-icon *ngIf="content.type === 'video' && this.playable !== 'false'" name="ios-arrow-dropright" class="play-button" slot="icon-only" id="playButton">
   </ion-icon>
+  <ion-img *ngIf="content.type === 'image'" [src]="content.content"></ion-img>
 </div>
-<ion-img *ngIf="content.type === 'image'" [src]="content.content"></ion-img>

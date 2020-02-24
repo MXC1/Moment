@@ -45,6 +45,6 @@ export class ProfilePage implements OnInit {
 
   }
 
-  postDetail(post: Post) {}
+  postDetail(post: Post) { }
 
 }
