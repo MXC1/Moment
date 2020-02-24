@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { PostDetailPageRoutingModule } from './post-detail-routing.module';
 
 import { PostDetailPage } from './post-detail.page';
+import { FeedPageModule } from '../tabs/feed/feed.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PostDetailPageRoutingModule
+    PostDetailPageRoutingModule,
+    FeedPageModule
   ],
   declarations: [PostDetailPage]
 })

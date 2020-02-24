@@ -74,20 +74,19 @@ export class PostDetailPage implements OnInit, OnDestroy {
       this.commentsSubscription.unsubscribe();
     }
   }
-  playPause(thisDiv) {
-    console.log(thisDiv);
-    
-    const thisVideo = thisDiv.children[0];
-    const thisButton = thisDiv.children[1];
 
-    if (thisVideo.paused) {
-      thisVideo.play();
-      thisButton.style = 'display: none';
-    } else {
-      thisVideo.pause();
-      thisButton.style = 'display: inline';
-    }
-  }
+  // playPause(thisDiv) {
+  //   const thisVideo = thisDiv.children[0];
+  //   const thisButton = thisDiv.children[1];
+
+  //   if (thisVideo.paused) {
+  //     thisVideo.play();
+  //     thisButton.style = 'display: none';
+  //   } else {
+  //     thisVideo.pause();
+  //     thisButton.style = 'display: inline';
+  //   }
+  // }
 
   onPostLike(id: string) { }
 

@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { FeedPageRoutingModule } from './feed-routing.module';
 
 import { FeedPage } from './feed.page';
+import { ContentComponent } from 'src/app/content/content.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { FeedPage } from './feed.page';
     IonicModule,
     FeedPageRoutingModule
   ],
-  declarations: [FeedPage]
+  declarations: [FeedPage, ContentComponent],
+  exports: [ContentComponent]
 })
 export class FeedPageModule {}

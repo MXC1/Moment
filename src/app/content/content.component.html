@@ -1,0 +1,8 @@
+<div (click)="playPause(thisVideo)" #thisVideo>
+  <video *ngIf="content.type === 'video'" style="max-width: 100%; max-height: 100%; position: relative" id="video">
+    <source type="video/mp4" [src]="content.content">
+  </video>
+  <ion-icon *ngIf="content.type === 'video'" name="ios-arrow-dropright" class="play-button" slot="icon-only" id="playButton">
+  </ion-icon>
+</div>
+<ion-img *ngIf="content.type === 'image'" [src]="content.content"></ion-img>
