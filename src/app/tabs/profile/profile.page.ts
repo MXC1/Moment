@@ -36,7 +36,7 @@ export class ProfilePage implements OnInit {
     this.usersSubscription = this.usersService.getUser(this.userId).subscribe(user => {
       this.user = user;
 
-      this.postsService.getPosts.pipe(map(posts => posts.filter(
+      this.postsService.fetchPosts().pipe(map(posts => posts.filter(
         post => post.userId === this.userId))).subscribe(posts => {
           this.posts = posts;
           this.isLoading = false;

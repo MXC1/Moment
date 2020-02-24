@@ -35,20 +35,7 @@
     </ion-card>
     <ion-row style="padding-top:8px" *ngIf="!isLoading">
       <ion-col size="4" *ngFor="let post of posts" [routerLink]="['/post-detail', post.id]">
-        <!-- <div style="height: 100px;">
-          <div style="object-fit: cover;">
-            <app-content [content]="this.post" notPlayable="true"></app-content>
-          </div>
-        </div> -->
-        <!-- <div style="height: 100px;"> -->
-
         <app-content [content]="this.post" playable="false" square="square"></app-content>
-        <!-- </div> -->
-        <!-- <video *ngIf="post.type === 'video'" style="max-width: 100%; max-height: 100%;"
-          #thisvideo>
-          <source type="video/mp4" [src]="post.content">
-        </video>
-        <ion-img *ngIf="post.type === 'image'" [src]="post.content"></ion-img> -->
       </ion-col>
     </ion-row>
   </ion-grid>
