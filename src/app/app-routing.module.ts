@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'tabs/feed', pathMatch: 'full' },
@@ -9,7 +10,8 @@ const routes: Routes = [
   },
   {
     path: 'tabs',
-    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'post-detail',
@@ -22,7 +24,8 @@ const routes: Routes = [
         path: ':postId',
         loadChildren: () => import('./post-detail/post-detail.module').then(m => m.PostDetailPageModule)
       }
-    ]
+    ],
+    canLoad: [AuthGuard]
   },
   {
     path: 'event-detail',
@@ -35,19 +38,23 @@ const routes: Routes = [
         path: ':eventId',
         loadChildren: () => import('./event-detail/event-detail.module').then(m => m.EventDetailPageModule)
       }
-    ]
+    ],
+    canLoad: [AuthGuard]
   },
   {
     path: 'new-post',
-    loadChildren: () => import('./new-post/new-post.module').then( m => m.NewPostPageModule)
+    loadChildren: () => import('./new-post/new-post.module').then( m => m.NewPostPageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'new-event',
-    loadChildren: () => import('./new-event/new-event.module').then( m => m.NewEventPageModule)
+    loadChildren: () => import('./new-event/new-event.module').then( m => m.NewEventPageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'event-detail',
-    loadChildren: () => import('./event-detail/event-detail.module').then( m => m.EventDetailPageModule)
+    loadChildren: () => import('./event-detail/event-detail.module').then( m => m.EventDetailPageModule),
+    canLoad: [AuthGuard]
   },
 
 ];

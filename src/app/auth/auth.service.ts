@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from '../user';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 interface UserAuth {
   email: string;
@@ -8,12 +9,22 @@ interface UserAuth {
   password: string;
 }
 
+interface AuthResData {
+  kind: string;
+  idToken: string;
+  email: string;
+  refreshToken: string;
+  localId: string;
+  expiresIn: string;
+  registered?: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private authenticated = true;
-  private userId = 'u2';
+  private authenticated = false;
+  private userId = null;
   private users = [];
 
   get isAuthenticated() {
@@ -24,19 +35,17 @@ export class AuthService {
     return this.userId;
   }
 
-  login(login: string, password: string) {
-    if (this.users.find(user => {
-      return (user.email === login || user.username === login) && user.password === password;
-    })) {
-      this.authenticated = true;
-    }
+  login(email: string, password: string) {
+    return this.http.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseAPIKey}`, { email, password });
   }
 
   logout() {
     this.authenticated = false;
   }
 
-  register() { }
+  register(email: string, password: string) {
+    return this.http.post<AuthResData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`, { email, password, returnSecureToken: true });
+  }
 
   constructor(private http: HttpClient) {
     this.http.get<UserAuth>('https://mmnt-io.firebaseio.com/users.json').subscribe(resData => {

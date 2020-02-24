@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
 export class LoginPage implements OnInit {
   form: FormGroup;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private alertController: AlertController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -31,12 +32,31 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    const login = this.form.value.login;
+    const email = this.form.value.login;
     const password = this.form.value.password;
 
-    this.authService.login(login, password);
+    this.authService.login(email, password).subscribe(resData => {
+      console.log(resData);
+    }, errorResponse => {
+      const code = errorResponse.error.error.message;
+      let message = 'There was a problem. Please try again.';
+      if (code === 'EMAIL_NOT_FOUND') {
+      message = 'Your username or password is incorrect.';
+      } else if (code === 'INVALID_PASSWORD') {
+        message = 'Your username or password is incorrect.';
+      }
+      this.showAlert(message);
+    });
     this.form.reset();
-    this.router.navigateByUrl('/tabs/feed');
+  }
+
+  showAlert(message: string) {
+    this.alertController.create({
+      header: 'Authentication Failed',
+      message,
+      buttons: ['Okay'] }).then(alertElement => {
+      alertElement.present();
+    });
   }
 
   onChooseRegister() {}
