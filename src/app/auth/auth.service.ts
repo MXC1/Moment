@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { User } from '../user';
+import { User } from './user';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface UserAuth {
   email: string;
@@ -27,12 +29,26 @@ export class AuthService {
   private userId = null;
   private users = [];
 
+  private user = new BehaviorSubject<User>(null);
+
   get isAuthenticated() {
-    return this.authenticated;
+    return this.user.asObservable().pipe(map(user => {
+      if (user) {
+        return !!user.getToken;
+      } else {
+        return false;
+      }
+    }));
   }
 
   get getUserId() {
-    return this.userId;
+    return this.user.asObservable().pipe(map(user => {
+      if (user) {
+        return user.id;
+      } else {
+        return null;
+      }
+    }));
   }
 
   login(email: string, password: string) {
