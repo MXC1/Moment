@@ -63,7 +63,7 @@ export class NewEventPage implements OnInit {
         if (!userId) {
           throw new Error('No User ID Found!');
         } else {
-          return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId);
+          return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId).subscribe();
         }
       }));
     })).subscribe();

@@ -41,7 +41,6 @@ export class RegisterPage implements OnInit {
     const password = this.form.value.password;
 
     this.authService.register(email, password).subscribe(resData => {
-      console.log(resData);
     }, errorResponse => {
       const code = errorResponse.error.error.message;
       let message = 'There was a problem. Please try again.';

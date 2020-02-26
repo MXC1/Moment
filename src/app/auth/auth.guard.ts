@@ -15,8 +15,6 @@ export class AuthGuard implements CanLoad {
     segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
     return this.authService.isAuthenticated.pipe(take(1), tap(isAuthenticated => {
       if (!isAuthenticated) {
-        console.log('!isAuthenticated');
-
         this.router.navigateByUrl('/auth/login');
       }
     }));

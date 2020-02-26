@@ -43,22 +43,15 @@ export class PostsService {
   }
 
   newPost(userId: string, eventId: string, caption: string, content: string, type: 'image' | 'video') {
-    const newPost = new Post('', '', eventId, caption, content, type);
-    // const newPost = new Post('', userId, eventId, caption, content, type);
+    const newPost = new Post('', userId, eventId, caption, content, type);
     let postId: string;
-
-    console.log(newPost);
 
     return this.http.post<{ name: string }>('https://mmnt-io.firebaseio.com/posts.json', { ...newPost, id: null })
       .pipe(take(1), switchMap(resData => {
-        console.log('connection to database successful');
-
         postId = resData.name;
         return this.posts;
       }), take(1),
         tap(posts => {
-          console.log('newPostSuccessful');
-
           newPost.id = userId;
           this.posts.next(posts.concat(newPost));
         }));

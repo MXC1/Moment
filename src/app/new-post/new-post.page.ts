@@ -66,12 +66,9 @@ export class NewPostPage implements OnInit {
         if (!userId) {
           throw new Error('No User ID Found!');
         } else {
-          console.log();
-          return this.postsService.newPost(userId, '', caption, uploadRes.imageUrl, type);
-
+          return this.postsService.newPost(userId, '', caption, uploadRes.imageUrl, type).subscribe();
         }
       }));
-
     })).subscribe();
 
     this.router.navigateByUrl('/tabs/feed');
