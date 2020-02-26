@@ -32,10 +32,6 @@ export class AuthService {
 
   private user = new BehaviorSubject<User>(null);
 
-  // get isAuthenticated() {
-  //   return true;
-  // }
-
   get isAuthenticated() {
     return this.user.asObservable().pipe(map(user => {
       if (user) {
@@ -62,6 +58,7 @@ export class AuthService {
 
   logout() {
     this.user.next(null);
+    Plugins.Storage.remove({key: 'authData'});
   }
 
   register(email: string, password: string) {
