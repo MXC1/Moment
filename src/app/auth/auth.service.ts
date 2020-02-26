@@ -25,21 +25,25 @@ interface AuthResData {
   providedIn: 'root'
 })
 export class AuthService {
-  private authenticated = false;
-  private userId = null;
+  private authenticated = true;
+  private userId = 'u2';
   private users = [];
-
+ 
   private user = new BehaviorSubject<User>(null);
 
   get isAuthenticated() {
-    return this.user.asObservable().pipe(map(user => {
-      if (user) {
-        return !!user.getToken;
-      } else {
-        return false;
-      }
-    }));
+    return true;
   }
+
+  // get isAuthenticated() {
+  //   return this.user.asObservable().pipe(map(user => {
+  //     if (user) {
+  //       return !!user.getToken;
+  //     } else {
+  //       return false;
+  //     }
+  //   }));
+  // }
 
   get getUserId() {
     return this.user.asObservable().pipe(map(user => {
@@ -52,18 +56,20 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    return this.http.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseAPIKey}`, { email, password });
+    return this.http.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseAPIKey}`, { email, password }).pipe(tap(this.setUserData.bind(this)));
   }
 
   logout() {
-    this.authenticated = false;
+    this.user.next(null);
   }
 
   register(email: string, password: string) {
-    return this.http.post<AuthResData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`, { email, password, returnSecureToken: true }).pipe(tap(userData => {
-      const tokenExpiration = new Date(new Date().getTime() + (+userData.expiresIn * 1000));
-      this.user.next(new User(userData.localId, userData.email, userData.idToken, new Date()));
-    }));
+    return this.http.post<AuthResData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`, { email, password, returnSecureToken: true }).pipe(tap(this.setUserData.bind(this)));
+  }
+
+  private setUserData(userData: AuthResData) {
+    const tokenExpiration = new Date(new Date().getTime() + (+userData.expiresIn * 1000));
+    this.user.next(new User(userData.localId, userData.email, userData.idToken, tokenExpiration));
   }
 
   constructor(private http: HttpClient) {

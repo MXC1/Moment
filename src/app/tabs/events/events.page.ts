@@ -3,6 +3,7 @@ import { EventContent } from 'src/app/event';
 import { Subscription } from 'rxjs';
 import { EventsService } from 'src/app/events.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-events',
@@ -43,15 +44,20 @@ export class EventsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.eventsSubscription = this.eventsService.getEvents.subscribe(events => {
-      this.loadedEvents = events.filter(event => {
-        let followedByUser = false;
-        event.followerIds.forEach(followerId => {
-          followedByUser = followerId === this.authService.getUserId;
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+      if (!userId) {
+        return;
+      } else {
+        this.eventsSubscription = this.eventsService.getEvents.subscribe(events => {
+          this.loadedEvents = events.filter(event => {
+            let followedByUser = false;
+            event.followerIds.forEach(followerId => {
+              followedByUser = followerId === userId;
+            });
+            return followedByUser;
+          });
         });
-        return followedByUser;
-      });
+      }
     });
   }
-
 }

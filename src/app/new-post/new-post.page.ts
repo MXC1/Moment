@@ -5,7 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take, tap } from 'rxjs/operators';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -54,9 +54,18 @@ export class NewPostPage implements OnInit {
       return;
     }
 
+    // this.postsService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
+    //   const type = this.form.get('image').value.type.includes('image') ? 'image' : 'video';
+    //   return this.postsService.newPost(userId, '', caption, uploadRes.imageUrl, type);
+    // })).subscribe();
+
     this.postsService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
       const type = this.form.get('image').value.type.includes('image') ? 'image' : 'video';
-      return this.postsService.newPost(this.authService.getUserId, '', caption, uploadRes.imageUrl, type);
+
+      return this.authService.getUserId.pipe(take(1), tap(userId => {
+        return this.postsService.newPost(userId, '', caption, uploadRes.imageUrl, type);
+      }));
+
     })).subscribe();
 
     this.router.navigateByUrl('/tabs/feed');

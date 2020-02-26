@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
 import { EventsService } from '../events.service';
 import { NavController } from '@ionic/angular';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take, tap } from 'rxjs/operators';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -53,14 +53,15 @@ export class NewEventPage implements OnInit {
     const location = this.form.value.location;
     const type = this.form.value.type;
     const headerImage = this.form.get('image').value;
-    const userId = this.authService.getUserId;
 
     if (!this.form.valid) {
       return;
     }
 
     this.eventsService.uploadImage(headerImage).pipe(switchMap(uploadRes => {
-      return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId);
+      return this.authService.getUserId.pipe(take(1), tap(userId => {
+        return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId);
+      }));
     })).subscribe();
 
     this.navController.navigateBack('/tabs/events');

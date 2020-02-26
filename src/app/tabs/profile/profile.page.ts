@@ -15,7 +15,6 @@ import { filter, take, map } from 'rxjs/operators';
 export class ProfilePage implements OnInit {
   private usersSubscription: Subscription;
   private postsSubscription: Subscription;
-  private userId: string;
   user: User;
   posts: Post[];
   isLoading = false;
@@ -24,25 +23,27 @@ export class ProfilePage implements OnInit {
 
   getUserImage() {
     let thisImage: string;
-    this.usersSubscription = this.usersService.getUser(this.userId).subscribe(user => {
-      thisImage = user.image;
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+      this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
+        thisImage = user.image;
+      });
     });
     return thisImage;
   }
 
   ngOnInit() {
     this.isLoading = true;
-    this.userId = this.authService.getUserId;
-    this.usersSubscription = this.usersService.getUser(this.userId).subscribe(user => {
-      this.user = user;
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+      this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
+        this.user = user;
 
-      this.postsService.fetchPosts().pipe(map(posts => posts.filter(
-        post => post.userId === this.userId))).subscribe(posts => {
-          this.posts = posts;
-          this.isLoading = false;
-        });
+        this.postsService.fetchPosts().pipe(map(posts => posts.filter(
+          post => post.userId === userId))).subscribe(posts => {
+            this.posts = posts;
+            this.isLoading = false;
+          });
+      });
     });
-
   }
 
   postDetail(post: Post) { }
