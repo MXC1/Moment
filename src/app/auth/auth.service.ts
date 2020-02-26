@@ -3,7 +3,7 @@ import { User } from './user';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 interface UserAuth {
   email: string;
@@ -60,7 +60,10 @@ export class AuthService {
   }
 
   register(email: string, password: string) {
-    return this.http.post<AuthResData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`, { email, password, returnSecureToken: true });
+    return this.http.post<AuthResData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`, { email, password, returnSecureToken: true }).pipe(tap(userData => {
+      const tokenExpiration = new Date(new Date().getTime() + (+userData.expiresIn * 1000));
+      this.user.next(new User(userData.localId, userData.email, userData.idToken, new Date()));
+    }));
   }
 
   constructor(private http: HttpClient) {
