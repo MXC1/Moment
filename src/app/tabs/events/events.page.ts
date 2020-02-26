@@ -19,15 +19,17 @@ export class EventsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
-      this.loadedEvents = events.filter(event => {
-        let followedByUser = false;
-        event.followerIds.forEach(followerId => {
-          followedByUser = followerId === this.authService.getUserId;
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+      this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
+        this.loadedEvents = events.filter(event => {
+          let followedByUser = false;
+          event.followerIds.forEach(followerId => {
+            followedByUser = followerId === userId;
+          });
+          return followedByUser;
         });
-        return followedByUser;
+        this.isLoading = false;
       });
-      this.isLoading = false;
     });
 
     // this.isLoading = true;

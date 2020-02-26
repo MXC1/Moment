@@ -52,7 +52,7 @@ export class PostsService {
         return this.posts;
       }), take(1),
         tap(posts => {
-          newPost.id = userId;
+          newPost.id = postId;
           this.posts.next(posts.concat(newPost));
         }));
   }
