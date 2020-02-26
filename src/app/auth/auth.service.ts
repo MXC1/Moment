@@ -52,6 +52,16 @@ export class AuthService {
     }));
   }
 
+  get getToken() {
+    return this.user.asObservable().pipe(map(user => {
+      if (user) {
+        return user.getToken;
+      } else {
+        return null;
+      }
+    }));
+  }
+
   login(email: string, password: string) {
     return this.http.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseAPIKey}`, { email, password, returnSecureToken: true }).pipe(tap(this.setUserData.bind(this)));
   }
@@ -69,7 +79,6 @@ export class AuthService {
     const tokenExpiration = new Date(new Date().getTime() + (+userData.expiresIn * 1000));
 
     this.user.next(new User(userData.localId, userData.email, userData.idToken, tokenExpiration));
-    // this.user.next(new User(userData.localId, userData.email, userData.idToken, tokenExpiration));
     this.storeAuthData(userData.localId, userData.email, userData.idToken, tokenExpiration.toISOString());
   }
 

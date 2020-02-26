@@ -3,6 +3,7 @@ import { Post } from './post';
 import { BehaviorSubject } from 'rxjs';
 import { take, tap, map, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from './auth/auth.service';
 
 interface PostData {
   caption: string;
@@ -22,39 +23,43 @@ export class PostsService {
   private posts = new BehaviorSubject<Post[]>([]);
 
   fetchPosts() {
-    return this.http.get<{ [key: string]: PostData }>('https://mmnt-io.firebaseio.com/posts.json')
-      .pipe(map(resData => {
-        const posts = [];
-        for (const key in resData) {
-          if (resData.hasOwnProperty(key)) {
-            posts.push(new Post(key,
-              resData[key].userId,
-              resData[key].eventId,
-              resData[key].caption,
-              resData[key].content,
-              resData[key].type));
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.http.get<{ [key: string]: PostData }>(`https://mmnt-io.firebaseio.com/posts.json?auth=${token}`)
+        .pipe(map(resData => {
+          const posts = [];
+          for (const key in resData) {
+            if (resData.hasOwnProperty(key)) {
+              posts.push(new Post(key,
+                resData[key].userId,
+                resData[key].eventId,
+                resData[key].caption,
+                resData[key].content,
+                resData[key].type));
+            }
           }
-        }
-        return posts;
-      }), tap(posts => {
-        this.posts.next(posts);
-      })
-      );
+          return posts;
+        }), tap(posts => {
+          this.posts.next(posts);
+        })
+        );
+    }));
   }
 
   newPost(userId: string, eventId: string, caption: string, content: string, type: 'image' | 'video') {
     const newPost = new Post('', userId, eventId, caption, content, type);
     let postId: string;
 
-    return this.http.post<{ name: string }>('https://mmnt-io.firebaseio.com/posts.json', { ...newPost, id: null })
-      .pipe(take(1), switchMap(resData => {
-        postId = resData.name;
-        return this.posts;
-      }), take(1),
-        tap(posts => {
-          newPost.id = postId;
-          this.posts.next(posts.concat(newPost));
-        }));
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.http.post<{ name: string }>(`https://mmnt-io.firebaseio.com/posts.json?auth=${token}`, { ...newPost, id: null })
+        .pipe(take(1), switchMap(resData => {
+          postId = resData.name;
+          return this.posts;
+        }), take(1),
+          tap(posts => {
+            newPost.id = postId;
+            this.posts.next(posts.concat(newPost));
+          }));
+    }));
   }
 
   get getPosts() {
@@ -62,11 +67,13 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<PostData>(`https://mmnt-io.firebaseio.com/posts/${id}.json`)
-      .pipe(map(resData => {
-        const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type);
-        return newPost;
-      }));
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.http.get<PostData>(`https://mmnt-io.firebaseio.com/posts/${id}.json?auth=${token}`)
+        .pipe(map(resData => {
+          const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type);
+          return newPost;
+        }));
+    }));
   }
 
   uploadImage(image: File) {
@@ -75,32 +82,10 @@ export class PostsService {
 
     uploadData.append('image', image);
 
-    return this.http.post<{ imageUrl: string, imagePath: string }>('https://us-central1-mmnt-io.cloudfunctions.net/storeImage', uploadData);
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.http.post<{ imageUrl: string, imagePath: string }>('https://us-central1-mmnt-io.cloudfunctions.net/storeImage', uploadData, { headers: { Authorization: 'Bearer ' + token } });
+    }));
   }
 
-  // public generateThumbnail(videoFile: Blob) {
-  //   let video: HTMLVideoElement;
-  //   let canvas: HTMLCanvasElement;
-  //   let context: CanvasRenderingContext2D;
-  //   new Promise<string>((resolve, reject) => {
-  //     canvas.addEventListener('error',  reject);
-  //     video.addEventListener('error',  reject);
-  //     video.addEventListener('canplay', event => {
-  //       canvas.width = video.videoWidth;
-  //       canvas.height = video.videoHeight;
-  //       context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-  //       resolve(canvas.toDataURL());
-  //     });
-  //     if (videoFile.type) {
-  //       video.setAttribute('type', videoFile.type);
-  //     }
-  //     video.preload = 'auto';
-  //     video.src = window.URL.createObjectURL(videoFile);
-  //     video.load();
-  //   }).then(thumbnailData => {
-  //     return thumbnailData;
-  //   });
-  // }
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 }
