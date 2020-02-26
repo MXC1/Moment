@@ -63,7 +63,13 @@ export class NewPostPage implements OnInit {
       const type = this.form.get('image').value.type.includes('image') ? 'image' : 'video';
 
       return this.authService.getUserId.pipe(take(1), tap(userId => {
-        return this.postsService.newPost(userId, '', caption, uploadRes.imageUrl, type);
+        if (!userId) {
+          throw new Error('No User ID Found!');
+        } else {
+          console.log();
+          return this.postsService.newPost(userId, '', caption, uploadRes.imageUrl, type);
+
+        }
       }));
 
     })).subscribe();

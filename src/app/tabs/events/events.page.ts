@@ -46,7 +46,7 @@ export class EventsPage implements OnInit, OnDestroy {
   ionViewWillEnter() {
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       if (!userId) {
-        return;
+        throw new Error('No User ID Found!');
       } else {
         this.eventsSubscription = this.eventsService.getEvents.subscribe(events => {
           this.loadedEvents = events.filter(event => {

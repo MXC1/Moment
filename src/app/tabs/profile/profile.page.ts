@@ -24,9 +24,13 @@ export class ProfilePage implements OnInit {
   getUserImage() {
     let thisImage: string;
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-      this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
-        thisImage = user.image;
-      });
+      if (!userId) {
+        throw new Error('No User ID Found!');
+      } else {
+        this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
+          thisImage = user.image;
+        });
+      }
     });
     return thisImage;
   }
@@ -34,15 +38,19 @@ export class ProfilePage implements OnInit {
   ngOnInit() {
     this.isLoading = true;
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-      this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
-        this.user = user;
+      if (!userId) {
+        throw new Error('No User ID Found!');
+      } else {
+        this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
+          this.user = user;
 
-        this.postsService.fetchPosts().pipe(map(posts => posts.filter(
-          post => post.userId === userId))).subscribe(posts => {
-            this.posts = posts;
-            this.isLoading = false;
-          });
-      });
+          this.postsService.fetchPosts().pipe(map(posts => posts.filter(
+            post => post.userId === userId))).subscribe(posts => {
+              this.posts = posts;
+              this.isLoading = false;
+            });
+        });
+      }
     });
   }
 

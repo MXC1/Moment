@@ -31,19 +31,19 @@ export class AuthService {
  
   private user = new BehaviorSubject<User>(null);
 
-  get isAuthenticated() {
-    return true;
-  }
-
   // get isAuthenticated() {
-  //   return this.user.asObservable().pipe(map(user => {
-  //     if (user) {
-  //       return !!user.getToken;
-  //     } else {
-  //       return false;
-  //     }
-  //   }));
+  //   return true;
   // }
+
+  get isAuthenticated() {
+    return this.user.asObservable().pipe(map(user => {
+      if (user) {
+        return !!user.getToken;
+      } else {
+        return false;
+      }
+    }));
+  }
 
   get getUserId() {
     return this.user.asObservable().pipe(map(user => {

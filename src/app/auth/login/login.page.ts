@@ -36,7 +36,7 @@ export class LoginPage implements OnInit {
     const password = this.form.value.password;
 
     this.authService.login(email, password).subscribe(resData => {
-      console.log(resData);
+      this.router.navigateByUrl('/tabs/feed');
     }, errorResponse => {
       const code = errorResponse.error.error.message;
       let message = 'There was a problem. Please try again.';

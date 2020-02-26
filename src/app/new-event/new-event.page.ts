@@ -60,7 +60,11 @@ export class NewEventPage implements OnInit {
 
     this.eventsService.uploadImage(headerImage).pipe(switchMap(uploadRes => {
       return this.authService.getUserId.pipe(take(1), tap(userId => {
-        return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId);
+        if (!userId) {
+          throw new Error('No User ID Found!');
+        } else {
+          return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId);
+        }
       }));
     })).subscribe();
 
