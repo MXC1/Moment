@@ -109,7 +109,6 @@ export class AuthService {
 
   private storeAuthData(userId: string, email: string, token: string, tokenExpiration: string) {
     const data = JSON.stringify({ userId, email, token, tokenExpiration });
-    console.log(data);
     Plugins.Storage.set({ key: 'authData', value: data });
   }
 

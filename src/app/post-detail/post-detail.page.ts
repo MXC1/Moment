@@ -42,18 +42,22 @@ export class PostDetailPage implements OnInit, OnDestroy {
         this.post = post;
         this.eventsSubscription = this.eventsService.getEvent(this.post.eventId).subscribe(event => {
           this.event = event;
+          this.usersSubscription = this.usersService.getUser(this.post.userId).subscribe(user => {
+            this.user = user;
+            this.commentsSubscription = this.commentsService.getComments().subscribe(comments => {
+              this.comments = comments.filter(comment => this.post.id === comment.postId);
+              this.isLoading = false;
+            });
+          });
         });
-        this.usersSubscription = this.usersService.getUser(this.post.userId).subscribe(user => {
-          this.user = user;
-        });
-        this.commentsSubscription = this.commentsService.getComments().subscribe(comments => {
-          this.comments = comments.filter(comment => this.post.id === comment.postId);
-        });
-        this.isLoading = false;
       }, error => {
-        this.alertController.create({header: 'An Error Occurred', message: 'Post could not be found. Please try again later.', buttons: [{text: 'Okay', handler: () => {
-          this.navController.navigateBack('/tabs/feed');
-        }}]}).then(alertElement => {
+        this.alertController.create({
+          header: 'An Error Occurred', message: 'Post could not be found. Please try again later.', buttons: [{
+            text: 'Okay', handler: () => {
+              this.navController.navigateBack('/tabs/feed');
+            }
+          }]
+        }).then(alertElement => {
           alertElement.present();
         });
       });

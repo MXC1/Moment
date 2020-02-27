@@ -6,7 +6,10 @@
     <ion-icon *ngIf="type === 'video'" name="ios-arrow-dropright" class="play-button" slot="icon-only" id="playButton">
     </ion-icon>
   </div>
-  <ion-img *ngIf="selectedImage && type === 'image'" [src]="selectedImage"></ion-img>
+
+  <image-cropper [imageBase64]="selectedImage" [maintainAspectRatio]="true" [aspectRatio]="1/1" (imageCropped)="imageCropped($event)" (imageLoaded)="imageCropper.crop()" format="jpeg" outputType="dataUrl"></image-cropper>
+
+  <ion-img *ngIf="croppedImage && type === 'image'" [src]="imagePreview"></ion-img>
   <ion-button (click)="onChooseImage()" expand="block" fill="clear">
     <ion-icon name="camera" slot="start"></ion-icon>
     <ion-label>{{ message }}</ion-label>

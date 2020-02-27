@@ -27,3 +27,8 @@ ion-avatar {
   font-weight: 100;
   // font-family: sans-serif;
 }
+
+.word-wrap {
+  // display: inline-block;
+  word-wrap: break-all;
+}

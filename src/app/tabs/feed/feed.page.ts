@@ -7,6 +7,7 @@ import { User } from 'src/app/user';
 import { EventsService } from 'src/app/events.service';
 import { EventContent } from 'src/app/event';
 import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-feed',
@@ -32,7 +33,10 @@ export class FeedPage implements OnInit, OnDestroy {
       this.loadedPosts = posts;
       this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
         this.loadedEvents = events;
-        this.isLoading = false;
+        this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
+          this.loadedUsers = users;
+          this.isLoading = false;
+        })
       });
     });
   }
@@ -56,11 +60,9 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   getUser(id: string): User {
-    let thisUser: User;
-    this.usersService.getUser(id).subscribe(user => {
-      thisUser = user;
-    });
-    return thisUser;
+    if (this.loadedUsers) {
+      return this.loadedUsers.find(user => user.id === id);
+    }
   }
 
   getEvent(id: string): EventContent {

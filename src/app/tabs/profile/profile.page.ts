@@ -27,7 +27,7 @@ export class ProfilePage implements OnInit {
       if (!userId) {
         throw new Error('No User ID Found!');
       } else {
-        this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
+        this.usersSubscription = this.usersService.getUser(userId).pipe(take(1)).subscribe(user => {
           thisImage = user.image;
         });
       }
@@ -42,8 +42,9 @@ export class ProfilePage implements OnInit {
         throw new Error('No User ID Found!');
       } else {
         this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
+          console.log(userId);
+          console.log(user);
           this.user = user;
-
           this.postsService.fetchPosts().pipe(map(posts => posts.filter(
             post => post.userId === userId))).subscribe(posts => {
               this.posts = posts;

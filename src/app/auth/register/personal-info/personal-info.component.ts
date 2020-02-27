@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../../auth.service';
 import { Router } from '@angular/router';
 import { UsersService } from 'src/app/users.service';
 import { switchMap } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
+import { ImageChooserComponent } from 'src/app/image-chooser/image-chooser.component';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -36,16 +37,18 @@ export class PersonalInfoComponent implements OnInit {
   @Input() email;
   @Input() username;
 
+  @ViewChild(ImageChooserComponent, { static: false }) imageChooser;
+
   constructor(private authService: AuthService, private router: Router, private usersService: UsersService, private modalController: ModalController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
       fullName: new FormControl(null, {
-        validators: [Validators.maxLength(255)]
+        validators: [Validators.maxLength(31)]
       }),
       image: new FormControl(null),
       bio: new FormControl(null, {
-        validators: [Validators.maxLength(255)]
+        validators: [Validators.maxLength(127)]
       })
     });
   }
@@ -70,6 +73,8 @@ export class PersonalInfoComponent implements OnInit {
   onSubmit() {
     const fullName = this.form.value.fullName;
     const bio = this.form.value.bio;
+
+    this.form.patchValue({ image: this.imageChooser.croppedImage });
 
     this.usersService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
       return this.usersService.addUser(this.username, this.email, uploadRes.imageUrl, fullName, bio);

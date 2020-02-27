@@ -9,13 +9,16 @@ import { NewPostPageRoutingModule } from './new-post-routing.module';
 import { NewPostPage } from './new-post.page';
 import { ImageChooserComponent } from '../image-chooser/image-chooser.component';
 
+import { ImageCropperModule } from 'ngx-image-cropper';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    NewPostPageRoutingModule
+    NewPostPageRoutingModule,
+    ImageCropperModule
   ],
   declarations: [NewPostPage, ImageChooserComponent],
   exports: [ImageChooserComponent]

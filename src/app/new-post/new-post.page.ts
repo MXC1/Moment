@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { AuthService } from '../auth/auth.service';
@@ -6,6 +6,7 @@ import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { switchMap, take, tap } from 'rxjs/operators';
+import { ImageChooserComponent } from '../image-chooser/image-chooser.component';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -36,6 +37,8 @@ export class NewPostPage implements OnInit {
   form: FormGroup;
   eventsSubscription: Subscription;
 
+  @ViewChild(ImageChooserComponent, { static: false }) imageChooser;
+
   constructor(private postsService: PostsService, private authService: AuthService, private navController: NavController, private router: Router) { }
 
   ngOnInit() {
@@ -49,6 +52,8 @@ export class NewPostPage implements OnInit {
 
   onPost() {
     const caption = this.form.value.caption;
+
+    this.form.patchValue({ image: this.imageChooser.croppedImage });
 
     if (!this.form.valid || !this.form.get('image').value) {
       return;
