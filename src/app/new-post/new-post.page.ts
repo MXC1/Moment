@@ -54,11 +54,6 @@ export class NewPostPage implements OnInit {
       return;
     }
 
-    // this.postsService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
-    //   const type = this.form.get('image').value.type.includes('image') ? 'image' : 'video';
-    //   return this.postsService.newPost(userId, '', caption, uploadRes.imageUrl, type);
-    // })).subscribe();
-
     this.postsService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
       const type = this.form.get('image').value.type.includes('image') ? 'image' : 'video';
 

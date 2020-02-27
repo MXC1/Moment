@@ -6,58 +6,55 @@
 
 <ion-content>
   <form [formGroup]="form">
-  <ion-grid>
-    <ion-row>
-      <ion-col class="ion-text-center">
-        <p>Sign up to start exploring your favourite content</p>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="8">
-        <ion-item>
-          <ion-label class="ion-text-center" position="floating">Email</ion-label>
-          <ion-input type="text" formControlName="email" email></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="8">
-        <ion-item>
-          <ion-label class="ion-text-center" position="floating">Full Name</ion-label>
-          <ion-input type="text" formControlName="fullName"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="8">
-        <ion-item>
-          <ion-label class="ion-text-center" position="floating">Username</ion-label>
-          <ion-input type="text" formControlName="username"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-justify-content-center" style="padding-top: 10px;">
-      <ion-col size="8">
-        <ion-item>
-          <ion-label class="ion-text-center" position="floating">Password</ion-label>
-          <ion-input type="password" formControlName="password" minLength="6"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="8">
-        <ion-item>
-          <ion-label class="ion-text-center" position="floating">Verify Password</ion-label>
-          <ion-input type="password" formControlName="verifyPassword"></ion-input>
-        </ion-item>
-        <p *ngIf="passwordMismatch" class="ion-text-center" color="danger">Two passwords don't match</p>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-text-center" style="padding-top: 10px;">
-      <ion-col>
-        <ion-button type="submit" (click)="onRegister()">Register</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</form>
+    <ion-grid>
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <p>Sign up to start exploring your favourite content</p>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="8">
+          <ion-item>
+            <ion-label class="ion-text-center" position="floating">Email *</ion-label>
+            <ion-input type="text" formControlName="email" email></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="8">
+          <ion-item>
+            <ion-label class="ion-text-center" position="floating">Username *</ion-label>
+            <ion-input type="text" formControlName="username"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center" style="padding-top: 10px;">
+        <ion-col size="8">
+          <ion-item>
+            <ion-label class="ion-text-center" position="floating">Password *</ion-label>
+            <ion-input type="password" formControlName="password" minLength="6"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="8">
+          <ion-item>
+            <ion-label class="ion-text-center" position="floating">Verify Password *</ion-label>
+            <ion-input type="password" formControlName="verifyPassword"></ion-input>
+          </ion-item>
+          <p *ngIf="passwordMismatch" class="ion-text-center" color="danger">Two passwords don't match</p>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-text-center" style="padding-top: 10px;">
+        <ion-col>
+          <ion-button type="submit" (click)="onRegister()" [disabled]="!form.valid">Register</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-text-center">
+        <ion-col>
+          <ion-button routerLink="../../login" fill="outline">Log in</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

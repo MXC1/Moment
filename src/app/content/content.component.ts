@@ -13,11 +13,10 @@ export class ContentComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-   }
+  ngOnInit() {}
 
   playPause(thisDiv) {
-    if (this.playable !== 'false') {
+    if (this.playable !== 'false' && this.content.type === 'video') {
       const thisVideo = thisDiv.children[0];
       const thisButton = thisDiv.children[1];
 

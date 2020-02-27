@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Add Personal Info</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="8">
+        <ion-item>
+          <ion-label class="ion-text-center" position="floating">Full Name</ion-label>
+          <ion-input type="text" formControlName="fullName"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="8">
+        <app-image-chooser (change)="onImageChosen($event)" message="Add An Image"></app-image-chooser>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="8">
+        <ion-item>
+          <ion-label class="ion-text-center" position="floating">Add a short Bio</ion-label>
+          <ion-textarea type="text" formControlName="bio"></ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-text-center" style="padding-top: 10px;">
+      <ion-col>
+        <ion-button type="submit" (click)="onSubmit()" [disabled]="!form.valid">Submit</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-text-center">
+      <ion-col>
+        <ion-button routerLink="/tabs/feed" fill="outline">Skip</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>
