@@ -15,10 +15,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row *ngIf="!isLoading && loadedPeople.length === 0" class="ion-text-center">
+  <ion-grid *ngIf="!isLoading">
+    <ion-row *ngIf="loadedPeople.length === 0" class="ion-text-center">
       <ion-col>
-        <p>You don't follow any events yet!</p>
+        <p>You haven't followed anyone yet!</p>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="isLoading" class="ion-justify-content-center">
@@ -28,7 +28,7 @@
     </ion-row>
     <ion-row *ngIf="!isLoading" style="padding-top:8px">
       <ion-col size="4" *ngFor="let person of loadedPeople">
-        <ion-img [src]="person.image" [routerLink]="['/event-detail', person.id]"></ion-img>
+        <ion-img [src]="person.image" [routerLink]="person.id"></ion-img>
         <p class="ion-text-center">{{person.username}}</p>
       </ion-col>
     </ion-row>

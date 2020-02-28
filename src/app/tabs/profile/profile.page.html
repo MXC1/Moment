@@ -4,6 +4,13 @@
       <ion-menu-button *ngIf="isThisUser"></ion-menu-button>
       <ion-back-button *ngIf="!isThisUser" defaultHref="/tabs/people"></ion-back-button>
     </ion-buttons>
+    <ion-buttons slot="end" *ngIf="!isFollowing && !isThisUser">
+      <ion-button (click)="onFollow()">
+        <ion-label>Follow</ion-label>
+        <ion-icon name="person-add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-label slot="end" *ngIf="isFollowing && !isThisUser" style="padding-right: 5px;">Following</ion-label>
     <ion-title>Moment</ion-title>
   </ion-toolbar>
 </ion-header>

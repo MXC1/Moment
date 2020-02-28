@@ -65,6 +65,7 @@ export class SearchComponent implements OnInit {
     if (!this.filteredUsers) {
       this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
         this.filteredUsers = users.filter(user => {
+          console.log(user);
           return (user.username.includes(searchValue) || user.fullName.includes(searchValue));
         });
       });
@@ -75,7 +76,6 @@ export class SearchComponent implements OnInit {
         });
       });
     }
-    console.log(this.filteredUsers);
   }
 
   filterEvents(searchValue: string) {

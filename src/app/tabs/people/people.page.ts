@@ -18,10 +18,28 @@ export class PeoplePage implements OnInit {
   constructor(private authService: AuthService, private usersService: UsersService, private modalController: ModalController) { }
 
   ngOnInit() {
+    this.refreshFollows()
+  }
+
+  ionViewWillEnter() {
+    this.refreshFollows();
+  }
+
+  refreshFollows() {
     this.isLoading = true;
     this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
-      this.loadedPeople = users;
-      this.isLoading = false;
+      this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+        this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
+          this.loadedPeople = users.filter(user => {
+            for (const friend of thisUser.friendIds) {
+              if (friend) {
+                return friend === user.id;
+              }
+            }
+          });
+          this.isLoading = false;
+        });
+      });
     });
   }
 

@@ -21,8 +21,44 @@ export class ProfilePage implements OnInit {
   isLoading = false;
 
   isThisUser;
+  isFollowing: boolean;
 
   constructor(private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private route: ActivatedRoute) { }
+
+
+  ngOnInit() {
+    this.isLoading = true;
+
+    let userId;
+
+    this.route.paramMap.subscribe(paramMap => {
+      if (!paramMap.has('userId')) {
+
+        this.authService.getUserId.pipe(take(1)).subscribe(id => {
+          if (!id) {
+            throw new Error('No User ID Found!');
+          } else {
+            this.isThisUser = true;
+            this.isFollowing = false;
+            this.getUser(id);
+          }
+        });
+      } else {
+        userId = paramMap.get('userId');
+        this.isThisUser = false;
+
+        this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+
+          this.usersService.isFollowing(thisUserId, userId).pipe(take(1)).subscribe(isFollowing => {
+            this.isFollowing = isFollowing.length !== 1;
+            console.log(isFollowing);
+          });
+        });
+
+        this.getUser(userId);
+      }
+    });
+  }
 
   getUserImage() {
     let thisImage: string;
@@ -38,30 +74,6 @@ export class ProfilePage implements OnInit {
     return thisImage;
   }
 
-  ngOnInit() {
-    this.isLoading = true;
-
-    let userId;
-
-    this.route.paramMap.subscribe(paramMap => {
-      if (!paramMap.has('userId')) {
-
-        this.authService.getUserId.pipe(take(1)).subscribe(id => {
-          if (!id) {
-            throw new Error('No User ID Found!');
-          } else {
-            this.isThisUser = true;
-            this.getUser(id);
-          }
-        });
-      } else {
-        userId = paramMap.get('userId');
-        this.isThisUser = false;
-        this.getUser(userId);
-      }
-    });
-  }
-
   getUser(userId: string) {
     this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
       this.user = user;
@@ -73,6 +85,11 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  postDetail(post: Post) { }
+  onFollow() {
+    this.authService.getUserId.pipe(take(1)).subscribe(id => {
+      this.usersService.follow(id, this.user.id).subscribe();
+      this.isFollowing = true;
+    });
+  }
 
 }
