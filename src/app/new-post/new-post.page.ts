@@ -46,7 +46,9 @@ export class NewPostPage implements OnInit {
       caption: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(255)]
       }),
-      image: new FormControl(null)
+      image: new FormControl(null, {
+        validators: [Validators.required]
+      })
     });
   }
 

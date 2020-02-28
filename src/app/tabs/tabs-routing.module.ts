@@ -13,8 +13,8 @@ const routes: Routes = [
         loadChildren: () => import('./feed/feed.module').then( m => m.FeedPageModule)
       },
       {
-        path: 'search',
-        loadChildren: () => import('./search/search.module').then( m => m.SearchPageModule)
+        path: 'people',
+        loadChildren: () => import('./people/people.module').then( m => m.PeoplePageModule)
       },
       {
         path: 'feed',
@@ -30,6 +30,7 @@ const routes: Routes = [
       }
     ]
   }
+
 ];
 
 @NgModule({

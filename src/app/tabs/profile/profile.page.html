@@ -11,12 +11,12 @@
   <ion-grid class="ion-no-margin" *ngIf="!isLoading">
     <ion-card class="ion-no-margin">
       <ion-row>
-        <ion-col class="ion-align-self-center" size="4" style="padding-left: 10px;">
+        <ion-col class="ion-align-self-center" size="4" style="padding: 10px;">
           <ion-avatar>
             <img [src]="user.image">
           </ion-avatar>
         </ion-col>
-        <ion-col class="ion-no-margin" size="8" style="padding-top: 10px; padding-left: 10px;">
+        <ion-col class="ion-no-margin" size="8" style="padding: 10px;">
           <ion-row *ngIf="user.fullName.length !== 0">
             <ion-card-title class="title-name ion-text-wrap ion-wrap" text-wrap>{{ user.fullName }}</ion-card-title>
           </ion-row>

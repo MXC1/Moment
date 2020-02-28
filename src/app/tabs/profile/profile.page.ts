@@ -42,8 +42,6 @@ export class ProfilePage implements OnInit {
         throw new Error('No User ID Found!');
       } else {
         this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
-          console.log(userId);
-          console.log(user);
           this.user = user;
           this.postsService.fetchPosts().pipe(map(posts => posts.filter(
             post => post.userId === userId))).subscribe(posts => {

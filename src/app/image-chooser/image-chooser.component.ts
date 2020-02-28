@@ -34,6 +34,7 @@ export class ImageChooserComponent implements OnInit {
   // @Output() chosenImage = new EventEmitter<string | File>();
   selectedImage: string;
   type: 'image' | 'video';
+  @Output() isLoading = false;
 
   useChooser = false;
   @ViewChild('fileChooser', { static: false }) fileChooserRef: ElementRef<HTMLInputElement>;
@@ -66,7 +67,6 @@ export class ImageChooserComponent implements OnInit {
       this.selectedImage = image.dataUrl;
       // this.chosenImage.emit(image.dataUrl);
       this.type = this.selectedImage.includes('image') ? 'image' : 'video';
-
     }).catch(error => {
       console.log(error);
       return false;
@@ -91,9 +91,11 @@ export class ImageChooserComponent implements OnInit {
   imageCropped(event: ImageCroppedEvent) {
     this.imagePreview = event.base64;
     this.croppedImage = this.dataURLtoFile(event.base64, event.base64);
+    this.isLoading = false;
   }
 
   onFileChosen(event: Event) {
+    this.isLoading = true;
     const chosenFile = (event.target as HTMLInputElement).files[0];
 
     if (!chosenFile) {
