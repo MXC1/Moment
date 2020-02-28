@@ -8,6 +8,8 @@ import { EventsService } from 'src/app/events.service';
 import { EventContent } from 'src/app/event';
 import { Router } from '@angular/router';
 import { take } from 'rxjs/operators';
+import { ModalController } from '@ionic/angular';
+import { SearchComponent } from 'src/app/search/search.component';
 
 @Component({
   selector: 'app-feed',
@@ -16,7 +18,7 @@ import { take } from 'rxjs/operators';
 })
 export class FeedPage implements OnInit, OnDestroy {
 
-  constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router) { }
+  constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController) { }
   loadedPosts: Post[];
   loadedUsers: User[];
   loadedEvents: EventContent[];
@@ -69,6 +71,12 @@ export class FeedPage implements OnInit, OnDestroy {
     if (this.loadedEvents) {
       return this.loadedEvents.find(event => event.id === id);
     }
+  }
+
+  onSearch() {
+    this.modalController.create({ component: SearchComponent, componentProps: { toSearch: 'posts' } }).then(modalElement => {
+      modalElement.present();
+    });
   }
 
   playPause(thisDiv) {

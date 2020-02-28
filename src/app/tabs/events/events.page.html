@@ -7,10 +7,10 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button routerLink="/new-event" size="small">
+      <ion-button (click)="onSearch()" size="small">
         <ion-icon name="search" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button routerLink="/new-event">
+      <ion-button routerLink="/">
         <ion-icon name="add" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -32,7 +32,7 @@
     <ion-row *ngIf="!isLoading" style="padding-top:8px">
       <ion-col size="4" *ngFor="let event of loadedEvents">
         <ion-img [src]="event.headerImage" [routerLink]="['/event-detail', event.id]"></ion-img>
-        <p>{{event.name}}</p>
+        <p class="ion-text-center">{{event.name}}</p>
       </ion-col>
     </ion-row>
   </ion-grid>

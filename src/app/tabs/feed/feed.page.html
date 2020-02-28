@@ -7,7 +7,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button routerLink="/new-post" size="small">
+      <ion-button (click)="onSearch()" size="small">
         <ion-icon name="search" slot="icon-only"></ion-icon>
       </ion-button>
       <ion-button routerLink="/new-post" size="large">

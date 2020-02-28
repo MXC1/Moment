@@ -18,11 +18,13 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+        loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
+        canLoad: [AuthGuard]
       },
       {
         path: ':postId',
-        loadChildren: () => import('./post-detail/post-detail.module').then(m => m.PostDetailPageModule)
+        loadChildren: () => import('./post-detail/post-detail.module').then(m => m.PostDetailPageModule),
+        canLoad: [AuthGuard]
       }
     ],
     canLoad: [AuthGuard]
@@ -32,11 +34,13 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+        loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
+        canLoad: [AuthGuard]
       },
       {
         path: ':eventId',
-        loadChildren: () => import('./event-detail/event-detail.module').then(m => m.EventDetailPageModule)
+        loadChildren: () => import('./event-detail/event-detail.module').then(m => m.EventDetailPageModule),
+        canLoad: [AuthGuard]
       }
     ],
     canLoad: [AuthGuard]

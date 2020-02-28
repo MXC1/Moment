@@ -7,7 +7,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button routerLink="/new-event" size="small">
+      <ion-button (click)="onSearch()" size="small">
         <ion-icon name="search" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -28,8 +28,8 @@
     </ion-row>
     <ion-row *ngIf="!isLoading" style="padding-top:8px">
       <ion-col size="4" *ngFor="let person of loadedPeople">
-        <ion-img [src]="person.headerImage" [routerLink]="['/event-detail', person.id]"></ion-img>
-        <p>{{person.name}}</p>
+        <ion-img [src]="person.image" [routerLink]="['/event-detail', person.id]"></ion-img>
+        <p class="ion-text-center">{{person.username}}</p>
       </ion-col>
     </ion-row>
   </ion-grid>

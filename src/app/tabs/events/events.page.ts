@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { EventsService } from 'src/app/events.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { take } from 'rxjs/operators';
+import { ModalController } from '@ionic/angular';
+import { SearchComponent } from 'src/app/search/search.component';
 
 @Component({
   selector: 'app-events',
@@ -15,7 +17,7 @@ export class EventsPage implements OnInit, OnDestroy {
   private eventsSubscription: Subscription;
   isLoading = false;
 
-  constructor(private eventsService: EventsService, private authService: AuthService) { }
+  constructor(private eventsService: EventsService, private authService: AuthService, private modalController: ModalController) { }
 
   ngOnInit() {
     this.isLoading = true;
@@ -60,6 +62,12 @@ export class EventsPage implements OnInit, OnDestroy {
           });
         });
       }
+    });
+  }
+
+  onSearch() {
+    this.modalController.create({ component: SearchComponent, componentProps: { toSearch: 'events' } }).then(modalElement => {
+      modalElement.present();
     });
   }
 }

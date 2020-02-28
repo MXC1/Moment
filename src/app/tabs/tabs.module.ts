@@ -9,6 +9,7 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 import { TabsPage } from './tabs.page';
 import { NewPostPageModule } from '../new-post/new-post.module';
 import { NewEventPageModule } from '../new-event/new-event.module';
+import { SearchComponent } from '../search/search.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { NewEventPageModule } from '../new-event/new-event.module';
     NewPostPageModule,
     NewEventPageModule
   ],
-  declarations: [TabsPage]
+  declarations: [TabsPage, SearchComponent],
+  entryComponents: [SearchComponent]
 })
 export class TabsPageModule {}
