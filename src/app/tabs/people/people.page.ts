@@ -18,7 +18,7 @@ export class PeoplePage implements OnInit {
   constructor(private authService: AuthService, private usersService: UsersService, private modalController: ModalController) { }
 
   ngOnInit() {
-    this.refreshFollows()
+    this.refreshFollows();
   }
 
   ionViewWillEnter() {

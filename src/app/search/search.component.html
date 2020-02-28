@@ -39,6 +39,44 @@
         </ion-row>
       </ion-item>
     </ion-list>
+    <ion-list *ngIf="toSearch === 'events'">
+      <ion-item *ngFor="let event of filteredEvents" [routerLink]="['/', 'event-detail', event.id]" (click)="closeModal()">
+        <ion-row>
+          <ion-col size="3">
+            <ion-avatar>
+              <ion-img [src]="event.headerImage"></ion-img>
+            </ion-avatar>
+          </ion-col>
+          <ion-col size="9" style="margin-top: auto; margin-bottom: auto;">
+            <ion-row>
+              <ion-label class="fullName">{{ event.name }}</ion-label>
+            </ion-row>
+            <ion-row style="padding-top: 10px;">
+              <ion-label class="username">{{ event.location }}</ion-label>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+    <ion-list *ngIf="toSearch === 'posts'">
+      <ion-item *ngFor="let post of filteredPosts" [routerLink]="['/', 'post-detail', post.id]" (click)="closeModal()">
+        <ion-row>
+          <ion-col size="3">
+            <ion-avatar>
+              <ion-img [src]="post.content"></ion-img>
+            </ion-avatar>
+          </ion-col>
+          <ion-col size="9" style="margin-top: auto; margin-bottom: auto;">
+            <ion-row>
+              <ion-label class="fullName">{{ post.caption }}</ion-label>
+            </ion-row>
+            <ion-row style="padding-top: 10px;">
+              <ion-label class="username">{{ getEvent(post.eventId)?.name }}</ion-label>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+    </ion-list>
   </ion-grid>
 </ion-content>
 

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
 import { EventsService } from '../events.service';
 import { NavController } from '@ionic/angular';
 import { switchMap, take, tap } from 'rxjs/operators';
+import { ImageChooserComponent } from '../image-chooser/image-chooser.component';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -33,6 +34,8 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
 export class NewEventPage implements OnInit {
   form: FormGroup;
 
+  @ViewChild(ImageChooserComponent, { static: false }) imageChooser;
+
   constructor(private eventsService: EventsService, private authService: AuthService, private navController: NavController) { }
 
   ngOnInit() {
@@ -52,13 +55,15 @@ export class NewEventPage implements OnInit {
     const name = this.form.value.name;
     const location = this.form.value.location;
     const type = this.form.value.type;
-    const headerImage = this.form.get('image').value;
+
+    this.form.patchValue({ image: this.imageChooser.croppedImage });
+
 
     if (!this.form.valid) {
       return;
     }
 
-    this.eventsService.uploadImage(headerImage).pipe(switchMap(uploadRes => {
+    this.eventsService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
       return this.authService.getUserId.pipe(take(1), tap(userId => {
         if (!userId) {
           throw new Error('No User ID Found!');

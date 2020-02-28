@@ -7,6 +7,7 @@ import { UsersService } from '../users.service';
 import { PostsService } from '../posts.service';
 import { EventsService } from '../events.service';
 import { take } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-search',
@@ -14,14 +15,14 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent implements OnInit {
-  @Input() toSearch: 'people' | 'posts' | 'users';
+  @Input() toSearch: 'people' | 'posts' | 'events';
   filteredUsers: User[];
   filteredPosts: Post[];
   filteredEvents: EventContent[];
 
   isLoading = false;
 
-  constructor(private modalController: ModalController, private usersService: UsersService, private postsService: PostsService, private eventsService: EventsService) { }
+  constructor(private modalController: ModalController, private usersService: UsersService, private postsService: PostsService, private eventsService: EventsService, private authService: AuthService) { }
 
   ngOnInit() { }
 
@@ -46,7 +47,7 @@ export class SearchComponent implements OnInit {
 
         break;
       }
-      case 'users': {
+      case 'events': {
         this.filterEvents(searchValue);
         this.isLoading = false;
 
@@ -66,7 +67,8 @@ export class SearchComponent implements OnInit {
       this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
         this.filteredUsers = users.filter(user => {
           console.log(user);
-          return (user.username.includes(searchValue) || user.fullName.includes(searchValue));
+          return (user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase()));
+
         });
       });
     } else {
@@ -79,10 +81,44 @@ export class SearchComponent implements OnInit {
   }
 
   filterEvents(searchValue: string) {
-
+    if (!this.filteredEvents) {
+      this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
+        this.filteredEvents = events.filter(event => {
+          return (event.name.includes(searchValue) || event.name.includes(searchValue.toUpperCase()) || event.name.includes(searchValue.toLowerCase()));
+        });
+      });
+    } else {
+      this.eventsService.getEvents.pipe(take(1)).subscribe(events => {
+        this.filteredEvents = events.filter(event => {
+          return (event.name.includes(searchValue) || event.name.includes(searchValue.toUpperCase()) || event.name.includes(searchValue.toLowerCase()));
+        });
+      });
+    }
   }
 
   filterPosts(searchValue: string) {
+    if (!this.filteredPosts) {
+      this.postsService.fetchPosts().pipe(take(1)).subscribe(posts => {
+        this.filteredPosts = posts.filter(post => {
+          return (post.caption.includes(searchValue));
+        });
+      });
+    } else {
+      this.postsService.getPosts.pipe(take(1)).subscribe(posts => {
+        this.filteredPosts = posts.filter(post => {
+          return (post.caption.includes(searchValue) || post.caption.includes(searchValue.toUpperCase()) || post.caption.includes(searchValue.toLowerCase()));
+        });
+      });
+    }
+  }
 
+  getEvent(eventId: string) {
+    let returnEvent;
+    this.authService.getToken.pipe(take(1)).subscribe(token => {
+      this.eventsService.getEvent(eventId).pipe(take(1)).subscribe(event => {
+        event = event;
+      });
+    });
+    return returnEvent;
   }
 }
