@@ -1,42 +1,50 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/events"></ion-back-button>
+<ion-back-button defaultHref="/tabs/events"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">Moment</ion-title>
+    <ion-buttons slot="end" *ngIf="!isFollowing">
+      <ion-button (click)="onFollowEvent()">
+        <ion-label>Follow</ion-label>
+        <ion-icon name="person-add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-label slot="end" *ngIf="isFollowing" style="padding-right: 5px;">Following</ion-label>
+    <ion-icon name="checkmark" *ngIf="isFollowing"></ion-icon>
+    <ion-title>Moment</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-grid class="ion-no-margin" *ngIf="!isLoading">
-    <ion-row>
-      <ion-col size="3"></ion-col>
-      <ion-col>
-        <ion-card>
-          <img [src]="event.headerImage">
-        </ion-card>
+    <ion-card class="ion-no-margin">
+      <ion-row>
+        <ion-col class="ion-align-self-center" style="padding: 10px;">
+          <ion-img [src]="event.headerImage"></ion-img>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="ion-no-margin" style="padding: 10px;">
+          <ion-row class="ion-justify-content-center">
+            <ion-label>{{ event.name }}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-center">
+            <ion-label>@ {{ event.location }}</ion-label>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+    <ion-row *ngIf="!isLoading && eventPosts.length === 0" style="padding-top: 10px;"
+      class="ion-justify-content-center">
+      <ion-col class="ion-text-center">
+        <p>This event has no content yet</p>
+        <ion-button routerLink="../../../new-post">Upload Something</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row style="padding-top:8px" *ngIf="!isLoading && eventPosts.length !== 0">
+      <ion-col size="4" *ngFor="let post of eventPosts" [routerLink]="['/post-detail', post.id]">
+        <app-content [content]="this.post" playable="false" square="square"></app-content>
       </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
-
-<!-- <ion-card class="ion-no-margin">
-  <ion-card-content>
-  <ion-row>
-    <ion-col class="ion-align-self-center">
-      <ion-img [src]="event.headerImage"></ion-img>
-    </ion-col>
-  </ion-row>
-  <ion-row style="padding-left: 6.25%; padding-top: 2.5%;">
-    <ion-col>
-      <h1>{{event.name}}</h1>
-    </ion-col>
-  </ion-row>
-</ion-card-content>
-</ion-card>
-<ion-row style="padding-top:8px">
-  <ion-col size="4" *ngFor="let post of eventPosts">
-    <ion-img style="background-size: cover;" [src]="post.content" [routerLink]="['/post-detail', post.id]">
-    </ion-img>
-  </ion-col>
-</ion-row> -->

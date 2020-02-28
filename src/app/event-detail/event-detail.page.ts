@@ -19,6 +19,7 @@ export class EventDetailPage implements OnInit, OnDestroy {
   private postsSubscription: Subscription;
   private eventsSubscription: Subscription;
   private usersSubscription: Subscription;
+  isFollowing = false;
   isLoading = false;
 
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController) { }
@@ -33,19 +34,25 @@ export class EventDetailPage implements OnInit, OnDestroy {
       this.isLoading = true;
       this.eventsSubscription = this.eventsService.getEvent(paramMap.get('eventId')).subscribe(event => {
         this.event = event;
-        this.isLoading = false;
+        this.postsSubscription = this.postsService.getPosts.subscribe(posts => {
+          this.eventPosts = posts.filter(post => post.eventId === eventId);
+          this.isLoading = false;
+        });
       }, error => {
-        this.alertController.create({header: 'An Error Occurred', message: 'Event could not be found. Please try again later.', buttons: [{text: 'Okay', handler: () => {
-          this.navController.navigateBack('/tabs/events');
-        }}]}).then(alertElement => {
+        this.alertController.create({
+          header: 'An Error Occurred', message: 'Event could not be found. Please try again later.', buttons: [{
+            text: 'Okay', handler: () => {
+              this.navController.navigateBack('/tabs/events');
+            }
+          }]
+        }).then(alertElement => {
           alertElement.present();
         });
       });
-      this.postsSubscription = this.postsService.getPosts.subscribe(posts => {
-        posts.filter(post => post.eventId === eventId);
-      });
     });
   }
+
+  onFollowEvent() {}
 
   ngOnDestroy() {
     if (this.eventsSubscription) {
