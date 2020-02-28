@@ -6,6 +6,7 @@ import { User } from 'src/app/user';
 import { Post } from 'src/app/post';
 import { PostsService } from 'src/app/posts.service';
 import { filter, take, map } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -19,7 +20,9 @@ export class ProfilePage implements OnInit {
   posts: Post[];
   isLoading = false;
 
-  constructor(private authService: AuthService, private usersService: UsersService, private postsService: PostsService) { }
+  isThisUser;
+
+  constructor(private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private route: ActivatedRoute) { }
 
   getUserImage() {
     let thisImage: string;
@@ -37,19 +40,36 @@ export class ProfilePage implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-      if (!userId) {
-        throw new Error('No User ID Found!');
-      } else {
-        this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
-          this.user = user;
-          this.postsService.fetchPosts().pipe(map(posts => posts.filter(
-            post => post.userId === userId))).subscribe(posts => {
-              this.posts = posts;
-              this.isLoading = false;
-            });
+
+    let userId;
+
+    this.route.paramMap.subscribe(paramMap => {
+      if (!paramMap.has('userId')) {
+
+        this.authService.getUserId.pipe(take(1)).subscribe(id => {
+          if (!id) {
+            throw new Error('No User ID Found!');
+          } else {
+            this.isThisUser = true;
+            this.getUser(id);
+          }
         });
+      } else {
+        userId = paramMap.get('userId');
+        this.isThisUser = false;
+        this.getUser(userId);
       }
+    });
+  }
+
+  getUser(userId: string) {
+    this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
+      this.user = user;
+      this.postsService.fetchPosts().pipe(map(posts => posts.filter(
+        post => post.userId === userId))).subscribe(posts => {
+          this.posts = posts;
+          this.isLoading = false;
+        });
     });
   }
 
