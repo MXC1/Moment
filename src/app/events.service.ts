@@ -29,9 +29,10 @@ export class EventsService {
           eventId = resData.name;
           return this.events;
         }), take(1),
-          tap(users => {
+          map(events => {
             newEvent.id = eventId;
-            this.events.next(users.concat(newEvent));
+            this.events.next(events.concat(newEvent));
+            return newEvent;
           }));
     }));
   }

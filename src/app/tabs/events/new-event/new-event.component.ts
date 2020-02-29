@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthService } from '../auth/auth.service';
-import { EventsService } from '../events.service';
-import { NavController } from '@ionic/angular';
-import { switchMap, take, tap } from 'rxjs/operators';
-import { ImageChooserComponent } from '../image-chooser/image-chooser.component';
+import { ImageChooserComponent } from 'src/app/image-chooser/image-chooser.component';
+import { EventsService } from 'src/app/events.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { NavController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { switchMap, take, tap } from 'rxjs/operators';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -28,16 +28,16 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
 };
 
 @Component({
-  selector: 'app-new-post',
-  templateUrl: './new-event.page.html',
-  styleUrls: ['./new-event.page.scss'],
+  selector: 'app-new-event',
+  templateUrl: './new-event.component.html',
+  styleUrls: ['./new-event.component.scss'],
 })
-export class NewEventPage implements OnInit {
+export class NewEventComponent implements OnInit {
   form: FormGroup;
 
   @ViewChild(ImageChooserComponent, { static: false }) imageChooser;
 
-  constructor(private eventsService: EventsService, private authService: AuthService, private navController: NavController, private router: Router) { }
+  constructor(private eventsService: EventsService, private authService: AuthService, private navController: NavController, private router: Router, private modalController: ModalController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -59,7 +59,6 @@ export class NewEventPage implements OnInit {
 
     this.form.patchValue({ image: this.imageChooser.croppedImage });
 
-
     if (!this.form.valid) {
       return;
 
@@ -70,12 +69,12 @@ export class NewEventPage implements OnInit {
         if (!userId) {
           throw new Error('No User ID Found!');
         } else {
-          return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId).subscribe();
+          return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId).subscribe(newEvent => {
+            this.modalController.dismiss( newEvent );
+          });
         }
       }));
-    })).subscribe(() => {
-      this.router.navigateByUrl('/tabs/events');
-    });
+    })).subscribe();
   }
 
   onImageChosen(imageData: string) {

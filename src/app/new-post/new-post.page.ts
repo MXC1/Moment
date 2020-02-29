@@ -2,11 +2,15 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { AuthService } from '../auth/auth.service';
-import { NavController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { switchMap, take, tap } from 'rxjs/operators';
 import { ImageChooserComponent } from '../image-chooser/image-chooser.component';
+import { EventContent } from '../event';
+import { EventsService } from '../events.service';
+import { NewEventComponent } from '../tabs/events/new-event/new-event.component';
+import { IonicSelectableComponent } from 'ionic-selectable';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -36,24 +40,53 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
 export class NewPostPage implements OnInit {
   form: FormGroup;
   eventsSubscription: Subscription;
+  loadedEvents: EventContent[];
+  loadedEventNames: string[] = [];
 
   @ViewChild(ImageChooserComponent, { static: false }) imageChooser;
+  @ViewChild(IonicSelectableComponent, { static: false }) eventSelector;
+  event: EventContent;
 
-  constructor(private postsService: PostsService, private authService: AuthService, private navController: NavController, private router: Router) { }
+  constructor(private postsService: PostsService, private authService: AuthService, private eventsService: EventsService, private navController: NavController, private router: Router, private modalController: ModalController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
       caption: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(255)]
       }),
+      event: new FormControl(null),
       image: new FormControl(null, {
         validators: [Validators.required]
       })
     });
+
+    this.fetchEvents();
+  }
+
+  fetchEvents() {
+    this.eventsSubscription = this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
+      this.loadedEvents = events;
+      // console.log(events);
+    });
+  }
+
+  onEventSelect(event) {
+    this.form.patchValue({ event: event.value.id });
+  }
+
+  async onAddEvent(event) {
+    const newEventModal = await this.modalController.create({ component: NewEventComponent, showBackdrop: true, id: 'eventModal' });
+    newEventModal.onDidDismiss().then(data => {
+      this.event = data.data;
+      this.eventSelector.close();
+      this.form.patchValue({ event: data.data.id });
+    });
+    await newEventModal.present();
   }
 
   onPost() {
     const caption = this.form.value.caption;
+    const eventId = this.form.value.event;
 
     this.form.patchValue({ image: this.imageChooser.croppedImage });
 
@@ -68,7 +101,7 @@ export class NewPostPage implements OnInit {
         if (!userId) {
           throw new Error('No User ID Found!');
         } else {
-          return this.postsService.newPost(userId, '', caption, uploadRes.imageUrl, type).subscribe();
+          return this.postsService.newPost(userId, eventId, caption, uploadRes.imageUrl, type).subscribe();
         }
       }));
     })).subscribe();
@@ -105,7 +138,4 @@ export class NewPostPage implements OnInit {
       thisButton.style = 'display: inline';
     }
   }
-
-  searchEvents() { }
-
 }

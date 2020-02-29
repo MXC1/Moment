@@ -98,13 +98,7 @@ export class UsersService {
   isFollowing(userId: string, userToCheckId: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(tap(ids => {
-        // console.log(ids);
-
         return ids.find(id => {
-          console.log(id);
-          console.log(userToCheckId);
-
-
           return id !== userToCheckId;
         });
       }));

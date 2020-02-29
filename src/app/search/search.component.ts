@@ -60,15 +60,11 @@ export class SearchComponent implements OnInit {
     }
   }
 
-  // console.log(event.srcElement.value);
-
   filterUsers(searchValue: string) {
     if (!this.filteredUsers) {
       this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
         this.filteredUsers = users.filter(user => {
-          console.log(user);
           return (user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase()));
-
         });
       });
     } else {

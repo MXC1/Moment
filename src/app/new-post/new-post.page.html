@@ -31,8 +31,11 @@
       <ion-row class="ion-justify-content-center">
         <ion-col size="8">
           <ion-item>
-            <ion-label class="ion-text-center" position="floating">Event</ion-label>
-            <ion-input (input)="searchEvents()"></ion-input>
+            <!-- <ion-label class="ion-text-center" position="floating">Event</ion-label> -->
+            <!-- <ion-input (input)="searchEvents()"></ion-input> -->
+            <ion-label class="ion-text-center">Event</ion-label>
+            <ionic-selectable [(ngModel)]="event" [ngModelOptions]="{standalone: true}" [items]="loadedEvents"  [canAddItem]="true" (onAddItem)="onAddEvent($event)" itemValueField="id"
+            itemTextField="name" [canSearch]="true" (onChange)="onEventSelect($event)"></ionic-selectable>
           </ion-item>
         </ion-col>
       </ion-row>

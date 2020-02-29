@@ -51,7 +51,6 @@ export class ProfilePage implements OnInit {
 
           this.usersService.isFollowing(thisUserId, userId).pipe(take(1)).subscribe(isFollowing => {
             this.isFollowing = isFollowing.length !== 1;
-            console.log(isFollowing);
           });
         });
 

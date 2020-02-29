@@ -11,6 +11,11 @@ import { ImageChooserComponent } from '../image-chooser/image-chooser.component'
 
 import { ImageCropperModule } from 'ngx-image-cropper';
 
+import { IonicSelectableModule } from 'ionic-selectable';
+import { NewEventPageModule } from '../new-event/new-event.module';
+import { NewEventPage } from '../new-event/new-event.page';
+import { NewEventComponent } from '../tabs/events/new-event/new-event.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -18,9 +23,11 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     ReactiveFormsModule,
     IonicModule,
     NewPostPageRoutingModule,
-    ImageCropperModule
+    ImageCropperModule,
+    IonicSelectableModule
   ],
-  declarations: [NewPostPage, ImageChooserComponent],
+  entryComponents: [NewEventComponent],
+  declarations: [NewPostPage, ImageChooserComponent, NewEventComponent],
   exports: [ImageChooserComponent]
 })
 export class NewPostPageModule {}

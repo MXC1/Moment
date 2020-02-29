@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Post } from 'src/app/post';
 import { PostsService } from 'src/app/posts.service';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { UsersService } from 'src/app/users.service';
 import { User } from 'src/app/user';
 import { EventsService } from 'src/app/events.service';
 import { EventContent } from 'src/app/event';
 import { Router } from '@angular/router';
-import { take } from 'rxjs/operators';
+import { take, switchMap } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
 import { SearchComponent } from 'src/app/search/search.component';
 
@@ -38,7 +38,7 @@ export class FeedPage implements OnInit, OnDestroy {
         this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
           this.loadedUsers = users;
           this.isLoading = false;
-        })
+        });
       });
     });
   }
@@ -68,6 +68,12 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   getEvent(id: string): EventContent {
+    // let event;
+    // this.eventsService.getEvent(id).pipe(take(1)).subscribe(fetchedEvent => {
+    //   event = fetchedEvent;
+    // });
+    // return event;
+
     if (this.loadedEvents) {
       return this.loadedEvents.find(event => event.id === id);
     }
