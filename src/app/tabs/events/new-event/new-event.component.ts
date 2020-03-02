@@ -94,4 +94,8 @@ export class NewEventComponent implements OnInit {
     this.form.patchValue({ image: imageFile.target.files[0] });
   }
 
+  closeModal() {
+    this.modalController.dismiss();
+  }
+
 }

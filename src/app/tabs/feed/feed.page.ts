@@ -30,25 +30,70 @@ export class FeedPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
-      this.authService.getUserId.pipe(take(1)).subscribe(id => {
-        this.usersService.getUser(id).pipe(take(1)).subscribe(currentUser => {
-          this.loadedPosts = posts.filter(post => {
-            for (const person of currentUser.friendIds) {
-              return post.userId === person;
-            }
+    this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
+      this.loadedEvents = events;
+      this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
+        this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+          this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
+            this.loadedPosts = posts.filter(post => {
+              let showPost: boolean;
+              currentUser.friendIds.forEach(person => {
+                showPost = person === post.userId;
+              });
+
+              this.loadedEvents.forEach(event => {
+                if (event.id === post.eventId) {
+                  event.followerIds.forEach(follower => {
+                    showPost = follower === userId;
+                  });
+                }
+              });
+
+              return showPost;
+            });
           });
-        });
-      });
-      this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
-        this.loadedEvents = events;
-        this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
-          this.loadedUsers = users;
-          this.isLoading = false;
+          this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
+            this.loadedUsers = users;
+            this.isLoading = false;
+          });
         });
       });
     });
   }
+  // this.isLoading = true;
+  // this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
+  //   this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+  //     this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
+  //       this.loadedPosts = posts.filter(post => {
+  //         let showPost: boolean;
+  //         currentUser.friendIds.forEach(person => {
+  //           showPost = person === post.userId;
+  //         });
+
+  //         if (post.eventId) {
+  //           this.eventsService.getEvent(post.eventId).pipe(take(1)).subscribe(event => {
+  //             event.followerIds.forEach(follower => {
+  //               // if (!showPost) {
+  //                 showPost = follower === userId;
+  //                 console.log(showPost);
+
+  //               // }
+  //             });
+  //           });
+  //         }
+
+  //         return showPost;
+  //       });
+  //       this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
+  //         this.loadedEvents = events;
+  //         this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
+  //           this.loadedUsers = users;
+  //           this.isLoading = false;
+  //         });
+  //       });
+  //     });
+  //   });
+  // });
 
   ngOnDestroy() {
     if (this.postsSubscription) {
@@ -63,9 +108,9 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.postsService.getPosts.subscribe(posts => {
-      this.loadedPosts = posts;
-    });
+    // this.postsService.getPosts.subscribe(posts => {
+    //   this.loadedPosts = posts;
+    // });
   }
 
   getUser(id: string): User {

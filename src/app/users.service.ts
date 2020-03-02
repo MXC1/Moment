@@ -56,7 +56,7 @@ export class UsersService {
   addUser(username: string, email: string, image: string, fullName: string, bio: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.authService.getUserId.pipe(take(1), switchMap(userId => {
-        const newUser = new User(userId, username, email, image, fullName, bio, [''], [''], ['']);
+        const newUser = new User(userId, username, email, image, fullName, bio, [''], [userId], ['']);
         return this.http.put<{ name: string }>(`https://mmnt-io.firebaseio.com/users/${userId}.json/?auth=${token}`, { ...newUser, id: null })
           .pipe(take(1), switchMap(resData => {
             return this.users;
