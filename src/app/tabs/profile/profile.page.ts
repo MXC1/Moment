@@ -88,7 +88,9 @@ export class ProfilePage implements OnInit {
 
   onFollow() {
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
-      this.usersService.follow(id, this.user.id).subscribe();
+      this.usersService.follow(id, this.user.id).subscribe(() => {
+        this.postsService.fetchPosts().subscribe();
+      });
       this.isFollowing = true;
     });
   }

@@ -2,6 +2,14 @@ ion-avatar {
   padding: 10px;
   width: 100% !important;
   height: 100% !important;
-//   max-width: 75px !important; //any size
-//   max-height: 75px !important; //any size
+}
+
+.square {
+  ion-img {
+    width: 50px !important;
+  }
+
+  video {
+    width: 50px !important;
+  }
 }

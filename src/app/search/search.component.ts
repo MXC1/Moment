@@ -122,21 +122,10 @@ export class SearchComponent implements OnInit {
     const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId } });
     onEventDetailModal.onDidDismiss().then(didFollow => {
       if (didFollow.data.didFollow) {
-        this.eventsService.fetchEvents().subscribe(() => {
-          console.log('fetchedEvents');
-        });
+        this.eventsService.fetchEvents().subscribe();
+        this.postsService.fetchPosts().subscribe();
       }
     });
     onEventDetailModal.present();
-  }
-
-  async onPersonDetail(personId: string) {
-    const onPersonDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { personId } });
-    onPersonDetailModal.onDidDismiss().then(didFollow => {
-      if (didFollow) {
-        this.usersService.fetchUsers().subscribe();
-      }
-    });
-    onPersonDetailModal.present();
   }
 }

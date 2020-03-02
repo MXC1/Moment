@@ -62,7 +62,8 @@
         <ion-row>
           <ion-col size="3">
             <ion-avatar>
-              <ion-img [src]="post.content"></ion-img>
+              <!-- <ion-img [src]="post.content"></ion-img> -->
+              <app-content [content]="post" playable="false" square="square"></app-content>
             </ion-avatar>
           </ion-col>
           <ion-col size="9" style="margin-top: auto; margin-bottom: auto;">

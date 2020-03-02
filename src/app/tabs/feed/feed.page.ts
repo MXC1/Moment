@@ -22,7 +22,7 @@ import { PostDetailComponent } from './post-detail/post-detail.component';
 export class FeedPage implements OnInit, OnDestroy {
 
   constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController, private authService: AuthService) { }
-  loadedPosts: Post[];
+  loadedPosts: Post[] = [];
   loadedUsers: User[];
   loadedEvents: EventContent[];
   private postsSubscription: Subscription;
@@ -35,30 +35,7 @@ export class FeedPage implements OnInit, OnDestroy {
     this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
       this.loadedEvents = events;
       this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
-        this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-          this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
-            this.loadedPosts = posts.filter(post => {
-              let showPost: boolean;
-              currentUser.friendIds.forEach(person => {
-                showPost = person === post.userId;
-              });
-
-              this.loadedEvents.forEach(event => {
-                if (event.id === post.eventId) {
-                  event.followerIds.forEach(follower => {
-                    showPost = follower === userId;
-                  });
-                }
-              });
-
-              return showPost;
-            });
-          });
-          this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
-            this.loadedUsers = users;
-            this.isLoading = false;
-          });
-        });
+        this.filterPosts(posts);
       });
     });
   }
@@ -76,9 +53,39 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    // this.postsService.getPosts.subscribe(posts => {
-    //   this.loadedPosts = posts;
-    // });
+    this.postsService.getPosts.subscribe(posts => {
+      this.filterPosts(posts);
+    });
+  }
+
+  filterPosts(posts) {
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+      this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
+        this.loadedPosts = posts.filter(post => {
+          let followsUser;
+          let followsEvent;
+
+          currentUser.friendIds.forEach(person => {
+            followsUser = person === post.userId;
+          });
+
+          this.loadedEvents.forEach(event => {
+            if (event.id === post.eventId) {
+              event.followerIds.forEach(follower => {
+                followsEvent = follower === userId;
+              });
+            }
+          });
+
+          return followsUser || followsEvent;
+        });
+      });
+      this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
+        this.loadedUsers = users;
+        this.isLoading = false;
+      });
+    });
+
   }
 
   getUser(id: string): User {
@@ -88,12 +95,6 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   getEvent(id: string): EventContent {
-    // let event;
-    // this.eventsService.getEvent(id).pipe(take(1)).subscribe(fetchedEvent => {
-    //   event = fetchedEvent;
-    // });
-    // return event;
-
     if (this.loadedEvents) {
       return this.loadedEvents.find(event => event.id === id);
     }

@@ -19,7 +19,6 @@ import { FeedPageModule } from 'src/app/tabs/feed/feed.module';
     RegisterPageRoutingModule,
     FeedPageModule
   ],
-  declarations: [RegisterPage, PersonalInfoComponent],
-  entryComponents: [PersonalInfoComponent]
+  declarations: [RegisterPage]
 })
 export class RegisterPageModule {}
