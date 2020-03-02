@@ -8,6 +8,7 @@ import { AuthService } from './auth/auth.service';
 interface UserData {
   bio: string;
   email: string;
+  followedEvents: string[];
   friendIds: string[];
   fullName: string;
   image: string;
@@ -32,10 +33,10 @@ export class UsersService {
           const users = [];
           for (const key in resData) {
             if (resData.hasOwnProperty(key)) {
-              users.push(new User(key, resData[key].username, resData[key].email, resData[key].image, resData[key].fullName, resData[key].bio, resData[key].postIds, resData[key].friendIds));
+              users.push(new User(key, resData[key].username, resData[key].email, resData[key].image, resData[key].fullName, resData[key].bio, resData[key].postIds, resData[key].friendIds, resData[key].followedEvents));
             }
           }
-          return users;
+          return users.reverse();
         }), tap(users => {
           this.users.next(users);
         })
@@ -46,7 +47,7 @@ export class UsersService {
   getUser(id: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<UserData>(`https://mmnt-io.firebaseio.com/users/${id}.json?auth=${token}`).pipe(take(1), map(resData => {
-        const newUser = new User(id, resData.username, resData.email, resData.image, resData.fullName, resData.bio, resData.postIds, resData.friendIds);
+        const newUser = new User(id, resData.username, resData.email, resData.image, resData.fullName, resData.bio, resData.postIds, resData.friendIds, resData.followedEvents);
         return newUser;
       }));
     }));
@@ -55,7 +56,7 @@ export class UsersService {
   addUser(username: string, email: string, image: string, fullName: string, bio: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.authService.getUserId.pipe(take(1), switchMap(userId => {
-        const newUser = new User(userId, username, email, image, fullName, bio, [''], ['']);
+        const newUser = new User(userId, username, email, image, fullName, bio, [''], [''], ['']);
         return this.http.put<{ name: string }>(`https://mmnt-io.firebaseio.com/users/${userId}.json/?auth=${token}`, { ...newUser, id: null })
           .pipe(take(1), switchMap(resData => {
             return this.users;
@@ -86,7 +87,6 @@ export class UsersService {
 
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(tap(ids => {
-        const friendIds = ids.concat(toFollowId);
         const key = ids.length;
         return this.http.patch<{ name: string }>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`, {
           [key]: toFollowId

@@ -1,16 +1,17 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-<ion-back-button defaultHref="/tabs/events"></ion-back-button>
+      <!-- <ion-back-button defaultHref="/tabs/events"></ion-back-button> -->
+      <ion-back-button routerLink="/tabs/events"></ion-back-button>
     </ion-buttons>
-    <ion-buttons slot="end" *ngIf="!isFollowing">
+    <ion-buttons slot="end" *ngIf="!isFollowing && !isLoading">
       <ion-button (click)="onFollowEvent()">
         <ion-label>Follow</ion-label>
         <ion-icon name="person-add"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-label slot="end" *ngIf="isFollowing" style="padding-right: 5px;">Following</ion-label>
-    <ion-icon name="checkmark" *ngIf="isFollowing"></ion-icon>
+    <ion-label slot="end" *ngIf="isFollowing && !isLoading" style="padding-right: 5px;">Following</ion-label>
+    <ion-icon name="checkmark" slot="end" *ngIf="isFollowing && !isLoading"></ion-icon>
     <ion-title>Moment</ion-title>
   </ion-toolbar>
 </ion-header>

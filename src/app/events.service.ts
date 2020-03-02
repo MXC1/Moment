@@ -4,6 +4,7 @@ import { EventContent } from './event';
 import { take, map, switchMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth/auth.service';
+import { UsersService } from './users.service';
 
 interface EventData {
   name: string;
@@ -64,7 +65,7 @@ export class EventsService {
                 resData[key].headerImage));
             }
           }
-          return events;
+          return events.reverse();
         }), tap(events => {
           this.events.next(events);
         })
@@ -79,12 +80,39 @@ export class EventsService {
         .pipe(map(resData => {
           return new EventContent(id, resData.name, resData.location, resData.creatorId, resData.postIds, resData.followerIds, resData.headerImage);
         }));
-    }))
+    }));
   }
 
   get getEvents() {
     return this.events.asObservable();
   }
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  follow(userId: string, eventId: string) {
+    this.userService.getUser(userId).pipe(take(1)).subscribe(user => {
+      user.followedEvents.concat(eventId);
+    });
+
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds.json/?auth=${token}`).pipe(tap(followers => {
+        const key = followers.length;
+
+        return this.http.patch<{ name: string }>(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds.json/?auth=${token}`, {
+          [key]: userId
+        }).subscribe();
+      }));
+    }));
+
+  }
+
+  isFollowing(userId: string, eventId: string) {
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds.json/?auth=${token}`).pipe(tap(ids => {
+        return ids.find(id => {
+          return id !== userId;
+        });
+      }));
+    }));
+  }
+
+  constructor(private http: HttpClient, private authService: AuthService, private userService: UsersService) { }
 }

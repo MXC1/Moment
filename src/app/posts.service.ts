@@ -37,7 +37,7 @@ export class PostsService {
                 resData[key].type));
             }
           }
-          return posts;
+          return posts.reverse();
         }), tap(posts => {
           this.posts.next(posts);
         })

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { take, switchMap } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
 import { SearchComponent } from 'src/app/search/search.component';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-feed',
@@ -18,7 +19,7 @@ import { SearchComponent } from 'src/app/search/search.component';
 })
 export class FeedPage implements OnInit, OnDestroy {
 
-  constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController) { }
+  constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController, private authService: AuthService) { }
   loadedPosts: Post[];
   loadedUsers: User[];
   loadedEvents: EventContent[];
@@ -27,12 +28,18 @@ export class FeedPage implements OnInit, OnDestroy {
   private eventsSubscription: Subscription;
   isLoading = false;
 
-  currentUser: User;
-
   ngOnInit() {
     this.isLoading = true;
     this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
-      this.loadedPosts = posts;
+      this.authService.getUserId.pipe(take(1)).subscribe(id => {
+        this.usersService.getUser(id).pipe(take(1)).subscribe(currentUser => {
+          this.loadedPosts = posts.filter(post => {
+            for (const person of currentUser.friendIds) {
+              return post.userId === person;
+            }
+          });
+        });
+      });
       this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
         this.loadedEvents = events;
         this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {

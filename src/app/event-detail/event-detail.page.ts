@@ -7,6 +7,8 @@ import { UsersService } from '../users.service';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular';
 import { Post } from '../post';
+import { AuthService } from '../auth/auth.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-event-detail',
@@ -22,7 +24,7 @@ export class EventDetailPage implements OnInit, OnDestroy {
   isFollowing = false;
   isLoading = false;
 
-  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController) { }
+  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -36,6 +38,11 @@ export class EventDetailPage implements OnInit, OnDestroy {
         this.event = event;
         this.postsSubscription = this.postsService.getPosts.subscribe(posts => {
           this.eventPosts = posts.filter(post => post.eventId === eventId);
+          this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+            this.eventsService.isFollowing(thisUserId, eventId).pipe(take(1)).subscribe(isFollowing => {
+              this.isFollowing = isFollowing.length !== 1;
+            });
+          });
           this.isLoading = false;
         });
       }, error => {
@@ -52,7 +59,12 @@ export class EventDetailPage implements OnInit, OnDestroy {
     });
   }
 
-  onFollowEvent() {}
+  onFollowEvent() {
+    this.isFollowing = true;
+    this.authService.getUserId.pipe(take(1)).subscribe(id => {
+      this.eventsService.follow(id, this.event.id).subscribe();
+    });
+  }
 
   ngOnDestroy() {
     if (this.eventsSubscription) {

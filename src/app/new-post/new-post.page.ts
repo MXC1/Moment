@@ -54,7 +54,9 @@ export class NewPostPage implements OnInit {
       caption: new FormControl(null, {
         validators: [Validators.required, Validators.maxLength(255)]
       }),
-      event: new FormControl(null),
+      event: new FormControl(null, {
+        validators: [Validators.required]
+      }),
       image: new FormControl(null, {
         validators: [Validators.required]
       })
@@ -76,10 +78,10 @@ export class NewPostPage implements OnInit {
 
   async onAddEvent(event) {
     const newEventModal = await this.modalController.create({ component: NewEventComponent, showBackdrop: true, id: 'eventModal' });
-    newEventModal.onDidDismiss().then(data => {
-      this.event = data.data;
+    newEventModal.onDidDismiss().then(newEvent => {
+      this.event = newEvent.data;
       this.eventSelector.close();
-      this.form.patchValue({ event: data.data.id });
+      this.form.patchValue({ event: newEvent.data.id });
     });
     await newEventModal.present();
   }

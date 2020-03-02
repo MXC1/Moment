@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>New Event</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="onCreate()">
+      <ion-button (click)="onCreate()" *ngIf="!isLoading">
         <ion-icon name="checkmark" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>

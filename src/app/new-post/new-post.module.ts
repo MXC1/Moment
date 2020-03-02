@@ -12,8 +12,6 @@ import { ImageChooserComponent } from '../image-chooser/image-chooser.component'
 import { ImageCropperModule } from 'ngx-image-cropper';
 
 import { IonicSelectableModule } from 'ionic-selectable';
-import { NewEventPageModule } from '../new-event/new-event.module';
-import { NewEventPage } from '../new-event/new-event.page';
 import { NewEventComponent } from '../tabs/events/new-event/new-event.component';
 
 @NgModule({

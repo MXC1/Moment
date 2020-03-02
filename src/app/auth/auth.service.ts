@@ -26,10 +26,6 @@ interface AuthResData {
   providedIn: 'root'
 })
 export class AuthService {
-  private authenticated = true;
-  private userId = 'u2';
-  private users = [];
-
   private user = new BehaviorSubject<User>(null);
 
   get isAuthenticated() {

@@ -7,6 +7,7 @@ export class User {
                 public fullName: string,
                 public bio: string,
                 public postIds: string[],
-                public friendIds: string[]) {
+                public friendIds: string[],
+                public followedEvents: string[]) {
     }
 }

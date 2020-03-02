@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { take } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
 import { SearchComponent } from 'src/app/search/search.component';
+import { NewEventComponent } from './new-event/new-event.component';
 
 @Component({
   selector: 'app-events',
@@ -21,6 +22,16 @@ export class EventsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
+    this.fetchFollowedEvents();
+
+    // this.isLoading = true;
+    // this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
+    //   this.loadedEvents = events;
+    //   this.isLoading = false;
+    // });
+  }
+
+  fetchFollowedEvents() {
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
         this.loadedEvents = events.filter(event => {
@@ -33,12 +44,6 @@ export class EventsPage implements OnInit, OnDestroy {
         this.isLoading = false;
       });
     });
-
-    // this.isLoading = true;
-    // this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
-    //   this.loadedEvents = events;
-    //   this.isLoading = false;
-    // });
   }
 
   ngOnDestroy() {
@@ -63,10 +68,19 @@ export class EventsPage implements OnInit, OnDestroy {
         });
       }
     });
+
+    this.isLoading = true;
+    this.fetchFollowedEvents();
   }
 
   onSearch() {
     this.modalController.create({ component: SearchComponent, componentProps: { toSearch: 'events' } }).then(modalElement => {
+      modalElement.present();
+    });
+  }
+
+  async onNewEvent() {
+    const newEventModal = this.modalController.create({ component: NewEventComponent }).then(modalElement => {
       modalElement.present();
     });
   }
