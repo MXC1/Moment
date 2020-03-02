@@ -9,6 +9,7 @@ import { filter, take, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { NewPostComponent } from '../feed/new-post/new-post.component';
 import { ModalController } from '@ionic/angular';
+import { PostDetailComponent } from '../feed/post-detail/post-detail.component';
 
 @Component({
   selector: 'app-profile',
@@ -94,6 +95,12 @@ export class ProfilePage implements OnInit {
 
   onNewPost() {
     this.modalController.create({ component: NewPostComponent }).then(modalElement => {
+      modalElement.present();
+    });
+  }
+
+  onPostDetail(postId: string) {
+    this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
       modalElement.present();
     });
   }

@@ -31,6 +31,7 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
 })
 export class ImageChooserComponent implements OnInit {
   @Input() public message;
+  @Input() public accepts: 'image/*,video/*' | 'image/*';
   // @Output() chosenImage = new EventEmitter<string | File>();
   selectedImage: string;
   type: 'image' | 'video';
@@ -41,12 +42,16 @@ export class ImageChooserComponent implements OnInit {
 
   @Output() croppedImage: File;
   imagePreview: string;
-  finishedCropping: boolean = false;
+  finishedCropping;
   @ViewChild(ImageCropperComponent, { static: false }) imageCropper: ImageCropperComponent;
 
   constructor(private platform: Platform) { }
 
   ngOnInit() {
+    if (!this.accepts) {
+      this.accepts = 'image/*,video/*';
+    }
+
     if (this.platform.is('mobile') && !this.platform.is('hybrid') || this.platform.is('desktop')) {
       this.useChooser = true;
     }
@@ -58,7 +63,7 @@ export class ImageChooserComponent implements OnInit {
       return;
     }
     Plugins.Camera.getPhoto({
-      quality: 100,
+      quality: 90,
       source: CameraSource.Prompt,
       correctOrientation: true,
       height: 320,
@@ -68,6 +73,7 @@ export class ImageChooserComponent implements OnInit {
       this.selectedImage = image.dataUrl;
       // this.chosenImage.emit(image.dataUrl);
       this.type = this.selectedImage.includes('image') ? 'image' : 'video';
+      console.log('firstone');
     }).catch(error => {
       console.log(error);
       return false;
@@ -96,7 +102,6 @@ export class ImageChooserComponent implements OnInit {
   }
 
   onFileChosen(event: Event) {
-    this.isLoading = true;
     const chosenFile = (event.target as HTMLInputElement).files[0];
 
     if (!chosenFile) {
@@ -108,6 +113,15 @@ export class ImageChooserComponent implements OnInit {
       this.selectedImage = dataUrl;
       // this.chosenImage.emit(chosenFile);
       this.type = chosenFile.type.includes('image') ? 'image' : 'video';
+      console.log('secondone');
+
+      if (this.type === 'video') {
+        this.croppedImage = this.dataURLtoFile(this.selectedImage, this.selectedImage);
+        console.log(this.croppedImage);
+      } else {
+        this.isLoading = true;
+        this.finishedCropping = false;
+      }
     };
     fileReader.readAsDataURL(chosenFile);
   }

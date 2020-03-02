@@ -15,11 +15,12 @@ import { ImageCropperComponent } from 'ngx-image-cropper';
 import { SearchComponent } from './search/search.component';
 import { IonicSelectableModule } from 'ionic-selectable';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NewEventComponent } from './tabs/events/new-event/new-event.component';
 
 
 @NgModule({
-  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent],
-  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent],
+  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent],
+  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicSelectableModule],
   providers: [
     StatusBar,

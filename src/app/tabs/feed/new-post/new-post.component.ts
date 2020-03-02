@@ -79,9 +79,11 @@ export class NewPostComponent implements OnInit {
   async onAddEvent(event) {
     const newEventModal = await this.modalController.create({ component: NewEventComponent, showBackdrop: true, id: 'eventModal' });
     newEventModal.onDidDismiss().then(newEvent => {
+      console.log(newEvent);
+
       this.event = newEvent.data;
-      this.eventSelector.close();
       this.form.patchValue({ event: newEvent.data.id });
+      this.eventSelector.close();
     });
     await newEventModal.present();
   }
