@@ -31,9 +31,11 @@ export class PeoplePage implements OnInit {
       this.authService.getUserId.pipe(take(1)).subscribe(userId => {
         this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
           this.loadedPeople = users.filter(user => {
-            for (const friend of thisUser.friendIds) {
-              if (friend) {
-                return friend === user.id;
+            if (user.id !== thisUser.id) {
+              for (const friend of thisUser.friendIds) {
+                if (friend) {
+                  return friend === user.id;
+                }
               }
             }
           });

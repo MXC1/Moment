@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { EventDetailPageRoutingModule } from './event-detail-routing.module';
 
 import { EventDetailPage } from './event-detail.page';
-import { NewPostPageModule } from '../new-post/new-post.module';
 import { FeedPageModule } from '../tabs/feed/feed.module';
 
 @NgModule({

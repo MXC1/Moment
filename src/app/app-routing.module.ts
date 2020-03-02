@@ -46,11 +46,6 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
-    path: 'new-post',
-    loadChildren: () => import('./new-post/new-post.module').then( m => m.NewPostPageModule),
-    canLoad: [AuthGuard]
-  },
-  {
     path: 'event-detail',
     loadChildren: () => import('./event-detail/event-detail.module').then( m => m.EventDetailPageModule),
     canLoad: [AuthGuard]

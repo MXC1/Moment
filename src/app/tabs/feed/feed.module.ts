@@ -8,6 +8,7 @@ import { FeedPageRoutingModule } from './feed-routing.module';
 
 import { FeedPage } from './feed.page';
 import { ContentComponent } from 'src/app/content/content.component';
+import { ImageChooserComponent } from 'src/app/image-chooser/image-chooser.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,7 @@ import { ContentComponent } from 'src/app/content/content.component';
     IonicModule,
     FeedPageRoutingModule
   ],
-  declarations: [FeedPage, ContentComponent],
-  exports: [ContentComponent]
+  declarations: [FeedPage, ContentComponent, ImageChooserComponent],
+  exports: [ContentComponent, ImageChooserComponent]
 })
 export class FeedPageModule {}

@@ -43,7 +43,7 @@
     <ion-row *ngIf="!isLoading && posts.length === 0" style="padding-top: 10px;" class="ion-justify-content-center">
       <ion-col class="ion-text-center" *ngIf="isThisUser">
         <p>Looks like you don't have any posts yet!</p>
-        <ion-button routerLink="../../../new-post">Upload Something</ion-button>
+        <ion-button (click)="onNewPost()">Upload Something</ion-button>
       </ion-col>
       <ion-col class="ion-text-center" *ngIf="!isThisUser">
         <p>{{ user.username }} doesn't have any posts yet.</p>

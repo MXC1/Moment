@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { PostsService } from '../posts.service';
-import { AuthService } from '../auth/auth.service';
+import { PostsService } from '../../../posts.service';
+import { AuthService } from '../../../auth/auth.service';
 import { NavController, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { switchMap, take, tap } from 'rxjs/operators';
-import { ImageChooserComponent } from '../image-chooser/image-chooser.component';
-import { EventContent } from '../event';
-import { EventsService } from '../events.service';
-import { NewEventComponent } from '../tabs/events/new-event/new-event.component';
+import { ImageChooserComponent } from '../../../image-chooser/image-chooser.component';
+import { EventContent } from '../../../event';
+import { EventsService } from '../../../events.service';
+import { NewEventComponent } from '../../events/new-event/new-event.component';
 import { IonicSelectableComponent } from 'ionic-selectable';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
@@ -34,10 +34,10 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
 
 @Component({
   selector: 'app-new-post',
-  templateUrl: './new-post.page.html',
-  styleUrls: ['./new-post.page.scss'],
+  templateUrl: './new-post.component.html',
+  styleUrls: ['./new-post.component.scss'],
 })
-export class NewPostPage implements OnInit {
+export class NewPostComponent implements OnInit {
   form: FormGroup;
   eventsSubscription: Subscription;
   loadedEvents: EventContent[];

@@ -7,6 +7,8 @@ import { Post } from 'src/app/post';
 import { PostsService } from 'src/app/posts.service';
 import { filter, take, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { NewPostComponent } from '../feed/new-post/new-post.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile',
@@ -23,7 +25,7 @@ export class ProfilePage implements OnInit {
   isThisUser;
   isFollowing: boolean;
 
-  constructor(private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private route: ActivatedRoute) { }
+  constructor(private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private route: ActivatedRoute, private modalController: ModalController) { }
 
 
   ngOnInit() {
@@ -87,6 +89,12 @@ export class ProfilePage implements OnInit {
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.usersService.follow(id, this.user.id).subscribe();
       this.isFollowing = true;
+    });
+  }
+
+  onNewPost() {
+    this.modalController.create({ component: NewPostComponent }).then(modalElement => {
+      modalElement.present();
     });
   }
 

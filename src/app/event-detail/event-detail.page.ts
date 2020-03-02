@@ -5,10 +5,11 @@ import { PostsService } from '../posts.service';
 import { EventsService } from '../events.service';
 import { UsersService } from '../users.service';
 import { ActivatedRoute } from '@angular/router';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, AlertController, ModalController } from '@ionic/angular';
 import { Post } from '../post';
 import { AuthService } from '../auth/auth.service';
 import { take } from 'rxjs/operators';
+import { NewPostComponent } from '../tabs/feed/new-post/new-post.component';
 
 @Component({
   selector: 'app-event-detail',
@@ -24,7 +25,7 @@ export class EventDetailPage implements OnInit, OnDestroy {
   isFollowing = false;
   isLoading = false;
 
-  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController) { }
+  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -63,6 +64,12 @@ export class EventDetailPage implements OnInit, OnDestroy {
     this.isFollowing = true;
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.eventsService.follow(id, this.event.id).subscribe();
+    });
+  }
+
+  onNewPost() {
+    this.modalController.create({ component: NewPostComponent }).then(modalElement => {
+      modalElement.present();
     });
   }
 

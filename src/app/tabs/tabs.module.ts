@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
-import { NewPostPageModule } from '../new-post/new-post.module';
 import { SearchComponent } from '../search/search.component';
+import { FeedPageModule } from './feed/feed.module';
 
 @NgModule({
   imports: [
@@ -16,7 +16,7 @@ import { SearchComponent } from '../search/search.component';
     FormsModule,
     IonicModule,
     TabsPageRoutingModule,
-    NewPostPageModule
+    FeedPageModule
   ],
   declarations: [TabsPage, SearchComponent],
   entryComponents: [SearchComponent]
