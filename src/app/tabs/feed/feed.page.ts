@@ -11,6 +11,8 @@ import { take, switchMap } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
 import { SearchComponent } from 'src/app/search/search.component';
 import { AuthService } from 'src/app/auth/auth.service';
+import { NewPostComponent } from './new-post/new-post.component';
+import { PostDetailComponent } from './post-detail/post-detail.component';
 
 @Component({
   selector: 'app-feed',
@@ -60,40 +62,6 @@ export class FeedPage implements OnInit, OnDestroy {
       });
     });
   }
-  // this.isLoading = true;
-  // this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
-  //   this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-  //     this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
-  //       this.loadedPosts = posts.filter(post => {
-  //         let showPost: boolean;
-  //         currentUser.friendIds.forEach(person => {
-  //           showPost = person === post.userId;
-  //         });
-
-  //         if (post.eventId) {
-  //           this.eventsService.getEvent(post.eventId).pipe(take(1)).subscribe(event => {
-  //             event.followerIds.forEach(follower => {
-  //               // if (!showPost) {
-  //                 showPost = follower === userId;
-  //                 console.log(showPost);
-
-  //               // }
-  //             });
-  //           });
-  //         }
-
-  //         return showPost;
-  //       });
-  //       this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
-  //         this.loadedEvents = events;
-  //         this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
-  //           this.loadedUsers = users;
-  //           this.isLoading = false;
-  //         });
-  //       });
-  //     });
-  //   });
-  // });
 
   ngOnDestroy() {
     if (this.postsSubscription) {
@@ -133,6 +101,18 @@ export class FeedPage implements OnInit, OnDestroy {
 
   onSearch() {
     this.modalController.create({ component: SearchComponent, componentProps: { toSearch: 'posts' } }).then(modalElement => {
+      modalElement.present();
+    });
+  }
+
+  onNewPost() {
+    this.modalController.create({ component: NewPostComponent }).then(modalElement => {
+      modalElement.present();
+    });
+  }
+
+  onPostDetail(postId: string) {
+    this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
       modalElement.present();
     });
   }

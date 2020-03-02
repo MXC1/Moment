@@ -10,10 +10,14 @@
     <ion-spinner *ngIf="isLoading"></ion-spinner>
   </ion-row>
 
-  <image-cropper [imageBase64]="selectedImage" [maintainAspectRatio]="true" [aspectRatio]="1/1" (imageCropped)="imageCropped($event)" (imageLoaded)="imageCropper.crop()" format="jpeg" outputType="dataUrl"></image-cropper>
+  <ion-img *ngIf="croppedImage && type === 'image' && finishedCropping" [src]="imagePreview"></ion-img>
+  <image-cropper *ngIf="!finishedCropping" [imageBase64]="selectedImage" [maintainAspectRatio]="true" [aspectRatio]="1/1" (imageCropped)="imageCropped($event)" (imageLoaded)="imageCropper.crop()" format="jpeg" outputType="dataUrl"></image-cropper>
+  <ion-button expand="block" *ngIf="croppedImage && !finishedCropping" (click)="onFinishCrop()" fill="clear">
+    <ion-icon name="checkmark" slot="start"></ion-icon>
+    <ion-label>Crop</ion-label>
+  </ion-button>
 
-  <ion-img *ngIf="croppedImage && type === 'image'" [src]="imagePreview"></ion-img>
-  <ion-button (click)="onChooseImage()" expand="block" fill="clear">
+  <ion-button *ngIf="!croppedImage" (click)="onChooseImage()" expand="block" fill="clear">
     <ion-icon name="camera" slot="start"></ion-icon>
     <ion-label>{{ message }}</ion-label>
   </ion-button>

@@ -20,11 +20,6 @@ const routes: Routes = [
         path: '',
         loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
         canLoad: [AuthGuard]
-      },
-      {
-        path: ':postId',
-        loadChildren: () => import('./post-detail/post-detail.module').then(m => m.PostDetailPageModule),
-        canLoad: [AuthGuard]
       }
     ],
     canLoad: [AuthGuard]
@@ -43,11 +38,6 @@ const routes: Routes = [
         canLoad: [AuthGuard]
       }
     ],
-    canLoad: [AuthGuard]
-  },
-  {
-    path: 'new-post',
-    loadChildren: () => import('./new-post/new-post.module').then( m => m.NewPostPageModule),
     canLoad: [AuthGuard]
   },
   {

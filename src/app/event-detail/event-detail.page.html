@@ -39,7 +39,7 @@
       class="ion-justify-content-center">
       <ion-col class="ion-text-center">
         <p>This event has no content yet</p>
-        <ion-button routerLink="../../../new-post">Upload Something</ion-button>
+        <ion-button (click)="onNewPost()">Upload Something</ion-button>
       </ion-col>
     </ion-row>
     <ion-row style="padding-top:8px" *ngIf="!isLoading && eventPosts.length !== 0">

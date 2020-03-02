@@ -94,9 +94,12 @@ export class SearchComponent implements OnInit {
 
   filterPosts(searchValue: string) {
     if (!this.filteredPosts) {
-      this.postsService.fetchPosts().pipe(take(1)).subscribe(posts => {
-        this.filteredPosts = posts.filter(post => {
-          return (post.caption.includes(searchValue));
+      this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
+        this.filteredEvents = events;
+        this.postsService.fetchPosts().pipe(take(1)).subscribe(posts => {
+          this.filteredPosts = posts.filter(post => {
+            return (post.caption.includes(searchValue));
+          });
         });
       });
     } else {
@@ -109,12 +112,20 @@ export class SearchComponent implements OnInit {
   }
 
   getEvent(eventId: string) {
-    let returnEvent;
-    this.authService.getToken.pipe(take(1)).subscribe(token => {
-      this.eventsService.getEvent(eventId).pipe(take(1)).subscribe(event => {
-        event = event;
-      });
-    });
-    return returnEvent;
+    if (this.filteredEvents) {
+      return this.filteredEvents.find(event => event.id === eventId);
+    }
+
+    // let returnEvent;
+    // this.authService.getToken.pipe(take(1)).subscribe(token => {
+    //   this.eventsService.getEvent(eventId).pipe<EventContent>(take(1)).subscribe(event => {
+    //     if (event !== undefined) {
+    //       return event;
+    //     } else {
+    //       return null;
+    //     }
+    //   });
+    // });
+    // return returnEvent;
   }
 }

@@ -75,10 +75,12 @@ export class EventsService {
   }
 
   getEvent(id: string) {
-    return this.authService.getToken.pipe(switchMap(token => {
+    return this.authService.getToken.pipe<EventContent>(switchMap(token => {
       return this.http.get<EventData>(`https://mmnt-io.firebaseio.com/events/${id}.json?auth=${token}`)
         .pipe(map(resData => {
-          return new EventContent(id, resData.name, resData.location, resData.creatorId, resData.postIds, resData.followerIds, resData.headerImage);
+          if (resData !== null) {
+            return new EventContent(id, resData.name, resData.location, resData.creatorId, resData.postIds, resData.followerIds, resData.headerImage);
+          }
         }));
     }));
   }

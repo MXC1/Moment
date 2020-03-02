@@ -1,22 +1,27 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
 import { FeedPageRoutingModule } from './feed-routing.module';
 
 import { FeedPage } from './feed.page';
+import { AppModule } from 'src/app/app.module';
 import { ContentComponent } from 'src/app/content/content.component';
+import { ContentModule } from 'src/app/shared/content/content.module';
+import { PostDetailComponent } from './post-detail/post-detail.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FormsModule,
     IonicModule,
-    FeedPageRoutingModule
+    FeedPageRoutingModule,
+    ContentModule
   ],
-  declarations: [FeedPage, ContentComponent],
-  exports: [ContentComponent]
+  declarations: [FeedPage, PostDetailComponent],
+  entryComponents: [PostDetailComponent]
 })
-export class FeedPageModule {}
+export class FeedPageModule { }

@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="ios-arrow-back"></ion-icon>
+        <ion-label>Back</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Moment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-padding">
+    <ion-row *ngIf="isLoading" class="ion-justify-content-center">
+      <ion-col class="ion-text-center">
+        <ion-spinner></ion-spinner>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="!isLoading" class="ion-justify-content-center">
+      <ion-col>
+        <ion-row>
+          <ion-col>
+            <app-content [content]="this.post"></app-content>
+            <!-- <div (click)="playPause(thisVideo)" #thisVideo>
+          <video *ngIf="post.type === 'video'" style="max-width: 100%; max-height: 100%; position: relative" id="video">
+            <source type="video/mp4" [src]="post.content">
+          </video>
+          <ion-icon *ngIf="post.type === 'video'" name="ios-arrow-dropright" class="play-button" slot="icon-only" id="playButton">
+          </ion-icon>
+        </div>
+        <ion-img *ngIf="post.type === 'image'" [src]="post.content"></ion-img> -->
+          </ion-col>
+        </ion-row>
+        <ion-row style="padding-top: 10px" class="ion-justify-content-center">
+          <ion-label>{{ event?.name }}</ion-label>
+        </ion-row>
+        <ion-row style="padding-top: 5px" class="ion-justify-content-center">
+          <ion-label>{{ post.caption }}</ion-label>
+        </ion-row>
+        <ion-row style="padding-top: 5px" class="ion-justify-content-center">
+          <ion-label>{{ user.username }}</ion-label>
+        </ion-row>
+        <ion-row style="padding-top: 5px" class="ion-text-center">
+          <ion-col>
+            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
+              <ion-icon name="heart" slot="icon-only"></ion-icon>
+            </ion-button>
+            <p *ngIf="post.likes !== 0">{{ post.likes }}</p>
+          </ion-col>
+          <ion-col>
+            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
+              <ion-icon name="chatbubbles" slot="icon-only"></ion-icon>
+            </ion-button>
+            <p *ngIf="post.commentIds.length !== 0">{{ post.commentIds.length }}</p>
+          </ion-col>
+          <ion-col>
+            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
+              <ion-icon name="share" slot="icon-only"></ion-icon>
+            </ion-button>
+            <p *ngIf="post.shares !== 0">{{ post.shares }}</p>
+          </ion-col>
+        </ion-row>
+        <ion-list *ngFor="let comment of comments">
+          <ion-row>
+            <ion-item>
+              <p>{{ comment.content }}</p>
+            </ion-item>
+          </ion-row>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { RegisterPageRoutingModule } from './register-routing.module';
 
 import { RegisterPage } from './register.page';
-import { NewPostPageModule } from 'src/app/new-post/new-post.module';
 import { PersonalInfoComponent } from './personal-info/personal-info.component';
+import { FeedPageModule } from 'src/app/tabs/feed/feed.module';
 
 @NgModule({
   imports: [
@@ -17,7 +17,7 @@ import { PersonalInfoComponent } from './personal-info/personal-info.component';
     ReactiveFormsModule,
     IonicModule,
     RegisterPageRoutingModule,
-    NewPostPageModule
+    FeedPageModule
   ],
   declarations: [RegisterPage, PersonalInfoComponent],
   entryComponents: [PersonalInfoComponent]

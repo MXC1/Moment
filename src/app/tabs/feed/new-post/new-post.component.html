@@ -1,7 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/feed"></ion-back-button>
+      <ion-button (click)="closeModal()">
+        <ion-icon name="ios-arrow-back"></ion-icon>
+        <ion-label>Back</ion-label>
+      </ion-button>
     </ion-buttons>
     <ion-title>New Post</ion-title>
     <ion-buttons slot="end">
@@ -23,7 +26,7 @@
       <ion-row class="ion-justify-content-center">
         <ion-col size-sm="10">
           <ion-item>
-            <ion-label class="ion-text-center" position="floating">Caption</ion-label>
+            <ion-label position="floating">Caption</ion-label>
             <ion-input type="text" formControlName="caption"></ion-input>
           </ion-item>
         </ion-col>
@@ -31,8 +34,8 @@
       <ion-row class="ion-justify-content-center">
         <ion-col size-sm="10">
           <ion-item>
-            <ion-label class="ion-text-center">Event</ion-label>
-            <ionic-selectable [(ngModel)]="event" [ngModelOptions]="{standalone: true}" [items]="loadedEvents"  [canAddItem]="true" (onAddItem)="onAddEvent($event)" itemValueField="id"
+            <ion-label>Event</ion-label>
+            <ionic-selectable [(ngModel)]="event" [ngModelOptions]="{standalone: true}" [items]="loadedEvents" [canAddItem]="true" (onAddItem)="onAddEvent($event)" itemValueField="id"
             itemTextField="name" [canSearch]="true" (onChange)="onEventSelect($event)"></ionic-selectable>
           </ion-item>
         </ion-col>

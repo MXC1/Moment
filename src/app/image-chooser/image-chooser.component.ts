@@ -41,6 +41,7 @@ export class ImageChooserComponent implements OnInit {
 
   @Output() croppedImage: File;
   imagePreview: string;
+  finishedCropping: boolean = false;
   @ViewChild(ImageCropperComponent, { static: false }) imageCropper: ImageCropperComponent;
 
   constructor(private platform: Platform) { }
@@ -109,6 +110,10 @@ export class ImageChooserComponent implements OnInit {
       this.type = chosenFile.type.includes('image') ? 'image' : 'video';
     };
     fileReader.readAsDataURL(chosenFile);
+  }
+
+  onFinishCrop() {
+    this.finishedCropping = true;
   }
 
   playPause(thisDiv) {

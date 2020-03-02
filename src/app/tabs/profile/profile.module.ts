@@ -8,6 +8,7 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
 import { FeedPageModule } from '../feed/feed.module';
+import { ContentModule } from 'src/app/shared/content/content.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { FeedPageModule } from '../feed/feed.module';
     FormsModule,
     IonicModule,
     ProfilePageRoutingModule,
-    FeedPageModule
+    FeedPageModule,
+    ContentModule
   ],
   declarations: [ProfilePage]
 })
