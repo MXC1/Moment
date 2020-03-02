@@ -108,10 +108,10 @@ export class EventsService {
 
   isFollowing(userId: string, eventId: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
-      return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds.json/?auth=${token}`).pipe(tap(ids => {
-        return ids.find(id => {
-          return id !== userId;
-        });
+      return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds.json/?auth=${token}`).pipe(map(followerIds => {
+        return !!(followerIds.find(id => {
+          return !!(id === userId);
+        }));
       }));
     }));
   }

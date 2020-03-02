@@ -32,7 +32,7 @@
     </ion-row>
     <ion-row *ngIf="!isLoading" style="padding-top:8px">
       <ion-col size="4" *ngFor="let event of loadedEvents">
-        <ion-img [src]="event.headerImage" [routerLink]="['/event-detail', event.id]"></ion-img>
+        <ion-img [src]="event.headerImage" (click)="onEventDetail(event.id)"></ion-img>
         <p class="ion-text-center">{{event.name}}</p>
       </ion-col>
     </ion-row>

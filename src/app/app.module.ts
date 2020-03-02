@@ -16,12 +16,14 @@ import { SearchComponent } from './search/search.component';
 import { IonicSelectableModule } from 'ionic-selectable';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NewEventComponent } from './tabs/events/new-event/new-event.component';
+import { EventDetailComponent } from './tabs/events/event-detail/event-detail.component';
+import { ContentModule } from './shared/content/content.module';
 
 
 @NgModule({
-  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent],
-  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent],
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicSelectableModule],
+  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent],
+  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent],
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicSelectableModule, ContentModule],
   providers: [
     StatusBar,
     SplashScreen,

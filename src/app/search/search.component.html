@@ -39,7 +39,7 @@
       </ion-item>
     </ion-list>
     <ion-list *ngIf="toSearch === 'events'">
-      <ion-item *ngFor="let event of filteredEvents" [routerLink]="['/', 'event-detail', event.id]" (click)="closeModal()">
+      <ion-item *ngFor="let event of filteredEvents" (click)="onEventDetail(event.id)" button>
         <ion-row>
           <ion-col size="3">
             <ion-avatar>

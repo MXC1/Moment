@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
 import { SearchComponent } from 'src/app/search/search.component';
 import { NewEventComponent } from './new-event/new-event.component';
+import { EventDetailComponent } from './event-detail/event-detail.component';
 
 @Component({
   selector: 'app-events',
@@ -83,5 +84,15 @@ export class EventsPage implements OnInit, OnDestroy {
     const newEventModal = this.modalController.create({ component: NewEventComponent }).then(modalElement => {
       modalElement.present();
     });
+  }
+
+  async onEventDetail(eventId: string) {
+    const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId } });
+    onEventDetailModal.onDidDismiss().then(didFollow => {
+      if (didFollow) {
+        this.fetchFollowedEvents();
+      }
+    });
+    onEventDetailModal.present();
   }
 }

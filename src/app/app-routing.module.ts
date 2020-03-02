@@ -23,29 +23,7 @@ const routes: Routes = [
       }
     ],
     canLoad: [AuthGuard]
-  },
-  {
-    path: 'event-detail',
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
-        canLoad: [AuthGuard]
-      },
-      {
-        path: ':eventId',
-        loadChildren: () => import('./event-detail/event-detail.module').then(m => m.EventDetailPageModule),
-        canLoad: [AuthGuard]
-      }
-    ],
-    canLoad: [AuthGuard]
-  },
-  {
-    path: 'event-detail',
-    loadChildren: () => import('./event-detail/event-detail.module').then( m => m.EventDetailPageModule),
-    canLoad: [AuthGuard]
-  },
-
+  }
 ];
 
 @NgModule({

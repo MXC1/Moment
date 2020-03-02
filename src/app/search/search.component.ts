@@ -8,6 +8,7 @@ import { PostsService } from '../posts.service';
 import { EventsService } from '../events.service';
 import { take } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
+import { EventDetailComponent } from '../tabs/events/event-detail/event-detail.component';
 
 @Component({
   selector: 'app-search',
@@ -115,17 +116,27 @@ export class SearchComponent implements OnInit {
     if (this.filteredEvents) {
       return this.filteredEvents.find(event => event.id === eventId);
     }
+  }
 
-    // let returnEvent;
-    // this.authService.getToken.pipe(take(1)).subscribe(token => {
-    //   this.eventsService.getEvent(eventId).pipe<EventContent>(take(1)).subscribe(event => {
-    //     if (event !== undefined) {
-    //       return event;
-    //     } else {
-    //       return null;
-    //     }
-    //   });
-    // });
-    // return returnEvent;
+  async onEventDetail(eventId: string) {
+    const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId } });
+    onEventDetailModal.onDidDismiss().then(didFollow => {
+      if (didFollow.data.didFollow) {
+        this.eventsService.fetchEvents().subscribe(() => {
+          console.log('fetchedEvents');
+        });
+      }
+    });
+    onEventDetailModal.present();
+  }
+
+  async onPersonDetail(personId: string) {
+    const onPersonDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { personId } });
+    onPersonDetailModal.onDidDismiss().then(didFollow => {
+      if (didFollow) {
+        this.usersService.fetchUsers().subscribe();
+      }
+    });
+    onPersonDetailModal.present();
   }
 }

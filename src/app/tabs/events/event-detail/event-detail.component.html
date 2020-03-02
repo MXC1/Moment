@@ -1,8 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <!-- <ion-back-button defaultHref="/tabs/events"></ion-back-button> -->
-      <ion-back-button routerLink="/tabs/events"></ion-back-button>
+      <ion-button (click)="closeModal()">
+        <ion-icon name="ios-arrow-back"></ion-icon>
+        <ion-label>Back</ion-label>
+      </ion-button>
     </ion-buttons>
     <ion-buttons slot="end" *ngIf="!isFollowing && !isLoading">
       <ion-button (click)="onFollowEvent()">
