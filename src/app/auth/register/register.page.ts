@@ -40,8 +40,8 @@ export class RegisterPage implements OnInit {
     const username = this.form.value.username;
 
     this.authService.register(email, password).subscribe(resData => {
-      this.modalController.create({ component: PersonalInfoComponent, componentProps: { email, username } }).then(modelElement => {
-        modelElement.present();
+      this.modalController.create({ component: PersonalInfoComponent, componentProps: { email, username } }).then(modalElement => {
+        modalElement.present();
       });
     }, errorResponse => {
       const code = errorResponse.error.error.message;

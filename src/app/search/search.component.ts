@@ -65,6 +65,9 @@ export class SearchComponent implements OnInit {
     if (!this.filteredUsers) {
       this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
         this.filteredUsers = users.filter(user => {
+          console.log(user.username);
+          console.log(user.fullName);
+          
           return (user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase()));
         });
       });

@@ -34,8 +34,8 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
 })
 export class PersonalInfoComponent implements OnInit {
   form: FormGroup;
-  @Input() email;
-  @Input() username;
+  @Input() email: string;
+  @Input() username: string;
 
   @ViewChild(ImageChooserComponent, { static: false }) imageChooser;
 
@@ -43,11 +43,11 @@ export class PersonalInfoComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      fullName: new FormControl(null, {
+      fullName: new FormControl('', {
         validators: [Validators.maxLength(31)]
       }),
       image: new FormControl(null),
-      bio: new FormControl(null, {
+      bio: new FormControl('', {
         validators: [Validators.maxLength(127)]
       })
     });
@@ -70,21 +70,49 @@ export class PersonalInfoComponent implements OnInit {
     this.form.patchValue({ image: imageFile.target.files[0] });
   }
 
-  onSubmit() {
+  async onSubmit() {
     const fullName = this.form.value.fullName;
     const bio = this.form.value.bio;
 
-    this.form.patchValue({ image: this.imageChooser.croppedImage });
+    let image;
 
-    this.usersService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
-      return this.usersService.addUser(this.username, this.email, uploadRes.imageUrl, fullName, bio);
-    })).subscribe(() => {
-      this.modalController.dismiss()
-      this.router.navigateByUrl('/tabs/feed');
-    });
+    if (this.imageChooser.croppedImage) {
+      image = this.imageChooser.croppedImage;
 
-    // this.usersService.addUser(this.email, fullName, this.username, bio);
+      this.form.patchValue({ image });
+
+      this.usersService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
+        return this.usersService.addUser(this.username, this.email, uploadRes.imageUrl, fullName, bio);
+      })).subscribe(() => {
+        this.modalController.dismiss();
+        this.router.navigateByUrl('/tabs/feed');
+      });
+    } else {
+      console.log('./assets/default_pictures/' + this.username.substr(0, 1).toUpperCase() + '.png');
+
+      let blob = null;
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', './assets/default_pictures/' + this.username.substr(0, 1).toUpperCase() + '.jpg');
+      xhr.responseType = 'blob'; // force the HTTP response, response-type header to be blob
+      xhr.onload = () => {
+        blob = xhr.response; // xhr.response is now a blob object
+        const file = new File([blob], 'logo.jpeg', { type: 'image/jpeg', lastModified: Date.now() });
+        console.log(file);
+
+        this.form.patchValue({ image });
+
+        this.usersService.uploadImage(file).pipe(switchMap(uploadRes => {
+          return this.usersService.addUser(this.username, this.email, uploadRes.imageUrl, fullName, bio);
+        })).subscribe(() => {
+          this.modalController.dismiss();
+          this.router.navigateByUrl('/tabs/feed');
+        });
+      };
+      xhr.send();
+
+      // image = this.assetToFile('https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg');
+    }
+
   }
-
 }
 

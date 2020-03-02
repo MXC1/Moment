@@ -80,7 +80,7 @@ export class ImageChooserComponent implements OnInit {
     });
   }
 
-  dataURLtoFile(dataurl, filename) {
+  dataURLtoFile(dataurl) {
 
     const arr = dataurl.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
@@ -92,12 +92,12 @@ export class ImageChooserComponent implements OnInit {
       u8arr[n] = bstr.charCodeAt(n);
     }
 
-    return new File([u8arr], 'filename', { type: mime });
+    return new File([u8arr], dataurl, { type: mime });
   }
 
   imageCropped(event: ImageCroppedEvent) {
     this.imagePreview = event.base64;
-    this.croppedImage = this.dataURLtoFile(event.base64, event.base64);
+    this.croppedImage = this.dataURLtoFile(event.base64);
     this.isLoading = false;
   }
 
@@ -116,7 +116,7 @@ export class ImageChooserComponent implements OnInit {
       console.log('secondone');
 
       if (this.type === 'video') {
-        this.croppedImage = this.dataURLtoFile(this.selectedImage, this.selectedImage);
+        this.croppedImage = this.dataURLtoFile(this.selectedImage);
         console.log(this.croppedImage);
       } else {
         this.isLoading = true;

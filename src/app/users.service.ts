@@ -69,7 +69,6 @@ export class UsersService {
   }
 
   uploadImage(image: File) {
-
     const uploadData = new FormData();
 
     uploadData.append('image', image);
