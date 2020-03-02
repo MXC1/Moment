@@ -13,11 +13,8 @@ import { NewPostComponent } from './tabs/feed/new-post/new-post.component';
 import { ImageChooserComponent } from './image-chooser/image-chooser.component';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { SearchComponent } from './search/search.component';
-import { IonicSelectableComponent, IonicSelectableModule } from 'ionic-selectable';
+import { IonicSelectableModule } from 'ionic-selectable';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ContentComponent } from 'src/app/content/content.component';
-import { PostDetailComponent } from './tabs/feed/post-detail/post-detail.component';
-import { ContentModule } from './shared/content/content.module';
 
 
 @NgModule({
