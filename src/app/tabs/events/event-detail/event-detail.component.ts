@@ -61,7 +61,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.eventsService.follow(id, this.event.id).subscribe(() => {
         this.didFollow = true;
-        console.log(this.didFollow);
       });
     });
   }

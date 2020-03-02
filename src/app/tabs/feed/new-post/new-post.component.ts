@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from '../../../posts.service';
 import { AuthService } from '../../../auth/auth.service';
-import { NavController, ModalController } from '@ionic/angular';
+import { NavController, ModalController, LoadingController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { switchMap, take, tap } from 'rxjs/operators';
@@ -47,7 +47,7 @@ export class NewPostComponent implements OnInit {
   @ViewChild(IonicSelectableComponent, { static: false }) eventSelector;
   event: EventContent;
 
-  constructor(private postsService: PostsService, private authService: AuthService, private eventsService: EventsService, private navController: NavController, private router: Router, private modalController: ModalController) { }
+  constructor(private postsService: PostsService, private authService: AuthService, private eventsService: EventsService, private navController: NavController, private router: Router, private modalController: ModalController, private loadingController: LoadingController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -68,7 +68,6 @@ export class NewPostComponent implements OnInit {
   fetchEvents() {
     this.eventsSubscription = this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
       this.loadedEvents = events;
-      // console.log(events);
     });
   }
 
@@ -79,8 +78,6 @@ export class NewPostComponent implements OnInit {
   async onAddEvent(event) {
     const newEventModal = await this.modalController.create({ component: NewEventComponent, showBackdrop: true, id: 'eventModal' });
     newEventModal.onDidDismiss().then(newEvent => {
-      console.log(newEvent);
-
       this.event = newEvent.data;
       this.form.patchValue({ event: newEvent.data.id });
       this.eventSelector.close();
@@ -88,7 +85,11 @@ export class NewPostComponent implements OnInit {
     await newEventModal.present();
   }
 
-  onPost() {
+  async onPost() {
+    const loadingElement = await this.loadingController.create({ message: 'Creating Your Account...' });
+
+    loadingElement.present();
+
     const caption = this.form.value.caption;
     const eventId = this.form.value.event;
 
@@ -105,7 +106,9 @@ export class NewPostComponent implements OnInit {
         if (!userId) {
           throw new Error('No User ID Found!');
         } else {
-          return this.postsService.newPost(userId, eventId, caption, uploadRes.imageUrl, type).subscribe();
+          return this.postsService.newPost(userId, eventId, caption, uploadRes.imageUrl, type).subscribe(() => {
+            loadingElement.dismiss();
+          });
         }
       }));
     })).subscribe();

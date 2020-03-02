@@ -73,7 +73,6 @@ export class ImageChooserComponent implements OnInit {
       this.selectedImage = image.dataUrl;
       // this.chosenImage.emit(image.dataUrl);
       this.type = this.selectedImage.includes('image') ? 'image' : 'video';
-      console.log('firstone');
     }).catch(error => {
       console.log(error);
       return false;
@@ -113,11 +112,8 @@ export class ImageChooserComponent implements OnInit {
       this.selectedImage = dataUrl;
       // this.chosenImage.emit(chosenFile);
       this.type = chosenFile.type.includes('image') ? 'image' : 'video';
-      console.log('secondone');
-
       if (this.type === 'video') {
         this.croppedImage = this.dataURLtoFile(this.selectedImage);
-        console.log(this.croppedImage);
       } else {
         this.isLoading = true;
         this.finishedCropping = false;

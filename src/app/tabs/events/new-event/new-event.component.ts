@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ImageChooserComponent } from 'src/app/image-chooser/image-chooser.component';
 import { EventsService } from 'src/app/events.service';
 import { AuthService } from 'src/app/auth/auth.service';
-import { NavController, ModalController } from '@ionic/angular';
+import { NavController, ModalController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { switchMap, take, tap } from 'rxjs/operators';
 
@@ -37,7 +37,7 @@ export class NewEventComponent implements OnInit {
 
   @ViewChild(ImageChooserComponent, { static: false }) imageChooser;
 
-  constructor(private eventsService: EventsService, private authService: AuthService, private navController: NavController, private router: Router, private modalController: ModalController) { }
+  constructor(private eventsService: EventsService, private authService: AuthService, private navController: NavController, private router: Router, private modalController: ModalController, private loadingController: LoadingController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -52,7 +52,11 @@ export class NewEventComponent implements OnInit {
     });
   }
 
-  onCreate() {
+  async onCreate() {
+    const loadingElement = await this.loadingController.create({ message: 'Creating Event...' });
+
+    loadingElement.present();
+
     const name = this.form.value.name;
     const location = this.form.value.location;
     const type = this.form.value.type;
@@ -70,7 +74,8 @@ export class NewEventComponent implements OnInit {
           throw new Error('No User ID Found!');
         } else {
           return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId).subscribe(newEvent => {
-            this.modalController.dismiss( newEvent );
+            loadingElement.dismiss();
+            this.modalController.dismiss(newEvent);
           });
         }
       }));

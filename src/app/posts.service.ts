@@ -57,7 +57,7 @@ export class PostsService {
         }), take(1),
           tap(posts => {
             newPost.id = postId;
-            this.posts.next(posts.concat(newPost));
+            this.posts.next(posts.reverse().concat(newPost).reverse());
           }));
     }));
   }
@@ -77,9 +77,6 @@ export class PostsService {
   }
 
   uploadImage(image: File) {
-    console.log(image);
-
-
     const uploadData = new FormData();
 
     uploadData.append('image', image);

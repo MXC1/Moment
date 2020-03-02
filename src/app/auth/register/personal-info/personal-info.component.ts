@@ -4,7 +4,7 @@ import { AuthService } from '../../auth.service';
 import { Router } from '@angular/router';
 import { UsersService } from 'src/app/users.service';
 import { switchMap } from 'rxjs/operators';
-import { ModalController } from '@ionic/angular';
+import { ModalController, LoadingController } from '@ionic/angular';
 import { ImageChooserComponent } from 'src/app/image-chooser/image-chooser.component';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
@@ -39,7 +39,7 @@ export class PersonalInfoComponent implements OnInit {
 
   @ViewChild(ImageChooserComponent, { static: false }) imageChooser;
 
-  constructor(private authService: AuthService, private router: Router, private usersService: UsersService, private modalController: ModalController) { }
+  constructor(private authService: AuthService, private router: Router, private usersService: UsersService, private modalController: ModalController, private loadingController: LoadingController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -71,6 +71,10 @@ export class PersonalInfoComponent implements OnInit {
   }
 
   async onSubmit() {
+    const loadingElement = await this.loadingController.create({ message: 'Creating Your Account...' });
+
+    loadingElement.present();
+
     const fullName = this.form.value.fullName;
     const bio = this.form.value.bio;
 
@@ -84,12 +88,11 @@ export class PersonalInfoComponent implements OnInit {
       this.usersService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
         return this.usersService.addUser(this.username, this.email, uploadRes.imageUrl, fullName, bio);
       })).subscribe(() => {
+        loadingElement.dismiss();
         this.modalController.dismiss();
         this.router.navigateByUrl('/tabs/feed');
       });
     } else {
-      console.log('./assets/default_pictures/' + this.username.substr(0, 1).toUpperCase() + '.png');
-
       let blob = null;
       const xhr = new XMLHttpRequest();
       xhr.open('GET', './assets/default_pictures/' + this.username.substr(0, 1).toUpperCase() + '.jpg');
@@ -97,13 +100,13 @@ export class PersonalInfoComponent implements OnInit {
       xhr.onload = () => {
         blob = xhr.response; // xhr.response is now a blob object
         const file = new File([blob], 'logo.jpeg', { type: 'image/jpeg', lastModified: Date.now() });
-        console.log(file);
 
         this.form.patchValue({ image });
 
         this.usersService.uploadImage(file).pipe(switchMap(uploadRes => {
           return this.usersService.addUser(this.username, this.email, uploadRes.imageUrl, fullName, bio);
         })).subscribe(() => {
+          loadingElement.dismiss();
           this.modalController.dismiss();
           this.router.navigateByUrl('/tabs/feed');
         });

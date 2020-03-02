@@ -32,7 +32,7 @@ export class EventsService {
         }), take(1),
           map(events => {
             newEvent.id = eventId;
-            this.events.next(events.concat(newEvent));
+            this.events.next(events.reverse().concat(newEvent).reverse());
             return newEvent;
           }));
     }));

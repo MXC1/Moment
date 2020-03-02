@@ -35,6 +35,8 @@ export class FeedPage implements OnInit, OnDestroy {
     this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
       this.loadedEvents = events;
       this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
+        console.log(posts);
+
         this.filterPosts(posts);
       });
     });
@@ -66,17 +68,28 @@ export class FeedPage implements OnInit, OnDestroy {
           let followsEvent;
 
           currentUser.friendIds.forEach(person => {
-            followsUser = person === post.userId;
+            // if (post.id === '-M1S0zlrmBnwEbN-Hyw_') {
+            //   console.log(person);
+            //   console.log(post.userId);
+            //   console.log(person === post.userId);
+            // }
+
+            if (!followsUser) {
+              followsUser = person === post.userId;
+            }
+
           });
 
           this.loadedEvents.forEach(event => {
             if (event.id === post.eventId) {
               event.followerIds.forEach(follower => {
-                followsEvent = follower === userId;
+                if (!followsUser) {
+                  followsEvent = follower === userId;
+                }
               });
             }
           });
-
+          
           return followsUser || followsEvent;
         });
       });
@@ -106,10 +119,14 @@ export class FeedPage implements OnInit, OnDestroy {
     });
   }
 
-  onNewPost() {
-    this.modalController.create({ component: NewPostComponent }).then(modalElement => {
-      modalElement.present();
+  async onNewPost() {
+    const newPostModal = await this.modalController.create({ component: NewPostComponent });
+    newPostModal.onDidDismiss().then(() => {
+      this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
+        this.filterPosts(posts);
+      });
     });
+    newPostModal.present();
   }
 
   onPostDetail(postId: string) {

@@ -81,9 +81,13 @@ export class EventsPage implements OnInit, OnDestroy {
   }
 
   async onNewEvent() {
-    const newEventModal = this.modalController.create({ component: NewEventComponent }).then(modalElement => {
-      modalElement.present();
+    const newEventModal = await this.modalController.create({ component: NewEventComponent });
+
+    newEventModal.onDidDismiss().then(() => {
+      this.fetchFollowedEvents();
     });
+
+    newEventModal.present();
   }
 
   async onEventDetail(eventId: string) {
