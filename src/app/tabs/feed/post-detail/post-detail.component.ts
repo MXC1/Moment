@@ -93,7 +93,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   onDeletePost() {
     this.postsService.deletePost(this.post.id);
     this.modalController.dismiss();
-    // this.navController.navigateBack('/tabs/feed');
   }
 
   isThisUsersPost() {

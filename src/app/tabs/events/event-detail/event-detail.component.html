@@ -15,10 +15,21 @@
     <ion-label slot="end" *ngIf="isFollowing && !isLoading" style="padding-right: 5px;">Following</ion-label>
     <ion-icon name="checkmark" slot="end" *ngIf="isFollowing && !isLoading"></ion-icon>
     <ion-title>Moment</ion-title>
+    <ion-buttons slot="end" *ngIf="!isLoading && isThisUsersEvent()">
+      <ion-button (click)="onShowMenu()">
+        <ion-icon name="menu" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-select #menu hidden interface="action-sheet" (ionChange)="onDeleteEvent()">
+    <ion-select-option (click)="onDeleteEvent()">
+      <ion-label>Delete Event</ion-label>
+    </ion-select-option>
+  </ion-select>
+
   <ion-grid class="ion-no-margin" *ngIf="!isLoading">
     <ion-card class="ion-no-margin">
       <ion-row>

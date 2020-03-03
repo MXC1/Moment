@@ -38,6 +38,18 @@ export class EventsService {
     }));
   }
 
+  deleteEvent(eventId: string) {
+    return this.authService.getToken.pipe(take(1)).subscribe(token => {
+      return this.http.delete(`https://mmnt-io.firebaseio.com/events/${eventId}.json?auth=${token}`).pipe(take(1), switchMap(() => {
+        return this.events;
+      }), take(1), tap(events => {
+        return this.events.next(events.filter(event => {
+          return event.id !== eventId;
+        }));
+      })).subscribe();
+    });
+  }
+
   uploadImage(image: File) {
 
     const uploadData = new FormData();
