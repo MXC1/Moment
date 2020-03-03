@@ -89,7 +89,7 @@ export class FeedPage implements OnInit, OnDestroy {
               });
             }
           });
-          
+
           return followsUser || followsEvent;
         });
       });

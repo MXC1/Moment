@@ -1,15 +1,17 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
 import { Post } from '../../../post';
 import { PostsService } from '../../../posts.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { NavController, AlertController, ModalController } from '@ionic/angular';
+import { NavController, AlertController, ModalController, IonSelect } from '@ionic/angular';
 import { EventsService } from '../../../events.service';
 import { UsersService } from '../../../users.service';
 import { EventContent } from '../../../event';
 import { User } from '../../../user';
 import { PostCommentService } from '../../../post-comment.service';
 import { PostComment } from '../../../post-comment';
+import { take, tap, switchMap, map } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-post-detail',
@@ -18,9 +20,11 @@ import { PostComment } from '../../../post-comment';
 })
 export class PostDetailComponent implements OnInit, OnDestroy {
   @Input() postId: string;
+  @ViewChild('menu', { static: false }) menu: IonSelect;
   post: Post;
   event: EventContent;
   user: User;
+  thisUser: User;
   comments: PostComment[];
   private postsSubscription: Subscription;
   private eventsSubscription: Subscription;
@@ -28,7 +32,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   private commentsSubscription: Subscription;
   isLoading = true;
 
-  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private commentsService: PostCommentService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
+  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private commentsService: PostCommentService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
 
   ngOnInit() {
     this.isLoading = true;
@@ -36,11 +40,16 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       this.post = post;
       this.eventsSubscription = this.eventsService.getEvent(this.post.eventId).subscribe(event => {
         this.event = event;
-        this.usersSubscription = this.usersService.getUser(this.post.userId).subscribe(user => {
-          this.user = user;
-          this.commentsSubscription = this.commentsService.getComments().subscribe(comments => {
-            this.comments = comments.filter(comment => this.post.id === comment.postId);
-            this.isLoading = false;
+        this.commentsSubscription = this.commentsService.getComments().subscribe(comments => {
+          this.comments = comments.filter(comment => this.post.id === comment.postId);
+          this.usersSubscription = this.usersService.getUser(this.post.userId).subscribe(user => {
+            this.user = user;
+            this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+              this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
+                this.thisUser = thisUser;
+                this.isLoading = false;
+              });
+            });
           });
         });
       });
@@ -75,6 +84,20 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   closeModal() {
     this.modalController.dismiss();
+  }
+
+  onShowMenu() {
+    this.menu.open();
+  }
+
+  onDeletePost() {
+    this.postsService.deletePost(this.post.id);
+    this.modalController.dismiss();
+    // this.navController.navigateBack('/tabs/feed');
+  }
+
+  isThisUsersPost() {
+    return this.thisUser.id === this.post.userId;
   }
 
   onPostLike(id: string) { }

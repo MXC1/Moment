@@ -7,10 +7,21 @@
       </ion-button>
     </ion-buttons>
     <ion-title class="ion-text-center">Moment</ion-title>
+    <ion-buttons slot="end" *ngIf="!isLoading && isThisUsersPost()">
+      <ion-button (click)="onShowMenu()">
+        <ion-icon name="menu" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-select #menu hidden interface="action-sheet" (ionChange)="onDeletePost()">
+    <ion-select-option (click)="onDeletePost()">
+      <ion-label>Delete Post</ion-label>
+    </ion-select-option>
+  </ion-select>
+
   <ion-grid class="ion-no-padding">
     <ion-row *ngIf="isLoading" class="ion-justify-content-center">
       <ion-col class="ion-text-center">
@@ -22,14 +33,6 @@
         <ion-row>
           <ion-col>
             <app-content [content]="this.post"></app-content>
-            <!-- <div (click)="playPause(thisVideo)" #thisVideo>
-          <video *ngIf="post.type === 'video'" style="max-width: 100%; max-height: 100%; position: relative" id="video">
-            <source type="video/mp4" [src]="post.content">
-          </video>
-          <ion-icon *ngIf="post.type === 'video'" name="ios-arrow-dropright" class="play-button" slot="icon-only" id="playButton">
-          </ion-icon>
-        </div>
-        <ion-img *ngIf="post.type === 'image'" [src]="post.content"></ion-img> -->
           </ion-col>
         </ion-row>
         <ion-row style="padding-top: 10px" class="ion-justify-content-center">
