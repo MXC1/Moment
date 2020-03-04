@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from '../../../posts.service';
 import { AuthService } from '../../../auth/auth.service';
@@ -45,7 +45,7 @@ export class NewPostComponent implements OnInit {
 
   @ViewChild(ImageChooserComponent, { static: false }) imageChooser;
   @ViewChild(IonicSelectableComponent, { static: false }) eventSelector;
-  event: EventContent;
+  @Input() event: EventContent;
 
   constructor(private postsService: PostsService, private authService: AuthService, private eventsService: EventsService, private navController: NavController, private router: Router, private modalController: ModalController, private loadingController: LoadingController) { }
 
@@ -61,6 +61,10 @@ export class NewPostComponent implements OnInit {
         validators: [Validators.required]
       })
     });
+
+    if (this.event) {
+      this.form.patchValue({ event: this.event.id });
+    }
 
     this.fetchEvents();
   }
@@ -86,7 +90,7 @@ export class NewPostComponent implements OnInit {
   }
 
   async onPost() {
-    const loadingElement = await this.loadingController.create({ message: 'Creating Your Account...' });
+    const loadingElement = await this.loadingController.create({ message: 'Creating Post...' });
 
     loadingElement.present();
 

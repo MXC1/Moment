@@ -1,21 +1,15 @@
 export class Post {
 
-
-    public likes: number;
-    public commentIds: string[];
-    public shares: number;
-
-
     constructor(public id: string,
                 public userId: string,
                 public eventId: string,
                 public caption: string,
                 public content: string,
-                public type: 'image' | 'video') {
+                public type: 'image' | 'video',
+                public comments: { [key: string]: {[key: string]: string} },
+                public likes: number,
+                public shares: number) {
 
-        this.likes = 0;
-        this.commentIds = [];
-        this.shares = 0;
     }
 
 }

@@ -7,13 +7,13 @@ import { AuthService } from './auth/auth.service';
 
 interface PostData {
   caption: string;
-  commentIds: string[];
   content: string;
   eventId: string;
   likes: number;
   shares: number;
   userId: string;
   type: 'image' | 'video';
+  comments: { [key: string]: { [key: string]: string } };
 }
 
 @Injectable({
@@ -34,7 +34,11 @@ export class PostsService {
                 resData[key].eventId,
                 resData[key].caption,
                 resData[key].content,
-                resData[key].type));
+                resData[key].type,
+                resData[key].comments,
+                resData[key].likes,
+                resData[key].shares
+              ));
             }
           }
           return posts.reverse();
@@ -46,7 +50,9 @@ export class PostsService {
   }
 
   newPost(userId: string, eventId: string, caption: string, content: string, type: 'image' | 'video') {
-    const newPost = new Post('', userId, eventId, caption, content, type);
+    const newPost = new Post('', userId, eventId, caption, content, type, null, 0, 0);
+    console.log(newPost);
+
     let postId: string;
 
     return this.authService.getToken.pipe(take(1), switchMap(token => {
@@ -70,7 +76,7 @@ export class PostsService {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<PostData>(`https://mmnt-io.firebaseio.com/posts/${id}.json?auth=${token}`)
         .pipe(map(resData => {
-          const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type);
+          const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type, resData.comments, resData.likes, resData.shares);
           return newPost;
         }));
     }));
@@ -95,6 +101,30 @@ export class PostsService {
           return post.id !== postId;
         }));
       })).subscribe();
+    });
+  }
+
+  addComment(postId: string, comment: { [userId: string]: string }) {
+    const userId = Object.keys(comment)[0];
+    const commentContent = Object.values(comment)[0];
+
+    return this.authService.getToken.pipe(take(1)).subscribe(token => {
+      return this.http.get<object[]>(`https://mmnt-io.firebaseio.com/posts/${postId}/comments.json?auth=${token}`).pipe(take(1)).subscribe((comments => {
+
+        let key;
+        if (comments !== null) {
+          key = Object.keys(comments).length;
+        } else {
+          key = 0;
+        }
+
+        return this.http.patch(`https://mmnt-io.firebaseio.com/posts/${postId}/comments.json?auth=${token}`,
+          {
+            [key]:
+              { [userId]: commentContent }
+          }
+        ).subscribe();
+      }));
     });
   }
 

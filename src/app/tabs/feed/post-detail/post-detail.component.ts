@@ -3,7 +3,7 @@ import { Post } from '../../../post';
 import { PostsService } from '../../../posts.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { NavController, AlertController, ModalController, IonSelect } from '@ionic/angular';
+import { NavController, AlertController, ModalController, IonSelect, IonInput } from '@ionic/angular';
 import { EventsService } from '../../../events.service';
 import { UsersService } from '../../../users.service';
 import { EventContent } from '../../../event';
@@ -12,6 +12,11 @@ import { PostCommentService } from '../../../post-comment.service';
 import { PostComment } from '../../../post-comment';
 import { take, tap, switchMap, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
+
+interface Comment {
+  userId: string;
+  commentContent: string;
+}
 
 @Component({
   selector: 'app-post-detail',
@@ -25,11 +30,13 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   event: EventContent;
   user: User;
   thisUser: User;
-  comments: PostComment[];
+  comments: Comment[] = [];
+  comment: string;
+  commentUsers: User[];
+  @ViewChild(IonInput, { static: false }) commentBox;
   private postsSubscription: Subscription;
   private eventsSubscription: Subscription;
   private usersSubscription: Subscription;
-  private commentsSubscription: Subscription;
   isLoading = true;
 
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private commentsService: PostCommentService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
@@ -38,15 +45,22 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.postsSubscription = this.postsService.getPost(this.postId).subscribe(post => {
       this.post = post;
+
+      if (this.post.comments) {
+        for (const eachComment of Object.values(this.post.comments)) {
+          this.comments = this.comments.concat({ userId: Object.keys(eachComment)[0], commentContent: Object.values(eachComment)[0] });
+        }
+      }
+
       this.eventsSubscription = this.eventsService.getEvent(this.post.eventId).subscribe(event => {
         this.event = event;
-        this.commentsSubscription = this.commentsService.getComments().subscribe(comments => {
-          this.comments = comments.filter(comment => this.post.id === comment.postId);
-          this.usersSubscription = this.usersService.getUser(this.post.userId).subscribe(user => {
-            this.user = user;
-            this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-              this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
-                this.thisUser = thisUser;
+        this.usersSubscription = this.usersService.getUser(this.post.userId).subscribe(user => {
+          this.user = user;
+          this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+            this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
+              this.thisUser = thisUser;
+              this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
+                this.commentUsers = users;
                 this.isLoading = false;
               });
             });
@@ -77,9 +91,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     if (this.usersSubscription) {
       this.usersSubscription.unsubscribe();
     }
-    if (this.commentsSubscription) {
-      this.commentsSubscription.unsubscribe();
-    }
   }
 
   closeModal() {
@@ -101,7 +112,21 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   onPostLike(id: string) { }
 
-  onPostComment(id: string) { }
+  onAddComment() {
+    const userId = this.thisUser.id;
+    const comment = this.comment;
+
+    this.postsService.addComment(this.post.id, { [userId]: comment });
+    this.commentUsers = this.commentUsers.concat(this.thisUser);
+    this.comments = this.comments.concat({ userId, commentContent: comment });
+    this.commentBox.value = '';
+  }
+
+  getUser(userId: string) {
+    if (this.commentUsers) {
+      return this.commentUsers.find(user => user.id === userId);
+    }
+  }
 
   onPostShare(id: string) { }
 

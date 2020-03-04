@@ -74,7 +74,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   }
 
   onNewPost() {
-    this.modalController.create({ component: NewPostComponent }).then(modalElement => {
+    this.modalController.create({ component: NewPostComponent, componentProps: {event: this.event} }).then(modalElement => {
       modalElement.present();
     });
   }

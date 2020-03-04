@@ -85,7 +85,7 @@ export class UsersService {
     });
 
     return this.authService.getToken.pipe(take(1), switchMap(token => {
-      return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(tap(ids => {
+      return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(take(1), tap(ids => {
         const key = ids.length;
         return this.http.patch<{ name: string }>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`, {
           [key]: toFollowId

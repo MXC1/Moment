@@ -14,3 +14,5 @@ platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.log(err));
 
 defineCustomElements(window);
+
+window.scrollTo(0, 1);
