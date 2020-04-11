@@ -3,7 +3,10 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'tabs/feed', pathMatch: 'full' , canLoad: [AuthGuard]},
+  {
+    path: '', redirectTo: 'tabs/feed', pathMatch: 'full',
+    canLoad: [AuthGuard]
+  },
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthPageModule)

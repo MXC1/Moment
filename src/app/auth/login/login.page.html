@@ -1,5 +1,10 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="onFeedback()">
+        <ion-icon name="bulb" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title class="ion-text-center">Log in</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -38,7 +43,6 @@
           <ion-button routerLink="../../register" fill="outline">Register</ion-button>
         </ion-col>
       </ion-row>
-
     </ion-grid>
   </form>
 </ion-content>

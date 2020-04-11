@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, ModalController } from '@ionic/angular';
 
 import { Plugins, Capacitor } from '@capacitor/core';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { FeedbackComponent } from './shared/feedback/feedback.component';
 
 // import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 // import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -22,7 +23,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private platform: Platform,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private modalController: ModalController
     // private splashScreen: SplashScreen,
     // private statusBar: StatusBar
   ) {
@@ -42,6 +44,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onLogOut() {
     this.authService.logout();
+  }
+
+  onFeedback() {
+    this.modalController.create({ component: FeedbackComponent }).then(modalElement => {
+      modalElement.present();
+    });
   }
 
   ngOnInit() {

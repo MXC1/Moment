@@ -6,6 +6,7 @@ import { UsersService } from 'src/app/users.service';
 import { switchMap } from 'rxjs/operators';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { ImageChooserComponent } from 'src/app/image-chooser/image-chooser.component';
+import { FeedbackComponent } from 'src/app/shared/feedback/feedback.component';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -116,6 +117,12 @@ export class PersonalInfoComponent implements OnInit {
       // image = this.assetToFile('https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg');
     }
 
+  }
+
+  onFeedback() {
+    this.modalController.create({ component: FeedbackComponent }).then(modalElement => {
+      modalElement.present();
+    });
   }
 }
 

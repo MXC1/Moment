@@ -9,8 +9,7 @@ import { UsersService } from '../../../users.service';
 import { EventContent } from '../../../event';
 import { User } from '../../../user';
 import { PostCommentService } from '../../../post-comment.service';
-import { PostComment } from '../../../post-comment';
-import { take, tap, switchMap, map } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 
 interface Comment {

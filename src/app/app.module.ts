@@ -19,11 +19,12 @@ import { NewEventComponent } from './tabs/events/new-event/new-event.component';
 import { EventDetailComponent } from './tabs/events/event-detail/event-detail.component';
 import { ContentModule } from './shared/content/content.module';
 import { PersonalInfoComponent } from './auth/register/personal-info/personal-info.component';
+import { FeedbackComponent } from './shared/feedback/feedback.component';
 
 
 @NgModule({
-  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent],
-  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent],
+  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent],
+  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicSelectableModule, ContentModule],
   providers: [
     StatusBar,

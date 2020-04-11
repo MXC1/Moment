@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
+import { FeedbackComponent } from 'src/app/shared/feedback/feedback.component';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { AlertController } from '@ionic/angular';
 export class LoginPage implements OnInit {
   form: FormGroup;
 
-  constructor(private authService: AuthService, private router: Router, private alertController: AlertController) { }
+  constructor(private authService: AuthService, private router: Router, private alertController: AlertController, private modalController: ModalController) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -41,7 +42,7 @@ export class LoginPage implements OnInit {
       const code = errorResponse.error.error.message;
       let message = 'There was a problem. Please try again.';
       if (code === 'EMAIL_NOT_FOUND') {
-      message = 'Your username or password is incorrect.';
+        message = 'Your username or password is incorrect.';
       } else if (code === 'INVALID_PASSWORD') {
         message = 'Your username or password is incorrect.';
       }
@@ -54,10 +55,15 @@ export class LoginPage implements OnInit {
     this.alertController.create({
       header: 'Authentication Failed',
       message,
-      buttons: ['Okay'] }).then(alertElement => {
+      buttons: ['Okay']
+    }).then(alertElement => {
       alertElement.present();
     });
   }
 
-  onChooseRegister() {}
+  onFeedback() {
+    this.modalController.create({ component: FeedbackComponent }).then(modalElement => {
+      modalElement.present();
+    });
+  }
 }

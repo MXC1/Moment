@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { AlertController, ModalController } from '@ionic/angular';
 import { PersonalInfoComponent } from './personal-info/personal-info.component';
+import { FeedbackComponent } from 'src/app/shared/feedback/feedback.component';
 
 @Component({
   selector: 'app-register',
@@ -62,6 +63,12 @@ export class RegisterPage implements OnInit {
       buttons: ['Okay']
     }).then(alertElement => {
       alertElement.present();
+    });
+  }
+
+  onFeedback() {
+    this.modalController.create({ component: FeedbackComponent }).then(modalElement => {
+      modalElement.present();
     });
   }
 }
