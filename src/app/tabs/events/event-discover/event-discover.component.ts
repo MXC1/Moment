@@ -4,7 +4,6 @@ import { EventContent } from 'src/app/event';
 import { Subscription } from 'rxjs';
 import { EventsService } from 'src/app/events.service';
 import { take } from 'rxjs/operators';
-import { PeoplePage } from '../../people/people.page';
 import { AuthService } from 'src/app/auth/auth.service';
 import { EventDetailComponent } from '../event-detail/event-detail.component';
 import { UsersService } from 'src/app/users.service';
@@ -40,10 +39,10 @@ export class EventDiscoverComponent implements OnInit {
           });
           return followedByUser;
         });
-        
-        this.loadedEvents.forEach(myFollowedEvent => {
-          myFollowedEvent.followerIds.forEach(followerId => {
-            this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
+
+        this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
+          this.loadedEvents.forEach(myFollowedEvent => {
+            myFollowedEvent.followerIds.forEach(followerId => {
               allEvents.filter(eachEvent => {
                 let followedByUser = false;
                 eachEvent.followerIds.forEach(eventFollowerId => {
@@ -58,9 +57,14 @@ export class EventDiscoverComponent implements OnInit {
                     this.displayedEvents = this.displayedEvents.concat({ event: followerFollowedEvent, weight: 1 });
                   }
                 } else {
-                  this.displayedEvents.find(e => e.event.id === followerFollowedEvent.id).weight = this.displayedEvents.find(e => e.event.id === followerFollowedEvent.id).weight + 1;                  
+                  this.displayedEvents.find(e => e.event.id === followerFollowedEvent.id).weight = this.displayedEvents.find(e => e.event.id === followerFollowedEvent.id).weight + 1;
                 }
               });
+
+              this.displayedEvents = this.displayedEvents.sort((e1, e2) => {
+                return e2.weight - e1.weight;
+              });
+
               this.isLoading = false;
             });
           });

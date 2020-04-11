@@ -25,8 +25,6 @@ export class EventsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.fetchFollowedEvents();
-
-    this.onDiscoverEvents();
   }
 
   fetchFollowedEvents() {

@@ -13,6 +13,8 @@
 <ion-content>
   <ion-grid>
     <ion-col>
+      <ion-row>
+      </ion-row>
       <ion-row *ngIf="!isLoading">
         <ion-col size="4" *ngFor="let event of displayedEvents">
           <ion-img [src]="event.event.headerImage" (click)="onEventDetail(event.event.id)"></ion-img>

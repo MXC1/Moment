@@ -13,6 +13,7 @@ import { SearchComponent } from 'src/app/search/search.component';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NewPostComponent } from './new-post/new-post.component';
 import { PostDetailComponent } from './post-detail/post-detail.component';
+import { PostDiscoverComponent } from './post-discover/post-discover.component';
 
 @Component({
   selector: 'app-feed',
@@ -32,6 +33,12 @@ export class FeedPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
+    this.fetchFollowedPosts();
+
+    this.onDiscoverPosts();
+  }
+
+  fetchFollowedPosts() {
     this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
       this.loadedEvents = events;
       this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
@@ -66,12 +73,6 @@ export class FeedPage implements OnInit, OnDestroy {
           let followsEvent;
 
           currentUser.friendIds.forEach(person => {
-            // if (post.id === '-M1S0zlrmBnwEbN-Hyw_') {
-            //   console.log(person);
-            //   console.log(post.userId);
-            //   console.log(person === post.userId);
-            // }
-
             if (!followsUser) {
               followsUser = person === post.userId;
             }
@@ -131,6 +132,14 @@ export class FeedPage implements OnInit, OnDestroy {
     this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
       modalElement.present();
     });
+  }
+
+  async onDiscoverPosts() {
+    const onDiscoverEventsModal = await this.modalController.create({ component: PostDiscoverComponent });
+    onDiscoverEventsModal.onDidDismiss().then(() => {
+      this.fetchFollowedPosts();
+    });
+    onDiscoverEventsModal.present();
   }
 
   playPause(thisDiv) {
