@@ -8,7 +8,6 @@ import { AuthService } from './auth/auth.service';
 interface UserData {
   bio: string;
   email: string;
-  followedEvents: string[];
   friendIds: string[];
   fullName: string;
   image: string;
@@ -33,7 +32,7 @@ export class UsersService {
           const users = [];
           for (const key in resData) {
             if (resData.hasOwnProperty(key)) {
-              users.push(new User(key, resData[key].username, resData[key].email, resData[key].image, resData[key].fullName, resData[key].bio, resData[key].postIds, resData[key].friendIds, resData[key].followedEvents));
+              users.push(new User(key, resData[key].username, resData[key].email, resData[key].image, resData[key].fullName, resData[key].bio, resData[key].postIds, resData[key].friendIds));
             }
           }
           return users.reverse();
@@ -47,7 +46,7 @@ export class UsersService {
   getUser(id: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<UserData>(`https://mmnt-io.firebaseio.com/users/${id}.json?auth=${token}`).pipe(take(1), map(resData => {
-        const newUser = new User(id, resData.username, resData.email, resData.image, resData.fullName, resData.bio, resData.postIds, resData.friendIds, resData.followedEvents);
+        const newUser = new User(id, resData.username, resData.email, resData.image, resData.fullName, resData.bio, resData.postIds, resData.friendIds);
         return newUser;
       }));
     }));

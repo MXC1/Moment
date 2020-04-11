@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar mode="md">
     <ion-buttons slot="start">
       <ion-menu-button *ngIf="isThisUser"></ion-menu-button>
       <ion-back-button *ngIf="!isThisUser" defaultHref="/tabs/people"></ion-back-button>
@@ -11,7 +11,7 @@
       </ion-button>
     </ion-buttons>
     <ion-label slot="end" *ngIf="isFollowing && !isThisUser" style="padding-right: 5px;">Following</ion-label>
-    <ion-title>Moment</ion-title>
+    <ion-title class="ion-text-left">Moment</ion-title>
   </ion-toolbar>
 </ion-header>
 

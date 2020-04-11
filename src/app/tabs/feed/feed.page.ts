@@ -35,8 +35,6 @@ export class FeedPage implements OnInit, OnDestroy {
     this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
       this.loadedEvents = events;
       this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
-        console.log(posts);
-
         this.filterPosts(posts);
       });
     });

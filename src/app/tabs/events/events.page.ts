@@ -8,6 +8,7 @@ import { ModalController } from '@ionic/angular';
 import { SearchComponent } from 'src/app/search/search.component';
 import { NewEventComponent } from './new-event/new-event.component';
 import { EventDetailComponent } from './event-detail/event-detail.component';
+import { EventDiscoverComponent } from './event-discover/event-discover.component';
 
 @Component({
   selector: 'app-events',
@@ -25,11 +26,7 @@ export class EventsPage implements OnInit, OnDestroy {
     this.isLoading = true;
     this.fetchFollowedEvents();
 
-    // this.isLoading = true;
-    // this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
-    //   this.loadedEvents = events;
-    //   this.isLoading = false;
-    // });
+    this.onDiscoverEvents();
   }
 
   fetchFollowedEvents() {
@@ -38,10 +35,14 @@ export class EventsPage implements OnInit, OnDestroy {
         this.loadedEvents = events.filter(event => {
           let followedByUser = false;
           event.followerIds.forEach(followerId => {
-            followedByUser = followerId === userId;
+            if (followerId === userId) {
+              followedByUser = followerId === userId;
+            }
+            return followedByUser;
           });
           return followedByUser;
         });
+
         this.isLoading = false;
       });
     });
@@ -98,5 +99,13 @@ export class EventsPage implements OnInit, OnDestroy {
       }
     });
     onEventDetailModal.present();
+  }
+
+  async onDiscoverEvents() {
+    const onDiscoverEventsModal = await this.modalController.create({ component: EventDiscoverComponent });
+    onDiscoverEventsModal.onDidDismiss().then(() => {
+      this.fetchFollowedEvents();
+    });
+    onDiscoverEventsModal.present();
   }
 }

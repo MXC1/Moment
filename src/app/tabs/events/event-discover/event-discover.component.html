@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="ios-arrow-back"></ion-icon>
+        <ion-label>Back</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Discover Events</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-col>
+      <ion-row *ngIf="!isLoading">
+        <ion-col size="4" *ngFor="let event of displayedEvents">
+          <ion-img [src]="event.event.headerImage" (click)="onEventDetail(event.event.id)"></ion-img>
+          <p class="ion-text-center">{{event.event.name}}</p>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-grid>
+</ion-content>
+

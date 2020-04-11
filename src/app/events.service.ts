@@ -102,10 +102,6 @@ export class EventsService {
   }
 
   follow(userId: string, eventId: string) {
-    this.userService.getUser(userId).pipe(take(1)).subscribe(user => {
-      user.followedEvents.concat(eventId);
-    });
-
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds.json/?auth=${token}`).pipe(tap(followers => {
         const key = followers.length;
