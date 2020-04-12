@@ -1,12 +1,9 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar mode="md">
     <ion-buttons slot="start">
-      <ion-button (click)="closeModal()">
-        <ion-icon name="ios-arrow-back"></ion-icon>
-        <ion-label>Back</ion-label>
-      </ion-button>
+      <ion-back-button (click)="closeModal()" defaultHref="/tabs/feed"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">Give Feedback</ion-title>
+    <ion-title>Give Feedback</ion-title>
   </ion-toolbar>
 </ion-header>
 

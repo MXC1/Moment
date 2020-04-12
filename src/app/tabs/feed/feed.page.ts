@@ -34,8 +34,6 @@ export class FeedPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.fetchFollowedPosts();
-
-    this.onDiscoverPosts();
   }
 
   fetchFollowedPosts() {
@@ -153,6 +151,16 @@ export class FeedPage implements OnInit, OnDestroy {
       thisVideo.pause();
       thisButton.style = 'display: inline';
     }
+  }
+
+  onClickUser(postUserId: string) {
+    this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+      if (thisUserId === postUserId) {
+        this.router.navigateByUrl('/tabs/profile');
+      } else {
+        this.router.navigateByUrl('/tabs/people/' + postUserId);
+      }
+    });
   }
 
   onPostLike(id: string) { }

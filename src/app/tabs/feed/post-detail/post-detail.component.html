@@ -1,12 +1,9 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar mode="md">
     <ion-buttons slot="start">
-      <ion-button (click)="closeModal()">
-        <ion-icon name="ios-arrow-back"></ion-icon>
-        <ion-label>Back</ion-label>
-      </ion-button>
+      <ion-back-button (click)="closeModal()" defaultHref="/tabs/feed"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">Moment</ion-title>
+    <ion-title>Moment</ion-title>
     <ion-buttons slot="end" *ngIf="!isLoading && isThisUsersPost()">
       <ion-button (click)="onShowMenu()">
         <ion-icon name="menu" slot="icon-only"></ion-icon>
@@ -36,13 +33,14 @@
           </ion-col>
         </ion-row>
         <ion-row style="padding-top: 10px" class="ion-justify-content-center">
-          <ion-label>{{ event?.name }}</ion-label>
+          <ion-label class="user-name">{{ user.username }}</ion-label>
         </ion-row>
         <ion-row style="padding-top: 5px" class="ion-justify-content-center">
-          <ion-label>{{ post.caption }}</ion-label>
+          <ion-label class="event-name"> @ {{ event?.name }}, {{ event?.location }}</ion-label>
         </ion-row>
-        <ion-row style="padding-top: 5px" class="ion-justify-content-center">
-          <ion-label>{{ user.username }}</ion-label>
+        <hr>
+        <ion-row style="padding-top: 5px" class="ion-text-center">
+          <ion-label class="caption">{{ post.caption }}</ion-label>
         </ion-row>
         <ion-row style="padding-top: 5px" class="ion-text-center">
           <ion-col>

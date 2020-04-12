@@ -74,8 +74,6 @@ export class AuthService {
   private setUserData(userData: AuthResData) {
     const tokenExpiration = new Date(new Date().getTime() + (+userData.expiresIn * 1000));
 
-    console.log(userData);
-
     this.user.next(new User(userData.localId, userData.email, userData.idToken, tokenExpiration));
     this.storeAuthData(userData.localId, userData.email, userData.idToken, tokenExpiration.toISOString());
   }

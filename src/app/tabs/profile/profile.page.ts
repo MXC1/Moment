@@ -35,9 +35,9 @@ export class ProfilePage implements OnInit {
     let userId;
 
     this.route.paramMap.subscribe(paramMap => {
-      if (!paramMap.has('userId')) {
+      this.authService.getUserId.pipe(take(1)).subscribe(id => {
+        if (!paramMap.has('userId')) {
 
-        this.authService.getUserId.pipe(take(1)).subscribe(id => {
           if (!id) {
             throw new Error('No User ID Found!');
           } else {
@@ -45,21 +45,25 @@ export class ProfilePage implements OnInit {
             this.isFollowing = false;
             this.getUser(id);
           }
-        });
-      } else {
-        userId = paramMap.get('userId');
-        this.isThisUser = false;
+        } else {
+          userId = paramMap.get('userId');
+          if (userId === id) {
+            this.isThisUser = true;
+          } else {
+            this.isThisUser = false;
+          }
 
-        this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
-          this.usersService.isFollowing(thisUserId, userId).pipe(take(1)).subscribe(isFollowing => {
-            isFollowing.subscribe(resData => {
-              this.isFollowing = resData;
-              this.getUser(userId);
+          this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+            this.usersService.isFollowing(thisUserId, userId).pipe(take(1)).subscribe(isFollowing => {
+              isFollowing.subscribe(resData => {
+                this.isFollowing = resData;
+                this.getUser(userId);
+              });
             });
           });
-        });
 
-      }
+        }
+      });
     });
   }
 
