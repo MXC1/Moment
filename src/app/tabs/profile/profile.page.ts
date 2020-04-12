@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { UsersService } from 'src/app/users.service';
-import { Subscription } from 'rxjs';
 import { User } from 'src/app/user';
 import { Post } from 'src/app/post';
 import { PostsService } from 'src/app/posts.service';
@@ -10,25 +9,36 @@ import { ActivatedRoute } from '@angular/router';
 import { NewPostComponent } from '../feed/new-post/new-post.component';
 import { ModalController } from '@ionic/angular';
 import { PostDetailComponent } from '../feed/post-detail/post-detail.component';
+import { Subscription } from 'rxjs';
 
+/**
+ * Page for viewing both the users own profile and other users profiles
+ *
+ * @export
+ * @class ProfilePage
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
-  private usersSubscription: Subscription;
-  private postsSubscription: Subscription;
+  usersSubscription: Subscription;
   user: User;
   posts: Post[];
   isLoading = false;
 
-  isThisUser;
+  isThisUser: boolean;
   isFollowing: boolean;
 
   constructor(private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private route: ActivatedRoute, private modalController: ModalController) { }
 
-
+  /**
+   * Check URL for a user ID and determine whether it is the users own profile or anothers
+   *
+   * @memberof ProfilePage
+   */
   ngOnInit() {
     this.isLoading = true;
 
@@ -67,20 +77,32 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  getUserImage() {
-    let thisImage: string;
-    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-      if (!userId) {
-        throw new Error('No User ID Found!');
-      } else {
-        this.usersSubscription = this.usersService.getUser(userId).pipe(take(1)).subscribe(user => {
-          thisImage = user.image;
-        });
-      }
-    });
-    return thisImage;
-  }
+  // /**
+  //  * Fetch the image for the user
+  //  *
+  //  * @returns
+  //  * @memberof ProfilePage
+  //  */
+  // getUserImage() {
+  //   let thisImage: string;
+  //   this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+  //     if (!userId) {
+  //       throw new Error('No User ID Found!');
+  //     } else {
+  //       this.usersSubscription = this.usersService.getUser(userId).pipe(take(1)).subscribe(user => {
+  //         thisImage = user.image;
+  //       });
+  //     }
+  //   });
+  //   return thisImage;
+  // }
 
+  /**
+   * Fetch the user, either from URL or using local user ID
+   *
+   * @param {string} userId
+   * @memberof ProfilePage
+   */
   getUser(userId: string) {
     this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
       this.user = user;
@@ -92,6 +114,11 @@ export class ProfilePage implements OnInit {
     });
   }
 
+  /**
+   * Send a follow request to the auth service
+   *
+   * @memberof ProfilePage
+   */
   onFollow() {
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.usersService.follow(id, this.user.id).subscribe(() => {
@@ -101,6 +128,11 @@ export class ProfilePage implements OnInit {
     });
   }
 
+  /**
+   * Send an unfollow request to the auth service
+   *
+   * @memberof ProfilePage
+   */
   onUnfollow() {
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.usersService.unfollow(id, this.user.id).subscribe(() => {
@@ -110,12 +142,23 @@ export class ProfilePage implements OnInit {
     });
   }
 
+  /**
+   * Open the new post modal
+   *
+   * @memberof ProfilePage
+   */
   onNewPost() {
     this.modalController.create({ component: NewPostComponent }).then(modalElement => {
       modalElement.present();
     });
   }
 
+  /**
+   * Open the post detail modal
+   *
+   * @param {string} postId
+   * @memberof ProfilePage
+   */
   onPostDetail(postId: string) {
     this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
       modalElement.present();

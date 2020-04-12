@@ -15,16 +15,35 @@ interface UserData {
   username: string;
 }
 
+/**
+ * Handles user data 
+ * Model of Model-View-Controller
+ *
+ * @export
+ * @class UsersService
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
   private users = new BehaviorSubject<User[]>([]);
 
+  /**
+   * Only called if fetchUsers has been called at least once already
+   *
+   * @readonly
+   * @memberof UsersService
+   */
   get getUsers() {
     return this.users.asObservable();
   }
 
+  /**
+   * Access the database and create a Subject type containing all saved users
+   *
+   * @returns
+   * @memberof UsersService
+   */
   fetchUsers() {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<{ [key: string]: UserData }>(`https://mmnt-io.firebaseio.com/users.json?auth=${token}`)
@@ -43,6 +62,10 @@ export class UsersService {
     }));
   }
 
+  /**
+   * Fetch a single user from the database
+   * @param id ID of user to be fetched
+   */
   getUser(id: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<UserData>(`https://mmnt-io.firebaseio.com/users/${id}.json?auth=${token}`).pipe(take(1), map(resData => {
@@ -52,6 +75,17 @@ export class UsersService {
     }));
   }
 
+  /**
+   * Add a user to the database
+   *
+   * @param {string} username
+   * @param {string} email
+   * @param {string} image URL of image
+   * @param {string} fullName
+   * @param {string} bio
+   * @returns
+   * @memberof UsersService
+   */
   addUser(username: string, email: string, image: string, fullName: string, bio: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.authService.getUserId.pipe(take(1), switchMap(userId => {
@@ -67,6 +101,13 @@ export class UsersService {
     }));
   }
 
+  /**
+   * Upload an image to Firebase storage
+   *
+   * @param {File} image
+   * @returns
+   * @memberof UsersService
+   */
   uploadImage(image: File) {
     const uploadData = new FormData();
 
@@ -77,6 +118,14 @@ export class UsersService {
     }));
   }
 
+  /**
+   * Add a user to another user's friends list
+   *
+   * @param {string} userId Following user
+   * @param {string} toFollowId User to follow
+   * @returns
+   * @memberof UsersService
+   */
   follow(userId: string, toFollowId: string) {
 
     this.getUser(userId).pipe(take(1)).subscribe(user => {
@@ -93,6 +142,14 @@ export class UsersService {
     }));
   }
 
+  /**
+   * Remove a user form another user's friends list
+   *
+   * @param {string} userId
+   * @param {string} toUnfollowId
+   * @returns
+   * @memberof UsersService
+   */
   unfollow(userId: string, toUnfollowId: string) {
     this.getUser(userId).pipe(take(1)).subscribe(user => {
       user.friendIds = user.friendIds.filter(i => i !== toUnfollowId);
@@ -106,6 +163,14 @@ export class UsersService {
     }));
   }
 
+  /**
+   * Check whether one user is following another
+   *
+   * @param {string} userId
+   * @param {string} userToCheckId
+   * @returns
+   * @memberof UsersService
+   */
   isFollowing(userId: string, userToCheckId: string) {
     return this.authService.getToken.pipe(take(1), map(token => {
       return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(take(1), map(friendIds => {
@@ -114,14 +179,6 @@ export class UsersService {
         });
       }));
     }));
-
-    // this.authService.getToken.pipe(take(1), switchMap(token => {
-    //   this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(tap(ids => {
-    //     return ids.some(id => {
-    //       return id === userToCheckId;
-    //     });
-    //   }));
-    // }));
   }
 
   constructor(private http: HttpClient, private authService: AuthService) { }

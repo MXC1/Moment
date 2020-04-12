@@ -8,6 +8,15 @@ import { ModalController, LoadingController } from '@ionic/angular';
 import { ImageChooserComponent } from 'src/app/image-chooser/image-chooser.component';
 import { FeedbackComponent } from 'src/app/shared/feedback/feedback.component';
 
+/**
+ * Converts a base64 string to a Blob object
+ * https://www.npmjs.com/package/b64-to-blob
+ *
+ * @param {*} b64Data
+ * @param {string} [contentType='']
+ * @param {number} [sliceSize=512]
+ * @returns
+ */
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
   const byteArrays = [];
@@ -28,6 +37,13 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   return blob;
 };
 
+/**
+ * A form for entering personal info during the register process
+ *
+ * @export
+ * @class PersonalInfoComponent
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'app-personal-info',
   templateUrl: './personal-info.component.html',
@@ -54,6 +70,14 @@ export class PersonalInfoComponent implements OnInit {
     });
   }
 
+  /**
+   * Called when a picture is chosen or taken
+   * Converts image file to blob if necessary and patches it into the form
+   *
+   * @param {string} imageData
+   * @returns
+   * @memberof PersonalInfoComponent
+   */
   onImageChosen(imageData: string) {
     let imageFile;
     if (typeof imageData === 'string') {
@@ -71,6 +95,11 @@ export class PersonalInfoComponent implements OnInit {
     this.form.patchValue({ image: imageFile.target.files[0] });
   }
 
+  /**
+   * Called when the form is submitted or skipped
+   *
+   * @memberof PersonalInfoComponent
+   */
   async onSubmit() {
     const loadingElement = await this.loadingController.create({ message: 'Creating Your Account...' });
 
@@ -94,6 +123,10 @@ export class PersonalInfoComponent implements OnInit {
         this.router.navigateByUrl('/tabs/feed');
       });
     } else {
+      /**
+       * Use a default letter from the assets folder for forms with no image 
+       */
+
       let blob = null;
       const xhr = new XMLHttpRequest();
       xhr.open('GET', './assets/default_pictures/' + this.username.substr(0, 1).toUpperCase() + '.jpg');
@@ -113,12 +146,15 @@ export class PersonalInfoComponent implements OnInit {
         });
       };
       xhr.send();
-
-      // image = this.assetToFile('https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg');
     }
 
   }
 
+  /**
+   * Open the feedback modal
+   *
+   * @memberof PersonalInfoComponent
+   */
   onFeedback() {
     this.modalController.create({ component: FeedbackComponent }).then(modalElement => {
       modalElement.present();

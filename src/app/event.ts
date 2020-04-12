@@ -7,6 +7,9 @@ export class EventContent {
                 public postIds: string[],
                 public followerIds: string[],
                 public headerImage: string) {
+        /**
+         * Ensure arrays are instantiated as empty so that they are iterable
+         */
         if (!this.postIds) {
             this.postIds = [];
         }

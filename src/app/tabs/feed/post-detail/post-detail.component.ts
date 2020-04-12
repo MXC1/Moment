@@ -17,6 +17,14 @@ interface Comment {
   commentContent: string;
 }
 
+/**
+ *  Shows a single post
+ *
+ * @export
+ * @class PostDetailComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
   selector: 'app-post-detail',
   templateUrl: './post-detail.component.html',

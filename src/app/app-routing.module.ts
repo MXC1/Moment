@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 
+/**
+ * Define basic routing paths
+ */
 const routes: Routes = [
   {
     path: '', redirectTo: 'tabs/feed', pathMatch: 'full',
@@ -14,17 +17,6 @@ const routes: Routes = [
   {
     path: 'tabs',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
-    canLoad: [AuthGuard]
-  },
-  {
-    path: 'post-detail',
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
-        canLoad: [AuthGuard]
-      }
-    ],
     canLoad: [AuthGuard]
   }
 ];

@@ -15,14 +15,20 @@ import { NewPostComponent } from './new-post/new-post.component';
 import { PostDetailComponent } from './post-detail/post-detail.component';
 import { PostDiscoverComponent } from './post-discover/post-discover.component';
 
+/**
+ * Feed of all posts by users or events the current user follows
+ *
+ * @export
+ * @class FeedPage
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
   selector: 'app-feed',
   templateUrl: './feed.page.html',
   styleUrls: ['./feed.page.scss'],
 })
 export class FeedPage implements OnInit, OnDestroy {
-
-  constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController, private authService: AuthService) { }
   loadedPosts: Post[] = [];
   loadedUsers: User[];
   loadedEvents: EventContent[];
@@ -31,11 +37,15 @@ export class FeedPage implements OnInit, OnDestroy {
   private eventsSubscription: Subscription;
   isLoading = false;
 
-  ngOnInit() {
-    this.isLoading = true;
-    this.fetchFollowedPosts();
-  }
+  constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController, private authService: AuthService) { }
 
+  ngOnInit() {}
+
+  /**
+   * Load in all events and posts
+   *
+   * @memberof FeedPage
+   */
   fetchFollowedPosts() {
     this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
       this.loadedEvents = events;
@@ -45,6 +55,11 @@ export class FeedPage implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Dispose of subscriptions
+   *
+   * @memberof FeedPage
+   */
   ngOnDestroy() {
     if (this.postsSubscription) {
       this.postsSubscription.unsubscribe();
@@ -58,11 +73,17 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.postsService.getPosts.subscribe(posts => {
-      this.filterPosts(posts);
-    });
+    this.isLoading = true;
+    this.fetchFollowedPosts();
   }
 
+  /**
+   * Check whether a post was made by a user or event that the current user follows
+   * Filter the array accordingly
+   *
+   * @param {*} posts
+   * @memberof FeedPage
+   */
   filterPosts(posts) {
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
@@ -98,24 +119,48 @@ export class FeedPage implements OnInit, OnDestroy {
 
   }
 
+  /**
+   * Get a single user 
+   *
+   * @param {string} id
+   * @returns {User}
+   * @memberof FeedPage
+   */
   getUser(id: string): User {
     if (this.loadedUsers) {
       return this.loadedUsers.find(user => user.id === id);
     }
   }
 
+  /**
+   * Get a single event
+   *
+   * @param {string} id
+   * @returns {EventContent}
+   * @memberof FeedPage
+   */
   getEvent(id: string): EventContent {
     if (this.loadedEvents) {
       return this.loadedEvents.find(event => event.id === id);
     }
   }
 
+  /**
+   * Open search modal
+   *
+   * @memberof FeedPage
+   */
   onSearch() {
     this.modalController.create({ component: SearchComponent, componentProps: { toSearch: 'posts' } }).then(modalElement => {
       modalElement.present();
     });
   }
 
+  /**
+   * Open new post modal and refresh posts to show the latest
+   *
+   * @memberof FeedPage
+   */
   async onNewPost() {
     const newPostModal = await this.modalController.create({ component: NewPostComponent });
     newPostModal.onDidDismiss().then(() => {
@@ -126,12 +171,23 @@ export class FeedPage implements OnInit, OnDestroy {
     newPostModal.present();
   }
 
+  /**
+   * Open post detail modal
+   *
+   * @param {string} postId
+   * @memberof FeedPage
+   */
   onPostDetail(postId: string) {
     this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
       modalElement.present();
     });
   }
 
+  /**
+   * Open discover modal
+   *
+   * @memberof FeedPage
+   */
   async onDiscoverPosts() {
     const onDiscoverEventsModal = await this.modalController.create({ component: PostDiscoverComponent });
     onDiscoverEventsModal.onDidDismiss().then(() => {
@@ -140,6 +196,12 @@ export class FeedPage implements OnInit, OnDestroy {
     onDiscoverEventsModal.present();
   }
 
+  /**
+   * Play or pause a video element
+   *
+   * @param {*} thisDiv
+   * @memberof FeedPage
+   */
   playPause(thisDiv) {
     const thisVideo = thisDiv.children[0];
     const thisButton = thisDiv.children[1];
@@ -153,6 +215,13 @@ export class FeedPage implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Called when a users name is pressed
+   * Determines whether to navigate to the profile or people page
+   *
+   * @param {string} postUserId
+   * @memberof FeedPage
+   */
   onClickUser(postUserId: string) {
     this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
       if (thisUserId === postUserId) {

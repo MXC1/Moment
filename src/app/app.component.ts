@@ -8,9 +8,14 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FeedbackComponent } from './shared/feedback/feedback.component';
 
-// import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-// import { StatusBar } from '@ionic-native/status-bar/ngx';
-
+/**
+ * Wraps the whole application
+ *
+ * @export
+ * @class AppComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -21,37 +26,16 @@ export class AppComponent implements OnInit, OnDestroy {
   private previousAuthState = false;
 
   constructor(
-    private platform: Platform,
     private authService: AuthService,
     private router: Router,
     private modalController: ModalController
-    // private splashScreen: SplashScreen,
-    // private statusBar: StatusBar
-  ) {
-    this.initializeApp();
-  }
+  ) {}
 
-  initializeApp() {
-    this.platform.ready().then(() => {
-      if (Capacitor.isPluginAvailable('SplashScreen')) {
-        Plugins.SplashScreen.hide();
-      }
-
-      // this.statusBar.styleDefault();
-      // this.splashScreen.hide();
-    });
-  }
-
-  onLogOut() {
-    this.authService.logout();
-  }
-
-  onFeedback() {
-    this.modalController.create({ component: FeedbackComponent }).then(modalElement => {
-      modalElement.present();
-    });
-  }
-
+  /**
+   * Check authentication status and navigate to login if not
+   *
+   * @memberof AppComponent
+   */
   ngOnInit() {
     this.authSubscription = this.authService.isAuthenticated.subscribe(isAuthenticated => {
       if (!isAuthenticated && this.previousAuthState !== isAuthenticated) {
@@ -61,6 +45,32 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Method for logout option in the sidebar menu
+   *
+   * @memberof AppComponent
+   */
+  onLogOut() {
+    this.authService.logout();
+  }
+
+  /**
+   * Create the feedback modal
+   *
+   * @memberof AppComponent
+   */
+  onFeedback() {
+    this.modalController.create({ component: FeedbackComponent }).then(modalElement => {
+      modalElement.present();
+    });
+  }
+
+
+  /**
+   * Dispose of auth subscription
+   *
+   * @memberof AppComponent
+   */
   ngOnDestroy() {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();

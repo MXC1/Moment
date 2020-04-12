@@ -8,8 +8,5 @@ export class Post {
                 public type: 'image' | 'video',
                 public comments: { [key: string]: {[key: string]: string} },
                 public likes: number,
-                public shares: number) {
-
-    }
-
+                public shares: number) {}
 }

@@ -4,6 +4,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { TabsPage } from './tabs.page';
 import { AuthGuard } from '../auth/auth.guard';
 
+/**
+ * Define detailed routing paths, including dynamic paths for viewing specific profiles
+ */
 const routes: Routes = [
   {
     path: '',

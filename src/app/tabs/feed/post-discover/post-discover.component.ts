@@ -13,13 +13,19 @@ import { PostDetailComponent } from '../post-detail/post-detail.component';
 import { SegmentChangeEventDetail } from '@ionic/core';
 
 
+/**
+ * Modal for discovering new posts
+ *
+ * @export
+ * @class PostDiscoverComponent
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'app-post-discover',
   templateUrl: './post-discover.component.html',
   styleUrls: ['./post-discover.component.scss'],
 })
 export class PostDiscoverComponent implements OnInit {
-
   loadedEvents: EventContent[] = [];
   loadedPosts: Post[] = [];
   displayedPosts: { post: Post, weight: number }[] = [];
@@ -29,6 +35,11 @@ export class PostDiscoverComponent implements OnInit {
 
   constructor(private modalController: ModalController, private eventsService: EventsService, private authService: AuthService, private usersService: UsersService, private postsService: PostsService) { }
 
+  /**
+   * Load in all users and events and load popular posts by default
+   *
+   * @memberof PostDiscoverComponent
+   */
   ngOnInit() {
     this.isLoading = true;
     this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
@@ -41,10 +52,13 @@ export class PostDiscoverComponent implements OnInit {
     });
   }
 
-  fetchUsersAndEvents() {
-  }
-
-
+  /**
+   * Filter posts by those within the current users network
+   * Shows posts by people who follow the same events as the current user
+   * Weights each post by how many events the poster has in common with the user and sorts the list by this weight
+   *
+   * @memberof PostDiscoverComponent
+   */
   fetchTailoredPosts() {
     this.displayedPosts = [];
 
@@ -112,6 +126,11 @@ export class PostDiscoverComponent implements OnInit {
     });
   }
 
+  /**
+   * Sort all the posts the user will not currently be shown already by how many likes they have 
+   *
+   * @memberof PostDiscoverComponent
+   */
   fetchPopularPosts() {
     this.displayedPosts = [];
 
@@ -124,13 +143,18 @@ export class PostDiscoverComponent implements OnInit {
 
       this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
         this.loadedUsers = allUsers;
-        console.log(this.displayedPosts);
-
+        
         this.isLoading = false;
       });
     });
   }
 
+  /**
+   * Switch from popular to tailored or vice-versa
+   *
+   * @param {CustomEvent<SegmentChangeEventDetail>} event
+   * @memberof PostDiscoverComponent
+   */
   onChangeSegment(event: CustomEvent<SegmentChangeEventDetail>) {
     if (event.detail.value === "popular") {
       this.fetchPopularPosts();
@@ -139,18 +163,38 @@ export class PostDiscoverComponent implements OnInit {
     }
   }
 
+  /**
+   * Get a single user
+   *
+   * @param {string} id
+   * @returns {User}
+   * @memberof PostDiscoverComponent
+   */
   getUser(id: string): User {
     if (this.loadedUsers) {
       return this.loadedUsers.find(user => user.id === id);
     }
   }
 
+  /**
+   * Get a single event
+   *
+   * @param {string} id
+   * @returns {EventContent}
+   * @memberof PostDiscoverComponent
+   */
   getEvent(id: string): EventContent {
     if (this.loadedEvents) {
       return this.loadedEvents.find(event => event.id === id);
     }
   }
 
+  /**
+   * Open post detail modal
+   *
+   * @param {string} postId
+   * @memberof PostDiscoverComponent
+   */
   onPostDetail(postId: string) {
     this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
       modalElement.present();

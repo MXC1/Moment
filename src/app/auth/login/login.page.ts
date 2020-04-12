@@ -36,15 +36,17 @@ export class LoginPage implements OnInit {
     const email = this.form.value.login;
     const password = this.form.value.password;
 
+    //Navigate if login is successful, throw error if not
+
     this.authService.login(email, password).subscribe(resData => {
       this.router.navigateByUrl('/tabs/feed');
     }, errorResponse => {
       const code = errorResponse.error.error.message;
       let message = 'There was a problem. Please try again.';
       if (code === 'EMAIL_NOT_FOUND') {
-        message = 'Your username or password is incorrect.';
+        message = 'Your email or password is incorrect.';
       } else if (code === 'INVALID_PASSWORD') {
-        message = 'Your username or password is incorrect.';
+        message = 'Your email or password is incorrect.';
       }
       this.showAlert(message);
     });

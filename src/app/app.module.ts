@@ -24,6 +24,12 @@ import { EventDiscoverComponent } from './tabs/events/event-discover/event-disco
 import { PostDiscoverComponent } from './tabs/feed/post-discover/post-discover.component';
 
 
+/**
+ * Declar and import necessary Components and Modules
+ *
+ * @export
+ * @class AppModule
+ */
 @NgModule({
   declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent],
   entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent],
