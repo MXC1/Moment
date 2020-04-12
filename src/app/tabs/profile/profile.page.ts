@@ -52,11 +52,13 @@ export class ProfilePage implements OnInit {
 
         this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
           this.usersService.isFollowing(thisUserId, userId).pipe(take(1)).subscribe(isFollowing => {
-            this.isFollowing = isFollowing.length !== 1;
+            isFollowing.subscribe(resData => {
+              this.isFollowing = resData;
+              this.getUser(userId);
+            });
           });
         });
 
-        this.getUser(userId);
       }
     });
   }

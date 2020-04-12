@@ -94,13 +94,21 @@ export class UsersService {
   }
 
   isFollowing(userId: string, userToCheckId: string) {
-    return this.authService.getToken.pipe(take(1), switchMap(token => {
-      return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(tap(ids => {
-        return ids.find(id => {
-          return id !== userToCheckId;
+    return this.authService.getToken.pipe(take(1), map(token => {
+      return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(take(1), map(friendIds => {
+        return friendIds.some(id => {
+          return id === userToCheckId;
         });
       }));
     }));
+
+    // this.authService.getToken.pipe(take(1), switchMap(token => {
+    //   this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(tap(ids => {
+    //     return ids.some(id => {
+    //       return id === userToCheckId;
+    //     });
+    //   }));
+    // }));
   }
 
   constructor(private http: HttpClient, private authService: AuthService) { }
