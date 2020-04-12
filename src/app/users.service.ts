@@ -93,6 +93,19 @@ export class UsersService {
     }));
   }
 
+  unfollow(userId: string, toUnfollowId: string) {
+    this.getUser(userId).pipe(take(1)).subscribe(user => {
+      user.friendIds = user.friendIds.filter(i => i !== toUnfollowId);
+    });
+
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(take(1), tap(ids => {
+        const key = ids.findIndex(i => i === toUnfollowId);
+        return this.http.delete(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds/${key}/?auth=${token}`).subscribe();
+      }));
+    }));
+  }
+
   isFollowing(userId: string, userToCheckId: string) {
     return this.authService.getToken.pipe(take(1), map(token => {
       return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(take(1), map(friendIds => {

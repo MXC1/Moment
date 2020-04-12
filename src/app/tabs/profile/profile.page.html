@@ -10,7 +10,12 @@
         <ion-icon name="person-add"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-label slot="end" *ngIf="isFollowing && !isThisUser" style="padding-right: 5px;">Following</ion-label>
+    <ion-buttons slot="end" *ngIf="isFollowing && !isThisUser">
+      <ion-button (click)="onUnfollow()">
+        <ion-label slot="end" style="padding-right: 5px;">Following</ion-label>
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title class="ion-text-left">Moment</ion-title>
   </ion-toolbar>
 </ion-header>

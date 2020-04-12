@@ -37,16 +37,10 @@ export class PeoplePage implements OnInit {
 
   ionViewWillEnter() {
     this.isLoading = true;
-    this.usersService.getUsers.subscribe(people => {
-      this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-        this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
-          this.loadedPeople = people.filter(user => {
-            for (const friend of thisUser.friendIds) {
-              if (friend !== thisUser.id) {
-                return friend === user.id;
-              }
-            }
-          });
+    this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
+      this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+        this.usersService.getUser(thisUserId).pipe(take(1)).subscribe(thisUser => {
+          this.loadedPeople = users.filter(user => thisUser.friendIds.some(u => u === user.id && u !== thisUserId));
           this.isLoading = false;
         });
       });

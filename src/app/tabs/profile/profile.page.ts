@@ -101,6 +101,15 @@ export class ProfilePage implements OnInit {
     });
   }
 
+  onUnfollow() {
+    this.authService.getUserId.pipe(take(1)).subscribe(id => {
+      this.usersService.unfollow(id, this.user.id).subscribe(() => {
+        this.postsService.fetchPosts().subscribe();
+      });
+      this.isFollowing = true;
+    });
+  }
+
   onNewPost() {
     this.modalController.create({ component: NewPostComponent }).then(modalElement => {
       modalElement.present();
