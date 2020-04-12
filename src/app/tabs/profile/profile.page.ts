@@ -96,8 +96,8 @@ export class ProfilePage implements OnInit {
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.usersService.follow(id, this.user.id).subscribe(() => {
         this.postsService.fetchPosts().subscribe();
+        this.isFollowing = true;
       });
-      this.isFollowing = true;
     });
   }
 
@@ -105,8 +105,8 @@ export class ProfilePage implements OnInit {
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.usersService.unfollow(id, this.user.id).subscribe(() => {
         this.postsService.fetchPosts().subscribe();
+        this.isFollowing = false;
       });
-      this.isFollowing = true;
     });
   }
 

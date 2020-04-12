@@ -101,7 +101,7 @@ export class UsersService {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`).pipe(take(1), tap(ids => {
         const key = ids.findIndex(i => i === toUnfollowId);
-        return this.http.delete(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds/${key}/?auth=${token}`).subscribe();
+        return this.http.delete(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds/${key}.json/?auth=${token}`).subscribe();
       }));
     }));
   }

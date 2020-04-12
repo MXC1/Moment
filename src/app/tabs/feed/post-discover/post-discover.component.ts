@@ -6,11 +6,12 @@ import { EventsService } from 'src/app/events.service';
 import { take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { UsersService } from 'src/app/users.service';
-import { EventDetailComponent } from '../../events/event-detail/event-detail.component';
 import { PostsService } from 'src/app/posts.service';
 import { Post } from 'src/app/post';
 import { User } from 'src/app/user';
 import { PostDetailComponent } from '../post-detail/post-detail.component';
+import { SegmentChangeEventDetail } from '@ionic/core';
+
 
 @Component({
   selector: 'app-post-discover',
@@ -20,7 +21,6 @@ import { PostDetailComponent } from '../post-detail/post-detail.component';
 export class PostDiscoverComponent implements OnInit {
 
   loadedEvents: EventContent[] = [];
-  displayedEvents: { event: EventContent, weight: number }[] = [];
   loadedPosts: Post[] = [];
   displayedPosts: { post: Post, weight: number }[] = [];
   loadedUsers: User[];
@@ -31,112 +31,112 @@ export class PostDiscoverComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    this.fetchAllUsers();
-    this.fetchFollowedPosts();
-  }
-
-  fetchAllUsers() {
     this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
       this.loadedUsers = allUsers;
-    });
-  }
-
-  filterPosts(posts) {
-    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-      this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
-        this.loadedPosts = posts.filter(post => {
-          let followsUser;
-          let followsEvent;
-
-          currentUser.friendIds.forEach(person => {
-            if (!followsUser) {
-              followsUser = person === post.userId;
-            }
-
-          });
-
-          this.loadedEvents.forEach(event => {
-            if (event.id === post.eventId) {
-              event.followerIds.forEach(follower => {
-                if (!followsUser) {
-                  followsEvent = follower === userId;
-                }
-              });
-            }
-          });
-
-          return followsUser || followsEvent;
-        });
-      });
-    });
-
-  }
-
-  fetchFollowedPosts() {
-    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
         this.loadedEvents = allEvents;
 
-        this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
-
-          this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
-            this.loadedPosts = allPosts.filter(post => {
-              let followsUser;
-              let followsEvent;
-
-              currentUser.friendIds.forEach(person => {
-                if (!followsUser) {
-                  followsUser = person === post.userId;
-                }
-
-              });
-
-              this.loadedEvents.forEach(event => {
-                if (event.id === post.eventId) {
-                  event.followerIds.forEach(follower => {
-                    if (!followsUser) {
-                      followsEvent = follower === userId;
-                    }
-                  });
-                }
-              });
-
-              return followsUser || followsEvent;
-            });
-
-
-            allEvents.filter(eachEvent => {
-              let followedByUser = false;
-              eachEvent.followerIds.forEach(followerId => {
-                if (followerId === userId) {
-                  followedByUser = followerId === userId;
-                }
-              });
-              return followedByUser;
-            }).forEach(eachMyFollowedEvent => {
-              eachMyFollowedEvent.followerIds.forEach(eachFollowerId => {
-                const tryPost = allPosts.filter(eachPost => {
-                  return eachPost.userId === eachFollowerId;
-                });
-                if (tryPost.length > 0) {
-                  if (!this.displayedPosts.some(p => p.post.id === tryPost[0].id)) {
-                    if (!this.loadedPosts.some(p => p.id === tryPost[0].id)) {
-                      this.displayedPosts = this.displayedPosts.concat({ post: tryPost[0], weight: 1 });
-                    }
-                  } else {
-                    this.displayedPosts.find(p => p.post.id === tryPost[0].id).weight = this.displayedPosts.find(p => p.post.id === tryPost[0].id).weight + 1;
-                  }
-                }
-              });
-            });
-          });
-          this.displayedPosts.sort((p1, p2) => {
-            return p2.weight - p1.weight;
-          });
-          this.isLoading = false;
-        });
+        this.fetchPopularPosts();
       });
     });
+  }
+
+  fetchUsersAndEvents() {
+  }
+
+
+  fetchTailoredPosts() {
+    this.displayedPosts = [];
+
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+
+      this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
+
+        this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
+          this.loadedPosts = allPosts.filter(post => {
+            let followsUser;
+            let followsEvent;
+
+            currentUser.friendIds.forEach(person => {
+              if (!followsUser) {
+                followsUser = person === post.userId;
+              }
+
+            });
+
+            this.loadedEvents.forEach(event => {
+              if (event.id === post.eventId) {
+                event.followerIds.forEach(follower => {
+                  if (!followsUser) {
+                    followsEvent = follower === userId;
+                  }
+                });
+              }
+            });
+
+            return followsUser || followsEvent;
+          });
+
+
+          this.loadedEvents.filter(eachEvent => {
+            let followedByUser = false;
+            eachEvent.followerIds.forEach(followerId => {
+              if (followerId === userId) {
+                followedByUser = followerId === userId;
+              }
+            });
+            return followedByUser;
+          }).forEach(eachMyFollowedEvent => {
+            eachMyFollowedEvent.followerIds.forEach(eachFollowerId => {
+              const tryPost = allPosts.filter(eachPost => {
+                return eachPost.userId === eachFollowerId;
+              });
+              if (tryPost.length > 0) {
+                if (!this.displayedPosts.some(p => p.post.id === tryPost[0].id)) {
+                  if (!this.loadedPosts.some(p => p.id === tryPost[0].id)) {
+                    this.displayedPosts = this.displayedPosts.concat({ post: tryPost[0], weight: 1 });
+                  }
+                } else {
+                  this.displayedPosts.find(p => p.post.id === tryPost[0].id).weight = this.displayedPosts.find(p => p.post.id === tryPost[0].id).weight + 1;
+                }
+              }
+            });
+          });
+        });
+        this.displayedPosts = this.displayedPosts.sort((p1, p2) => {
+          return p2.weight - p1.weight;
+        });
+
+        this.isLoading = false;
+      });
+    });
+  }
+
+  fetchPopularPosts() {
+    this.displayedPosts = [];
+
+    this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
+      this.displayedPosts = this.displayedPosts.concat(allPosts.sort((p1, p2) => {
+        return p2.likes - p1.likes;
+      }).map(p => {
+        return { post: p, weight: 1 }
+      }));
+
+      this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
+        this.loadedUsers = allUsers;
+        console.log(this.displayedPosts);
+
+        this.isLoading = false;
+      });
+    });
+  }
+
+  onChangeSegment(event: CustomEvent<SegmentChangeEventDetail>) {
+    if (event.detail.value === "popular") {
+      this.fetchPopularPosts();
+    } else {
+      this.fetchTailoredPosts();
+    }
   }
 
   getUser(id: string): User {
