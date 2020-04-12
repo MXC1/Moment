@@ -63,15 +63,19 @@ export class SearchComponent implements OnInit {
 
   filterUsers(searchValue: string) {
     if (!this.filteredUsers) {
-      this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
-        this.filteredUsers = users.filter(user => {
-          return (user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase()));
+      this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+        this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
+          this.filteredUsers = users.filter(user => {
+            return ((user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase())) && user.id !== thisUserId);
+          });
         });
       });
     } else {
-      this.usersService.getUsers.pipe(take(1)).subscribe(users => {
-        this.filteredUsers = users.filter(user => {
-          return (user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase()));
+      this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+        this.usersService.getUsers.pipe(take(1)).subscribe(users => {
+          this.filteredUsers = users.filter(user => {            
+            return ((user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase())) && user.id !== thisUserId);
+          });
         });
       });
     }
