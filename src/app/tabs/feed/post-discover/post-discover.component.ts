@@ -11,6 +11,7 @@ import { Post } from 'src/app/post';
 import { User } from 'src/app/user';
 import { PostDetailComponent } from '../post-detail/post-detail.component';
 import { SegmentChangeEventDetail } from '@ionic/core';
+import { Router } from '@angular/router';
 
 
 /**
@@ -33,7 +34,7 @@ export class PostDiscoverComponent implements OnInit {
   private eventsSubscription: Subscription;
   isLoading = false;
 
-  constructor(private modalController: ModalController, private eventsService: EventsService, private authService: AuthService, private usersService: UsersService, private postsService: PostsService) { }
+  constructor(private modalController: ModalController, private eventsService: EventsService, private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private router: Router) { }
 
   /**
    * Load in all users and events and load popular posts by default
@@ -127,7 +128,7 @@ export class PostDiscoverComponent implements OnInit {
   }
 
   /**
-   * Sort all the posts the user will not currently be shown already by how many likes they have 
+   * Sort all the posts the user will not currently be shown already by how many likes they have
    *
    * @memberof PostDiscoverComponent
    */
@@ -138,12 +139,12 @@ export class PostDiscoverComponent implements OnInit {
       this.displayedPosts = this.displayedPosts.concat(allPosts.sort((p1, p2) => {
         return p2.likes - p1.likes;
       }).map(p => {
-        return { post: p, weight: 1 }
+        return { post: p, weight: 1 };
       }));
 
       this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
         this.loadedUsers = allUsers;
-        
+
         this.isLoading = false;
       });
     });
@@ -156,7 +157,7 @@ export class PostDiscoverComponent implements OnInit {
    * @memberof PostDiscoverComponent
    */
   onChangeSegment(event: CustomEvent<SegmentChangeEventDetail>) {
-    if (event.detail.value === "popular") {
+    if (event.detail.value === 'popular') {
       this.fetchPopularPosts();
     } else {
       this.fetchTailoredPosts();
@@ -204,4 +205,28 @@ export class PostDiscoverComponent implements OnInit {
   closeModal() {
     this.modalController.dismiss();
   }
+
+
+  /**
+   * Called when a users name is pressed
+   * Determines whether to navigate to the profile or people page
+   *
+   * @param {string} postUserId
+   * @memberof FeedPage
+   */
+  onClickUser(postUserId: string) {
+    this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+      if (thisUserId === postUserId) {
+        this.router.navigateByUrl('/tabs/profile');
+      } else {
+        this.router.navigateByUrl('/tabs/people/' + postUserId);
+      }
+    });
+  }
+
+  onPostLike(id: string) { }
+
+  onPostComment(id: string) { }
+
+  onPostShare(id: string) { }
 }
