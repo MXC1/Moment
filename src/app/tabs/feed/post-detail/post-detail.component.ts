@@ -117,7 +117,15 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     return this.thisUser.id === this.post.userId;
   }
 
-  onPostLike(id: string) { }
+  onPostLike() {
+    this.postsService.likePost(this.postId);
+   }
+
+  onPostComment() {
+    this.commentBox.setFocus();
+  }
+
+  onPostShare(id: string) { }
 
   onAddComment() {
     const userId = this.thisUser.id;
@@ -135,6 +143,5 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  onPostShare(id: string) { }
 
 }

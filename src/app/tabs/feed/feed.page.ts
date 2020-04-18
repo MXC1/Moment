@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { NewPostComponent } from './new-post/new-post.component';
 import { PostDetailComponent } from './post-detail/post-detail.component';
 import { PostDiscoverComponent } from './post-discover/post-discover.component';
+import { EventDetailComponent } from '../events/event-detail/event-detail.component';
 
 /**
  * Feed of all posts by users or events the current user follows
@@ -177,10 +178,25 @@ export class FeedPage implements OnInit, OnDestroy {
    * @param {string} postId
    * @memberof FeedPage
    */
-  onPostDetail(postId: string) {
-    this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
-      modalElement.present();
+  async onPostDetail(postId: string) {
+
+    const postDetailModal = await this.modalController.create({ component: PostDetailComponent, componentProps: { postId } });
+
+    postDetailModal.onDidDismiss().then(() => {
+      this.fetchFollowedPosts();
     });
+    postDetailModal.present();
+  }
+
+  async onEventDetail(eventId: string) {
+    const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId } });
+    onEventDetailModal.onDidDismiss().then(didFollow => {
+      if (didFollow.data.didFollow) {
+        this.eventsService.fetchEvents().subscribe();
+        this.postsService.fetchPosts().subscribe();
+      }
+    });
+    onEventDetailModal.present();
   }
 
   /**
@@ -232,7 +248,9 @@ export class FeedPage implements OnInit, OnDestroy {
     });
   }
 
-  onPostLike(id: string) { }
+  onPostLike(postId: string) {
+    this.postsService.likePost(postId);
+   }
 
   onPostComment(id: string) { }
 

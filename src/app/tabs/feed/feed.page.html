@@ -44,7 +44,7 @@
                 <ion-label class="caption">{{ post.caption }}</ion-label>
             </ion-row>
             <ion-row style="padding-top: 5px; padding-left: 10px">
-              <ion-label class="event-name"> @ {{ getEvent(post.eventId)?.name }}, {{ getEvent(post.eventId)?.location }} </ion-label>
+              <ion-label class="event-name" (click)="onEventDetail(post.eventId)"> @ {{ getEvent(post.eventId)?.name }}, {{ getEvent(post.eventId)?.location }} </ion-label>
             </ion-row>
           </ion-col>
           <ion-col class="ion-text-end ion-align-self-center">
@@ -64,67 +64,19 @@
             <p *ngIf="post.likes !== 0">{{ post.likes }}</p>
           </ion-col>
           <ion-col>
-            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
+            <ion-button class="post-interaction" (click)="onPostComment(post.id)">
               <ion-icon name="chatbubbles" slot="icon-only"></ion-icon>
             </ion-button>
             <p *ngIf="post.comments">{{ post.comments.length }}</p>
           </ion-col>
-          <ion-col>
-            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
+          <!-- <ion-col>
+            <ion-button class="post-interaction" (click)="onPostShare(post.id)">
               <ion-icon name="share" slot="icon-only"></ion-icon>
             </ion-button>
             <p *ngIf="post.shares !== 0">{{ post.shares }}</p>
-          </ion-col>
+          </ion-col> -->
         </ion-row>
       </ion-card-content>
     </ion-card>
   </ion-list>
 </ion-content>
-
-<!-- <ion-virtual-scroll [items]="loadedPosts" approxItemHeight="320px" *ngIf="!isLoading" class="ion-text-center" style="padding-top: 0px;">
-    <ion-card *virtualItem="let post" class="ion-no-margin">
-      <div>
-        <ion-row>
-          <ion-col class="ion-text-start">
-            <ion-card-header>
-              <ion-card-title>{{ getEvent(post.eventId)?.name }}</ion-card-title>
-              <ion-card-subtitle>{{ getUser(post.userId).username }}</ion-card-subtitle>
-            </ion-card-header>
-          </ion-col>
-          <ion-col class="ion-text-end ion-align-self-center">
-            <ion-button [routerLink]="['/post-detail', post.id]" class="moreinfo" fill="clear" size="large">
-              <ion-icon name="ios-arrow-forward" slot="icon-only"></ion-icon>
-            </ion-button>
-          </ion-col>
-        </ion-row>
-        <app-content [content]="this.post"></app-content>
-        <ion-row ion-text-center>
-          <ion-col>
-            {{ post.caption }}
-          </ion-col>
-        </ion-row>
-      </div>
-      <ion-card-content>
-        <ion-row style="padding:0%">
-          <ion-col>
-            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
-              <ion-icon name="heart" slot="icon-only"></ion-icon>
-            </ion-button>
-            <p *ngIf="post.likes !== 0">{{ post.likes }}</p>
-          </ion-col>
-          <ion-col>
-            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
-              <ion-icon name="chatbubbles" slot="icon-only"></ion-icon>
-            </ion-button>
-            <p *ngIf="post.commentIds.length !== 0">{{ post.commentIds.length }}</p>
-          </ion-col>
-          <ion-col>
-            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
-              <ion-icon name="share" slot="icon-only"></ion-icon>
-            </ion-button>
-            <p *ngIf="post.shares !== 0">{{ post.shares }}</p>
-          </ion-col>
-        </ion-row>
-      </ion-card-content>
-    </ion-card>
-  </ion-virtual-scroll> -->

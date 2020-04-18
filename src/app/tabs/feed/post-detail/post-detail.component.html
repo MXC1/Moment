@@ -44,23 +44,23 @@
         </ion-row>
         <ion-row style="padding-top: 5px" class="ion-text-center">
           <ion-col>
-            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
+            <ion-button class="post-interaction" (click)="onPostLike()">
               <ion-icon name="heart" slot="icon-only"></ion-icon>
             </ion-button>
             <p *ngIf="post.likes !== 0">{{ post.likes }}</p>
           </ion-col>
           <ion-col>
-            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
+            <ion-button class="post-interaction" (click)="onPostComment(post.id)">
               <ion-icon name="chatbubbles" slot="icon-only"></ion-icon>
             </ion-button>
             <p *ngIf="post.comments">{{ post.comments.length }}</p>
           </ion-col>
-          <ion-col>
-            <ion-button class="post-interaction" (click)="onPostLike(post.id)">
+          <!-- <ion-col>
+            <ion-button class="post-interaction" (click)="onPostShare()">
               <ion-icon name="share" slot="icon-only"></ion-icon>
             </ion-button>
             <p *ngIf="post.shares !== 0">{{ post.shares }}</p>
-          </ion-col>
+          </ion-col> -->
         </ion-row>
         <ion-row>
           <ion-col>

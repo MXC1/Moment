@@ -184,5 +184,15 @@ export class PostsService {
     });
   }
 
+  likePost(postId: string) {
+    return this.authService.getToken.pipe(take(1)).subscribe(token => {
+      return this.http.get<number>(`https://mmnt-io.firebaseio.com/posts/${postId}/likes.json?auth=${token}`).pipe(take(1)).subscribe(postLikes => {
+        console.log(postLikes);
+
+        return this.http.patch(`https://mmnt-io.firebaseio.com/posts/${postId}.json?auth=${token}`, { likes: postLikes+1 }).subscribe();
+      });
+    });
+  }
+
   constructor(private http: HttpClient, private authService: AuthService) { }
 }
