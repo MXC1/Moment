@@ -19,7 +19,7 @@ import { User } from 'src/app/user';
 })
 export class EventDetailComponent implements OnInit, OnDestroy {
   event: EventContent;
-  eventPosts: Post[];
+  eventPosts: Post[] = [];
   private postsSubscription: Subscription;
   private eventsSubscription: Subscription;
   private usersSubscription: Subscription;
@@ -33,11 +33,10 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
 
   ngOnInit() {
-
     this.isLoading = true;
     this.eventsSubscription = this.eventsService.getEvent(this.eventId).subscribe(event => {
       this.event = event;
-      this.postsSubscription = this.postsService.getPosts.subscribe(posts => {
+      this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
         this.eventPosts = posts.filter(post => post.eventId === this.eventId);
         this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
           this.eventsService.isFollowing(thisUserId, this.eventId).pipe(take(1)).subscribe(isFollowing => {

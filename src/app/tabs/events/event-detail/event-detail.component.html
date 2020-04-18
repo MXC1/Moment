@@ -1,10 +1,7 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar mode="md">
     <ion-buttons slot="start">
-      <ion-button (click)="closeModal()">
-        <ion-icon name="ios-arrow-back"></ion-icon>
-        <ion-label>Back</ion-label>
-      </ion-button>
+      <ion-back-button (click)="closeModal()" defaultHref="."></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end" *ngIf="!isFollowing && !isLoading">
       <ion-button (click)="onFollowEvent()">
@@ -40,12 +37,16 @@
       <ion-row>
         <ion-col class="ion-no-margin" style="padding: 10px;">
           <ion-row class="ion-justify-content-center">
-            <ion-label>{{ event.name }}</ion-label>
+            <ion-label class="event-name">{{ event.name }}</ion-label>
           </ion-row>
           <ion-row class="ion-justify-content-center">
-            <ion-label>@ {{ event.location }}</ion-label>
+            <ion-label class="location">@ {{ event.location }}</ion-label>
           </ion-row>
         </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center" *ngIf="!isLoading">
+        <ion-col class="ion-text-center event-name">{{ event.followerIds.length }} followers</ion-col>
+        <ion-col class="ion-text-center event-name">{{ eventPosts.length }} posts</ion-col>
       </ion-row>
     </ion-card>
     <ion-row *ngIf="!isLoading && eventPosts.length === 0" style="padding-top: 10px;"
