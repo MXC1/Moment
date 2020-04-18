@@ -26,6 +26,7 @@ import { Subscription } from 'rxjs';
 export class ProfilePage implements OnInit {
   usersSubscription: Subscription;
   user: User;
+  followerNumber: number;
   posts: Post[];
   isLoading = false;
 
@@ -77,26 +78,6 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  // /**
-  //  * Fetch the image for the user
-  //  *
-  //  * @returns
-  //  * @memberof ProfilePage
-  //  */
-  // getUserImage() {
-  //   let thisImage: string;
-  //   this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-  //     if (!userId) {
-  //       throw new Error('No User ID Found!');
-  //     } else {
-  //       this.usersSubscription = this.usersService.getUser(userId).pipe(take(1)).subscribe(user => {
-  //         thisImage = user.image;
-  //       });
-  //     }
-  //   });
-  //   return thisImage;
-  // }
-
   /**
    * Fetch the user, either from URL or using local user ID
    *
@@ -109,6 +90,15 @@ export class ProfilePage implements OnInit {
       this.postsService.fetchPosts().pipe(map(posts => posts.filter(
         post => post.userId === userId))).subscribe(posts => {
           this.posts = posts;
+
+          this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
+            this.followerNumber = allUsers.filter(eachUser => {
+              console.log(eachUser.friendIds === this.user.id);
+
+              return eachUser.friendIds.some(id => id === this.user.id);
+            }).length;
+          });
+
           this.isLoading = false;
         });
     });
@@ -123,6 +113,7 @@ export class ProfilePage implements OnInit {
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.usersService.follow(id, this.user.id).subscribe(() => {
         this.postsService.fetchPosts().subscribe();
+        this.followerNumber++;
         this.isFollowing = true;
       });
     });

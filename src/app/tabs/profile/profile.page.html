@@ -16,7 +16,7 @@
         <ion-icon name="checkmark"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="ion-text-left">Moment</ion-title>
+    <ion-title>Moment</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -43,6 +43,11 @@
             <p class="bio">{{ user.bio }}</p>
           </ion-row>
         </ion-col>
+      </ion-row>
+      <ion-row style="padding-top: 10px; padding-bottom: 10px;" *ngIf="!isLoading">
+        <ion-col class="ion-text-center">{{ this.followerNumber - 1 }} followers</ion-col>
+        <ion-col class="ion-text-center">{{ user.friendIds.length - 1 }} following</ion-col>
+        <ion-col class="ion-text-center">{{ this.posts.length }} posts</ion-col>
       </ion-row>
     </ion-card>
     <ion-row *ngIf="!isLoading && posts.length === 0" style="padding-top: 10px;" class="ion-justify-content-center">
