@@ -1,0 +1,191 @@
+Date : 2020-04-18 11:07:23
+Directory : d:\mfhco\Documents\Uni\Moment\Moment\src
+Total : 138 files,  6663 codes, 830 comments, 928 blanks, all 8421 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| HTML       |         30 |      3,479 |         70 |        238 |      3,787 |
+| TypeScript |         82 |      2,949 |        743 |        632 |      4,324 |
+| SCSS       |         23 |        220 |         16 |         56 |        292 |
+| XML        |          3 |         15 |          1 |          2 |         18 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                              | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                 |        138 |      6,663 |        830 |        928 |      8,421 |
+| app                                                                                                               |        118 |      4,004 |        719 |        682 |      5,405 |
+| app\auth                                                                                                          |         27 |        739 |         96 |        139 |        974 |
+| app\auth\login                                                                                                    |          6 |        158 |          1 |         28 |        187 |
+| app\auth\register                                                                                                 |         10 |        355 |         70 |         59 |        484 |
+| app\auth\register\personal-info                                                                                   |          4 |        166 |         38 |         33 |        237 |
+| app\content                                                                                                       |          4 |         72 |          0 |         16 |         88 |
+| app\image-chooser                                                                                                 |          4 |         79 |        108 |         18 |        205 |
+| app\search                                                                                                        |          4 |        226 |          2 |         28 |        256 |
+| app\shared                                                                                                        |         11 |        153 |          2 |         35 |        190 |
+| app\shared\content                                                                                                |          5 |         49 |          1 |         17 |         67 |
+| app\shared\feedback                                                                                               |          4 |         93 |          1 |         15 |        109 |
+| app\tabs                                                                                                          |         54 |      2,175 |        278 |        348 |      2,801 |
+| app\tabs\events                                                                                                   |         18 |        706 |          1 |        107 |        814 |
+| app\tabs\events\event-detail                                                                                      |          4 |        174 |          0 |         21 |        195 |
+| app\tabs\events\event-discover                                                                                    |          4 |        149 |          0 |         25 |        174 |
+| app\tabs\events\new-event                                                                                         |          4 |        190 |          1 |         29 |        220 |
+| app\tabs\feed                                                                                                     |         18 |        985 |        179 |        150 |      1,314 |
+| app\tabs\feed\new-post                                                                                            |          4 |        192 |          1 |         36 |        229 |
+| app\tabs\feed\post-detail                                                                                         |          4 |        250 |          8 |         31 |        289 |
+| app\tabs\feed\post-discover                                                                                       |          4 |        239 |         50 |         37 |        326 |
+| app\tabs\people                                                                                                   |          6 |        122 |         37 |         24 |        183 |
+| app\tabs\profile                                                                                                  |          6 |        236 |         58 |         39 |        333 |
+| assets                                                                                                            |         11 |      2,509 |         20 |        191 |      2,720 |
+| assets\mmnt-io – Firebase console_files                                                                           |          9 |         92 |          8 |         11 |        111 |
+| environments                                                                                                      |          2 |          8 |         11 |          5 |         24 |
+| theme                                                                                                             |          1 |         60 |          3 |         12 |         75 |
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                                          | language   | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\app-routing.module.ts                                                | TypeScript |         25 |          3 |          3 |         31 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\app.component.html                                                   | HTML       |         24 |          0 |          2 |         26 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\app.component.scss                                                   | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\app.component.spec.ts                                                | TypeScript |         36 |          1 |         11 |         48 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\app.component.ts                                                     | TypeScript |         42 |         28 |         10 |         80 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\app.module.ts                                                        | TypeScript |         34 |          8 |          7 |         49 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\auth-routing.module.ts                                          | TypeScript |         22 |          0 |          4 |         26 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\auth.guard.spec.ts                                              | TypeScript |         12 |          0 |          4 |         16 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\auth.guard.ts                                                   | TypeScript |         26 |         16 |          3 |         45 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\auth.module.ts                                                  | TypeScript |         16 |          0 |          5 |         21 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\auth.page.html                                                  | HTML       |          7 |          0 |          3 |         10 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\auth.page.scss                                                  | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\auth.page.spec.ts                                               | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\auth.page.ts                                                    | TypeScript |         11 |          0 |          5 |         16 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\auth.service.ts                                                 | TypeScript |         97 |          9 |         17 |        123 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\login\login-routing.module.ts                                   | TypeScript |         14 |          0 |          4 |         18 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\login\login.module.ts                                           | TypeScript |         17 |          0 |          5 |         22 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\login\login.page.html                                           | HTML       |         47 |          0 |          2 |         49 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\login\login.page.scss                                           | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\login\login.page.spec.ts                                        | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\login\login.page.ts                                             | TypeScript |         61 |          1 |         10 |         72 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\register\personal-info\personal-info.component.html             | HTML       |         45 |          0 |          1 |         46 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\register\personal-info\personal-info.component.scss             | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\register\personal-info\personal-info.component.spec.ts          | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\register\personal-info\personal-info.component.ts               | TypeScript |        102 |         38 |         25 |        165 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\register\register-routing.module.ts                             | TypeScript |         14 |          0 |          4 |         18 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\register\register.module.ts                                     | TypeScript |         20 |          0 |          5 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\register\register.page.html                                     | HTML       |         64 |          0 |          1 |         65 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\register\register.page.scss                                     | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\register\register.page.spec.ts                                  | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\register\register.page.ts                                       | TypeScript |         72 |         32 |          9 |        113 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\user.spec.ts                                                    | TypeScript |          6 |          0 |          2 |          8 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\auth\user.ts                                                         | TypeScript |         10 |          0 |          2 |         12 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\content\content.component.html                                       | HTML       |          7 |          0 |          0 |          7 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\content\content.component.scss                                       | SCSS       |         19 |          0 |          3 |         22 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\content\content.component.spec.ts                                    | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\content\content.component.ts                                         | TypeScript |         27 |          0 |          7 |         34 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\event.ts                                                             | TypeScript |         16 |          3 |          2 |         21 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\events.service.ts                                                    | TypeScript |        111 |         67 |         18 |        196 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\image-chooser\image-chooser.component.html                           | HTML       |         23 |          0 |          2 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\image-chooser\image-chooser.component.scss                           | SCSS       |         10 |          0 |          3 |         13 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\image-chooser\image-chooser.component.spec.ts                        | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\image-chooser\image-chooser.component.ts                             | TypeScript |         27 |        108 |          7 |        142 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\post-comment.service.ts                                              | TypeScript |         25 |          0 |          4 |         29 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\post-comment.ts                                                      | TypeScript |          6 |          0 |          1 |          7 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\post.ts                                                              | TypeScript |         11 |          0 |          2 |         13 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\posts.service.ts                                                     | TypeScript |        115 |         58 |         18 |        191 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\search\search.component.html                                         | HTML       |         74 |          2 |          3 |         79 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\search\search.component.scss                                         | SCSS       |         13 |          0 |          3 |         16 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\search\search.component.spec.ts                                      | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\search\search.component.ts                                           | TypeScript |        120 |          0 |         16 |        136 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\content\content.component.html                                | HTML       |          3 |          0 |          1 |          4 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\content\content.component.scss                                | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\content\content.component.spec.ts                             | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\content\content.component.ts                                  | TypeScript |         10 |          0 |          5 |         15 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\content\content.module.ts                                     | TypeScript |         17 |          1 |          4 |         22 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\feedback.spec.ts                                              | TypeScript |          6 |          0 |          2 |          8 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\feedback.ts                                                   | TypeScript |          5 |          0 |          1 |          6 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\feedback\feedback.component.html                              | HTML       |         35 |          1 |          1 |         37 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\feedback\feedback.component.scss                              | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\feedback\feedback.component.spec.ts                           | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\shared\feedback\feedback.component.ts                                | TypeScript |         39 |          0 |          7 |         46 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\event-detail\event-detail.component.html                 | HTML       |         62 |          0 |          2 |         64 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\event-detail\event-detail.component.scss                 | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\event-detail\event-detail.component.spec.ts              | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\event-detail\event-detail.component.ts                   | TypeScript |         93 |          0 |         12 |        105 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\event-discover\event-discover.component.html             | HTML       |         27 |          0 |          3 |         30 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\event-discover\event-discover.component.scss             | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\event-discover\event-discover.component.spec.ts          | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\event-discover\event-discover.component.ts               | TypeScript |        103 |          0 |         15 |        118 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\events-routing.module.ts                                 | TypeScript |         14 |          0 |          4 |         18 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\events.module.ts                                         | TypeScript |         18 |          0 |          5 |         23 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\events.page.html                                         | HTML       |         42 |          0 |          1 |         43 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\events.page.scss                                         | SCSS       |          5 |          0 |          1 |          6 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\events.page.spec.ts                                      | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\events.page.ts                                           | TypeScript |         95 |          0 |         15 |        110 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\new-event\new-event.component.html                       | HTML       |         86 |          0 |          1 |         87 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\new-event\new-event.component.scss                       | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\new-event\new-event.component.spec.ts                    | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\events\new-event\new-event.component.ts                         | TypeScript |         85 |          1 |         21 |        107 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\feed-routing.module.ts                                     | TypeScript |         14 |          0 |          4 |         18 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\feed.module.ts                                             | TypeScript |         23 |          0 |          5 |         28 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\feed.page.html                                             | HTML       |         83 |         47 |          2 |        132 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\feed.page.scss                                             | SCSS       |         22 |          0 |          3 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\feed.page.spec.ts                                          | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\feed.page.ts                                               | TypeScript |        143 |         73 |         26 |        242 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\new-post\new-post.component.html                           | HTML       |         44 |          0 |          1 |         45 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\new-post\new-post.component.scss                           | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\new-post\new-post.component.spec.ts                        | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\new-post\new-post.component.ts                             | TypeScript |        129 |          1 |         28 |        158 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\post-detail\post-detail.component.html                     | HTML       |        101 |          0 |          4 |        105 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\post-detail\post-detail.component.scss                     | SCSS       |         16 |          0 |          2 |         18 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\post-detail\post-detail.component.spec.ts                  | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\post-detail\post-detail.component.ts                       | TypeScript |        114 |          8 |         19 |        141 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\post-discover\post-discover.component.html                 | HTML       |         72 |          0 |          3 |         75 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\post-discover\post-discover.component.scss                 | SCSS       |         16 |          0 |          2 |         18 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\post-discover\post-discover.component.spec.ts              | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\feed\post-discover\post-discover.component.ts                   | TypeScript |        132 |         50 |         26 |        208 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\people\people-routing.module.ts                                 | TypeScript |         14 |          0 |          4 |         18 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\people\people.module.ts                                         | TypeScript |         18 |          0 |          5 |         23 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\people\people.page.html                                         | HTML       |         36 |          0 |          1 |         37 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\people\people.page.scss                                         | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\people\people.page.spec.ts                                      | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\people\people.page.ts                                           | TypeScript |         35 |         37 |          7 |         79 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\profile\profile-routing.module.ts                               | TypeScript |         14 |          0 |          4 |         18 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\profile\profile.module.ts                                       | TypeScript |         21 |          0 |          5 |         26 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\profile\profile.page.html                                       | HTML       |         62 |          0 |          1 |         63 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\profile\profile.page.scss                                       | SCSS       |         26 |          0 |          6 |         32 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\profile\profile.page.spec.ts                                    | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\profile\profile.page.ts                                         | TypeScript |         94 |         58 |         17 |        169 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\tabs-routing.module.ts                                          | TypeScript |         56 |          3 |          5 |         64 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\tabs.module.ts                                                  | TypeScript |         20 |          0 |          5 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\tabs.page.html                                                  | HTML       |         20 |          0 |          6 |         26 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\tabs.page.scss                                                  | SCSS       |          0 |          0 |          1 |          1 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\tabs.page.spec.ts                                               | TypeScript |         19 |          0 |          6 |         25 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\tabs\tabs.page.ts                                                    | TypeScript |         11 |          0 |          5 |         16 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\user.ts                                                              | TypeScript |         11 |          0 |          2 |         13 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\app\users.service.ts                                                     | TypeScript |        104 |         65 |         17 |        186 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\mmnt-io – Firebase console.html                                   | HTML       |      2,416 |         12 |        179 |      2,607 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\mmnt-io – Firebase console_files\alternategtm.html                | HTML       |         11 |          1 |          0 |         12 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\mmnt-io – Firebase console_files\firebase_logotype_grey_18dp.svg  | XML        |         11 |          1 |          0 |         12 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\mmnt-io – Firebase console_files\firebase_logotype_white_18dp.svg | XML        |          3 |          0 |          1 |          4 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\mmnt-io – Firebase console_files\postmessageRelay.html            | HTML       |          2 |          1 |          0 |          3 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\mmnt-io – Firebase console_files\proxy(1).html                    | HTML       |         13 |          1 |          2 |         16 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\mmnt-io – Firebase console_files\proxy(2).html                    | HTML       |         13 |          1 |          2 |         16 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\mmnt-io – Firebase console_files\proxy(3).html                    | HTML       |         13 |          1 |          2 |         16 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\mmnt-io – Firebase console_files\proxy(4).html                    | HTML       |         13 |          1 |          2 |         16 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\mmnt-io – Firebase console_files\proxy.html                       | HTML       |         13 |          1 |          2 |         16 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\assets\shapes.svg                                                        | XML        |          1 |          0 |          1 |          2 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\environments\environment.prod.ts                                         | TypeScript |          4 |          0 |          2 |          6 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\environments\environment.ts                                              | TypeScript |          4 |         11 |          3 |         18 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\global.scss                                                              | SCSS       |         33 |         13 |          8 |         54 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\index.html                                                               | HTML       |         21 |          1 |          8 |         30 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\main.ts                                                                  | TypeScript |         12 |          0 |          7 |         19 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\polyfills.ts                                                             | TypeScript |          2 |         55 |         10 |         67 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\test.ts                                                                  | TypeScript |         13 |          4 |          4 |         21 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\theme\variables.scss                                                     | SCSS       |         60 |          3 |         12 |         75 |
+| d:\mfhco\Documents\Uni\Moment\Moment\src\zone-flags.ts                                                            | TypeScript |          1 |          4 |          1 |          6 |
+| Total                                                                                                             |            |      6,663 |        830 |        928 |      8,421 |
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
