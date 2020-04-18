@@ -55,11 +55,10 @@
       </ion-item>
     </ion-list>
     <ion-list *ngIf="toSearch === 'posts'">
-      <ion-item *ngFor="let post of filteredPosts" [routerLink]="['/', 'post-detail', post.id]" (click)="closeModal()">
+      <ion-item *ngFor="let post of filteredPosts" (click)="onPostDetail(post.id)">
         <ion-row>
           <ion-col size="3">
             <ion-avatar>
-              <!-- <ion-img [src]="post.content"></ion-img> -->
               <app-content [content]="post" playable="false" square="square"></app-content>
             </ion-avatar>
           </ion-col>

@@ -37,8 +37,11 @@
       <div>
         <ion-row>
           <ion-col class="ion-text-start" size="8">
-            <ion-row style="padding-top: 10px; padding-left: 15px;">
+            <ion-row style="padding-top: 10px; padding-left: 10px;">
               <ion-label class="user-name" (click)="onClickUser(post.userId)">{{ getUser(post.userId)?.username }}</ion-label>
+            </ion-row>
+            <ion-row style="padding-top: 5px; padding-left: 10px;">
+                <ion-label class="caption">{{ post.caption }}</ion-label>
             </ion-row>
             <ion-row style="padding-top: 5px; padding-left: 10px">
               <ion-label class="event-name"> @ {{ getEvent(post.eventId)?.name }}, {{ getEvent(post.eventId)?.location }} </ion-label>
@@ -51,11 +54,6 @@
           </ion-col>
         </ion-row>
         <app-content [content]="this.post"></app-content>
-        <ion-row style="padding-top: 10px;" class="ion-text-center">
-          <ion-col>
-            <ion-label class="caption">{{ post.caption }}</ion-label>
-          </ion-col>
-        </ion-row>
       </div>
       <ion-card-content>
         <ion-row style="padding:0%">

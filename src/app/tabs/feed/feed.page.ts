@@ -39,7 +39,7 @@ export class FeedPage implements OnInit, OnDestroy {
 
   constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController, private authService: AuthService) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   /**
    * Load in all events and posts
@@ -165,7 +165,7 @@ export class FeedPage implements OnInit, OnDestroy {
     const newPostModal = await this.modalController.create({ component: NewPostComponent });
     newPostModal.onDidDismiss().then(() => {
       this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
-        this.filterPosts(posts);
+        this.fetchFollowedPosts();
       });
     });
     newPostModal.present();

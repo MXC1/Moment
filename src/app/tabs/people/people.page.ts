@@ -20,7 +20,7 @@ import { SearchComponent } from 'src/app/search/search.component';
 })
 export class PeoplePage implements OnInit {
   isLoading = false;
-  loadedPeople: User[];
+  loadedPeople: User[] = [];
 
   constructor(private authService: AuthService, private usersService: UsersService, private modalController: ModalController) { }
 

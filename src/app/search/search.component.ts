@@ -9,6 +9,7 @@ import { EventsService } from '../events.service';
 import { take } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { EventDetailComponent } from '../tabs/events/event-detail/event-detail.component';
+import { PostDetailComponent } from '../tabs/feed/post-detail/post-detail.component';
 
 @Component({
   selector: 'app-search',
@@ -131,5 +132,17 @@ export class SearchComponent implements OnInit {
       }
     });
     onEventDetailModal.present();
+  }
+
+    /**
+   * Open post detail modal
+   *
+   * @param {string} postId
+   * @memberof FeedPage
+   */
+  onPostDetail(postId: string) {
+    this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
+      modalElement.present();
+    });
   }
 }

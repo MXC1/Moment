@@ -90,7 +90,7 @@ export class NewPostComponent implements OnInit {
   }
 
   async onPost() {
-    const loadingElement = await this.loadingController.create({ message: 'Creating Post...' });
+    const loadingElement = await this.loadingController.create({ message: 'Creating Post... \n This could take a while if you are uploading a video.' });
 
     loadingElement.present();
 
@@ -112,13 +112,14 @@ export class NewPostComponent implements OnInit {
         } else {
           return this.postsService.newPost(userId, eventId, caption, uploadRes.imageUrl, type).subscribe(() => {
             loadingElement.dismiss();
+            this.modalController.dismiss();
+            this.router.navigateByUrl('/tabs/feed');
           });
         }
       }));
-    })).subscribe();
+    })).subscribe(() => {
+    });
 
-    this.modalController.dismiss();
-    this.router.navigateByUrl('/tabs/feed');
   }
 
   onImageChosen(imageData: string) {

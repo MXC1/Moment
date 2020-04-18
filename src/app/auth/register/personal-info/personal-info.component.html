@@ -1,11 +1,11 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar mode="md">
     <ion-buttons slot="start">
       <ion-button (click)="onFeedback()">
         <ion-icon name="bulb" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">Add Personal Info</ion-title>
+    <ion-title>Add Personal Info</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -29,7 +29,7 @@
     </ion-row>
     <ion-row class="ion-justify-content-center">
       <ion-col size="8">
-        <app-image-chooser (change)="onImageChosen($event)" message="Add An Image"></app-image-chooser>
+        <app-image-chooser (change)="onImageChosen($event)" message="Add An Image" accepts="image/*"></app-image-chooser>
       </ion-col>
     </ion-row>
     <ion-row class="ion-text-center" style="padding-top: 10px;">

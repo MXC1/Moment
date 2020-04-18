@@ -74,8 +74,6 @@ export class PostsService {
    */
   newPost(userId: string, eventId: string, caption: string, content: string, type: 'image' | 'video') {
     const newPost = new Post('', userId, eventId, caption, content, type, null, 0, 0);
-    console.log(newPost);
-
     let postId: string;
 
     return this.authService.getToken.pipe(take(1), switchMap(token => {
