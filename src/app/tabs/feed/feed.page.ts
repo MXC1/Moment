@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Post } from 'src/app/post';
 import { PostsService } from 'src/app/posts.service';
 import { Subscription, of } from 'rxjs';
@@ -8,13 +8,18 @@ import { EventsService } from 'src/app/events.service';
 import { EventContent } from 'src/app/event';
 import { Router } from '@angular/router';
 import { take, switchMap } from 'rxjs/operators';
-import { ModalController } from '@ionic/angular';
+import { ModalController, IonInput } from '@ionic/angular';
 import { SearchComponent } from 'src/app/search/search.component';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NewPostComponent } from './new-post/new-post.component';
 import { PostDetailComponent } from './post-detail/post-detail.component';
 import { PostDiscoverComponent } from './post-discover/post-discover.component';
 import { EventDetailComponent } from '../events/event-detail/event-detail.component';
+
+interface Comment {
+  userId: string;
+  commentContent: string;
+}
 
 /**
  * Feed of all posts by users or events the current user follows
@@ -37,6 +42,9 @@ export class FeedPage implements OnInit, OnDestroy {
   private usersSubscription: Subscription;
   private eventsSubscription: Subscription;
   isLoading = false;
+
+  @ViewChild(IonInput, { static: false }) commentBox;
+  comment: string;
 
   constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController, private authService: AuthService) { }
 
@@ -252,9 +260,20 @@ export class FeedPage implements OnInit, OnDestroy {
     this.postsService.likePost(postId).subscribe(() => {
       this.loadedPosts.find(p => p.id === postId).likes++;
     });
-   }
+  }
 
-  onPostComment(id: string) { }
+  onPostComment() {
+    this.commentBox.setFocus();
+  }
+
+  onAddComment(postId: string) {
+    this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+      const comment = this.comment;
+
+      this.postsService.addComment(postId, { [thisUserId]: comment });
+      this.commentBox.value = '';
+    });
+  }
 
   onPostShare(id: string) { }
 

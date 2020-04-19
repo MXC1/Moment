@@ -76,6 +76,18 @@
             <p *ngIf="post.shares !== 0">{{ post.shares }}</p>
           </ion-col> -->
         </ion-row>
+        <ion-row class="ion-justify-content-center">
+          <ion-col class="ion-align-items-center" size="12">
+            <ion-item>
+              <ion-input placeholder="Add a Comment" [(ngModel)]="comment" maxLength="22" #commentBox></ion-input>
+              <ion-button fill="clear" slot="end" (click)="onAddComment(post.id)">
+                <ion-icon name="add" slot="icon-only"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-col>
+          <ion-col class="ion-align-items-center">
+          </ion-col>
+        </ion-row>
       </ion-card-content>
     </ion-card>
   </ion-list>

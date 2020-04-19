@@ -62,41 +62,39 @@
             <p *ngIf="post.shares !== 0">{{ post.shares }}</p>
           </ion-col> -->
         </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-list *ngIf="comments" lines="none">
-
-              <ion-item *ngFor="let comment of comments" lines="none" style="border: 0px; padding-bottom: 5px;">
-                <ion-row>
-                  <ion-col>
-                    <ion-avatar>
-                      <ion-img [src]="getUser(comment.userId)?.image"></ion-img>
-                    </ion-avatar>
-                  </ion-col>
-                  <ion-col style="margin-top: auto; margin-bottom: auto;">
-                    <ion-row>
-                      <ion-label class="fullName">{{ getUser(comment.userId)?.username }}</ion-label>
-                    </ion-row>
-                    <ion-row style="padding-top: 10px;">
-                      <ion-label class="username">{{ comment?.commentContent }}</ion-label>
-                    </ion-row>
-                  </ion-col>
-                </ion-row>
-              </ion-item>
-            </ion-list>
-          </ion-col>
-
-        </ion-row>
         <ion-row class="ion-justify-content-center">
           <ion-col class="ion-align-items-center" size="12">
             <ion-item>
-              <ion-input placeholder="Add a Comment" [(ngModel)]="comment" #commentBox></ion-input>
+              <ion-input placeholder="Add a Comment" [(ngModel)]="comment" maxLength="22" #commentBox></ion-input>
               <ion-button fill="clear" slot="end" (click)="onAddComment()">
                 <ion-icon name="add" slot="icon-only"></ion-icon>
               </ion-button>
             </ion-item>
           </ion-col>
           <ion-col class="ion-align-items-center">
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-list *ngIf="comments" lines="none">
+            <ion-item *ngFor="let comment of comments" lines="none" style="border: 0px; padding-bottom: 5px;">
+              <ion-row>
+                <ion-col>
+
+                  <ion-avatar>
+                    <ion-img [src]="getUser(comment.userId)?.image"></ion-img>
+                  </ion-avatar>
+                </ion-col>
+              </ion-row>
+              <br>
+              <ion-row>
+                <ion-col>
+                  <ion-label class="user-name">{{ getUser(comment.userId)?.username }}</ion-label>
+                  <ion-label>{{ comment?.commentContent }}</ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+            </ion-list>
           </ion-col>
         </ion-row>
       </ion-col>
