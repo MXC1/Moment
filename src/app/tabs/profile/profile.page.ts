@@ -10,6 +10,7 @@ import { NewPostComponent } from '../feed/new-post/new-post.component';
 import { ModalController } from '@ionic/angular';
 import { PostDetailComponent } from '../feed/post-detail/post-detail.component';
 import { Subscription } from 'rxjs';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 /**
  * Page for viewing both the users own profile and other users profiles
@@ -152,6 +153,12 @@ export class ProfilePage implements OnInit {
    */
   onPostDetail(postId: string) {
     this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
+      modalElement.present();
+    });
+  }
+
+  onClickNotifications() {
+    this.modalController.create({ component: NotificationsComponent }).then(modalElement => {
       modalElement.present();
     });
   }

@@ -16,6 +16,11 @@
         <ion-icon name="checkmark"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-buttons slot="end" *ngIf="isThisUser">
+      <ion-button (click)="onClickNotifications()">
+        <ion-icon slot="icon-only" name="notifications"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Moment</ion-title>
   </ion-toolbar>
 </ion-header>

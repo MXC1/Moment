@@ -22,6 +22,7 @@ import { PersonalInfoComponent } from './auth/register/personal-info/personal-in
 import { FeedbackComponent } from './shared/feedback/feedback.component';
 import { EventDiscoverComponent } from './tabs/events/event-discover/event-discover.component';
 import { PostDiscoverComponent } from './tabs/feed/post-discover/post-discover.component';
+import { NotificationsComponent } from './tabs/profile/notifications/notifications.component';
 
 
 /**
@@ -31,8 +32,8 @@ import { PostDiscoverComponent } from './tabs/feed/post-discover/post-discover.c
  * @class AppModule
  */
 @NgModule({
-  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent],
-  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent],
+  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent],
+  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicSelectableModule, ContentModule],
   providers: [
     StatusBar,
