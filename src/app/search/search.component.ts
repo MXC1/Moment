@@ -86,13 +86,13 @@ export class SearchComponent implements OnInit {
     if (!this.filteredEvents) {
       this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
         this.filteredEvents = events.filter(event => {
-          return (event.name.includes(searchValue) || event.name.includes(searchValue.toUpperCase()) || event.name.includes(searchValue.toLowerCase()));
+          return ((event.name.includes(searchValue) || event.name.includes(searchValue.toUpperCase()) || event.name.includes(searchValue.toLowerCase())) && !event.isPrivate);
         });
       });
     } else {
       this.eventsService.getEvents.pipe(take(1)).subscribe(events => {
         this.filteredEvents = events.filter(event => {
-          return (event.name.includes(searchValue) || event.name.includes(searchValue.toUpperCase()) || event.name.includes(searchValue.toLowerCase()));
+          return ((event.name.includes(searchValue) || event.name.includes(searchValue.toUpperCase()) || event.name.includes(searchValue.toLowerCase())) && !event.isPrivate);
         });
       });
     }

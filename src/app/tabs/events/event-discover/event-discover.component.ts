@@ -29,6 +29,7 @@ export class EventDiscoverComponent implements OnInit {
   }
 
   fetchTailoredEvents() {
+    this.isLoading = true;
     this.displayedEvents = [];
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
@@ -78,6 +79,8 @@ export class EventDiscoverComponent implements OnInit {
   }
 
   fetchPopularEvents() {
+    this.isLoading = true;
+
     this.displayedEvents = [];
 
     this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
