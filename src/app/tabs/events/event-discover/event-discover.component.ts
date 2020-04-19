@@ -53,7 +53,7 @@ export class EventDiscoverComponent implements OnInit {
                 });
                 return followedByUser;
               }).forEach(followerFollowedEvent => {
-                if (!followerFollowedEvent.isPrivate) {
+                if (!followerFollowedEvent.isPrivate || followerFollowedEvent.isPrivate === null) {
                   if (!this.displayedEvents.some(e => e.event.id === followerFollowedEvent.id)) {
                     if (!this.loadedEvents.some(e => e.id === followerFollowedEvent.id)) {
                       this.displayedEvents = this.displayedEvents.concat({ event: followerFollowedEvent, weight: 1 });
@@ -84,15 +84,19 @@ export class EventDiscoverComponent implements OnInit {
       this.displayedEvents = this.displayedEvents.concat(allEvents.sort((e1, e2) => {
         return e2.followerIds.length - e1.followerIds.length;
       }).map(e => {
-        if (!e.isPrivate) {
-
+        
+        if (!e.isPrivate || e.isPrivate === null) {
+          
           if (!this.displayedEvents.some(currentEvent => currentEvent.event.id === e.id)) {
             return { event: e, weight: 1 };
           } else {
             return null;
           }
+        } else {
+          return null;
         }
       }).filter(each => each !== null));
+      console.log(this.displayedEvents);
 
       this.isLoading = false;
     });
