@@ -48,7 +48,10 @@ export class NewEventComponent implements OnInit {
       type: new FormControl(null, {
         validators: [Validators.required]
       }),
-      image: new FormControl(null)
+      image: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      private: new FormControl(true)
     });
   }
 
@@ -60,6 +63,9 @@ export class NewEventComponent implements OnInit {
     const name = this.form.value.name;
     const location = this.form.value.location;
     const type = this.form.value.type;
+    const isPrivate = this.form.value.private;
+    console.log(isPrivate);
+    
 
     this.form.patchValue({ image: this.imageChooser.croppedImage });
 
@@ -73,7 +79,7 @@ export class NewEventComponent implements OnInit {
         if (!userId) {
           throw new Error('No User ID Found!');
         } else {
-          return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId).subscribe(newEvent => {
+          return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId, isPrivate).subscribe(newEvent => {
             loadingElement.dismiss();
             this.modalController.dismiss(newEvent);
           });
@@ -102,5 +108,4 @@ export class NewEventComponent implements OnInit {
   closeModal() {
     this.modalController.dismiss();
   }
-
 }

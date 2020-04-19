@@ -11,6 +11,7 @@ import { AuthService } from '../../../auth/auth.service';
 import { take } from 'rxjs/operators';
 import { NewPostComponent } from '../../../tabs/feed/new-post/new-post.component';
 import { User } from 'src/app/shared/models/user';
+import { IonicSelectableComponent } from 'ionic-selectable';
 
 @Component({
   selector: 'app-event-detail',
@@ -29,6 +30,9 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   @Input() eventId;
   @ViewChild('menu', { static: false }) menu: IonSelect;
   didFollow = false;
+
+  @ViewChild('inviteSelectable', { static: false }) inviteSelectable: IonicSelectableComponent;
+  private loadedPeople: User[];
 
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
 
@@ -73,7 +77,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   }
 
   onNewPost() {
-    this.modalController.create({ component: NewPostComponent, componentProps: {event: this.event} }).then(modalElement => {
+    this.modalController.create({ component: NewPostComponent, componentProps: { event: this.event } }).then(modalElement => {
       modalElement.present();
     });
   }
@@ -95,9 +99,32 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     this.modalController.dismiss({ didFollow: this.didFollow });
   }
 
+  onInvite() {
+    this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
+      this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+        this.usersService.getUser(thisUserId).pipe(take(1)).subscribe(thisUser => {
+          this.loadedPeople = users.filter(user => thisUser.friendIds.some(u => u === user.id && u !== thisUserId));
+        });
+      });
+    });
+    this.inviteSelectable.open();
+  }
+
+  onInviteUser(event) {
+    const userToInvite = event.value;
+
+    this.usersService.generateNotification(userToInvite.id, 'You were invited to this event', this.event.id, 'event').subscribe();
+  }
+
   ngOnDestroy() {
     if (this.eventsSubscription) {
       this.eventsSubscription.unsubscribe();
+    }
+    if (this.usersSubscription) {
+      this.usersSubscription.unsubscribe();
+    }
+    if (this.postsSubscription) {
+      this.postsSubscription.unsubscribe();
     }
   }
 }

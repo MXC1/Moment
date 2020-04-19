@@ -53,12 +53,14 @@ export class EventDiscoverComponent implements OnInit {
                 });
                 return followedByUser;
               }).forEach(followerFollowedEvent => {
-                if (!this.displayedEvents.some(e => e.event.id === followerFollowedEvent.id)) {
-                  if (!this.loadedEvents.some(e => e.id === followerFollowedEvent.id)) {
-                    this.displayedEvents = this.displayedEvents.concat({ event: followerFollowedEvent, weight: 1 });
+                if (!followerFollowedEvent.isPrivate) {
+                  if (!this.displayedEvents.some(e => e.event.id === followerFollowedEvent.id)) {
+                    if (!this.loadedEvents.some(e => e.id === followerFollowedEvent.id)) {
+                      this.displayedEvents = this.displayedEvents.concat({ event: followerFollowedEvent, weight: 1 });
+                    }
+                  } else {
+                    this.displayedEvents.find(e => e.event.id === followerFollowedEvent.id).weight = this.displayedEvents.find(e => e.event.id === followerFollowedEvent.id).weight + 1;
                   }
-                } else {
-                  this.displayedEvents.find(e => e.event.id === followerFollowedEvent.id).weight = this.displayedEvents.find(e => e.event.id === followerFollowedEvent.id).weight + 1;
                 }
               });
 
@@ -82,10 +84,13 @@ export class EventDiscoverComponent implements OnInit {
       this.displayedEvents = this.displayedEvents.concat(allEvents.sort((e1, e2) => {
         return e2.followerIds.length - e1.followerIds.length;
       }).map(e => {
-        if (!this.displayedEvents.some(currentEvent => currentEvent.event.id === e.id)) {
-          return { event: e, weight: 1 };
-        } else {
-          return null;
+        if (!e.isPrivate) {
+
+          if (!this.displayedEvents.some(currentEvent => currentEvent.event.id === e.id)) {
+            return { event: e, weight: 1 };
+          } else {
+            return null;
+          }
         }
       }).filter(each => each !== null));
 

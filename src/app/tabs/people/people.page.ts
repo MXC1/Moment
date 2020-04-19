@@ -24,28 +24,7 @@ export class PeoplePage implements OnInit {
 
   constructor(private authService: AuthService, private usersService: UsersService, private modalController: ModalController) { }
 
-  /**
-   * Fetch all users and filter by those followed by current user
-   *
-   * @memberof PeoplePage
-   */
-  ngOnInit() {
-    // this.isLoading = true;
-    // this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
-    //   this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-    //     this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
-    //       this.loadedPeople = users.filter(user => {
-    //         for (const friend of thisUser.friendIds) {
-    //           if (friend !== thisUser.id) {
-    //             return friend === user.id;
-    //           }
-    //         }
-    //       });
-    //       this.isLoading = false;
-    //     });
-    //   });
-    // });
-  }
+  ngOnInit() {  }
 
   /**
    * Fetch all users and filter by those followed by current user

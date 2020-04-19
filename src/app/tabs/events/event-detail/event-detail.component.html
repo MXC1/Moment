@@ -45,12 +45,29 @@
         </ion-col>
       </ion-row>
       <ion-row class="ion-justify-content-center" *ngIf="!isLoading">
-        <ion-col class="ion-text-center event-name">{{ event.followerIds.length }} followers</ion-col>
-        <ion-col class="ion-text-center event-name">{{ eventPosts.length }} posts</ion-col>
+        <ion-col class="ion-text-center event-name">
+          {{ event.followerIds.length }} followers
+        </ion-col>
+        <ion-col class="ion-text-center event-name">
+          {{ eventPosts.length }} posts
+        </ion-col>
+      </ion-row>
+      <ion-row style="padding: 0px;">
+        <ion-col class="ion-text-center event-name">
+          <ion-button fill="clear" (click)="onInvite()">
+            <ion-icon name="add" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ionic-selectable style="display: none;" [items]="loadedPeople" itemValueField="id"
+          itemTextField="username" [canSearch]="true" (onChange)="onInviteUser($event)" #inviteSelectable></ionic-selectable>
+        </ion-col>
+        <ion-col class="ion-text-center event-name">
+          <ion-button fill="clear" (click)="onNewPost()">
+            <ion-icon name="add" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-col>
       </ion-row>
     </ion-card>
-    <ion-row *ngIf="!isLoading && eventPosts.length === 0" style="padding-top: 10px;"
-      class="ion-justify-content-center">
+    <ion-row *ngIf="!isLoading && eventPosts.length === 0" class="ion-justify-content-center">
       <ion-col class="ion-text-center">
         <p>This event has no content yet</p>
         <ion-button (click)="onNewPost()">Upload Something</ion-button>
