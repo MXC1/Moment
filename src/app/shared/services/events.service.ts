@@ -5,6 +5,7 @@ import { take, map, switchMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
 import { UsersService } from './users.service';
+import { logging } from 'protractor';
 
 interface EventData {
   name: string;
@@ -173,7 +174,23 @@ export class EventsService {
         }).subscribe();
       }));
     }));
+  }
 
+  unfollow(unfollowUserId: string, eventId: string) {
+    return this.authService.getUserId.pipe(take(1), switchMap(userId => {
+      return this.getEvent(eventId).pipe(take(1), switchMap(event => {
+        event.followerIds = event.followerIds.filter(e => e !== userId);
+
+        return this.authService.getToken.pipe(take(1), switchMap(token => {
+          return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds.json/?auth=${token}`).pipe(take(1), map(followers => {
+            const key = followers.findIndex(f => f === unfollowUserId);
+            console.log(key);
+            
+          return this.http.delete(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds/${key}.json/?auth=${token}`, ).subscribe();
+          }))
+        }))
+      }));
+    }));
   }
 
   /**

@@ -9,8 +9,8 @@
         <ion-icon name="person-add"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-label slot="end" *ngIf="isFollowing && !isLoading" style="padding-right: 5px;">Following</ion-label>
-    <ion-icon name="checkmark" slot="end" *ngIf="isFollowing && !isLoading"></ion-icon>
+      <ion-label slot="end" *ngIf="isFollowing && !isLoading" style="padding-right: 5px;" (click)="onUnfollowEvent()">Following</ion-label>
+      <ion-icon name="checkmark" slot="end" *ngIf="isFollowing && !isLoading"></ion-icon>
     <ion-title>Moment</ion-title>
     <ion-buttons slot="end" *ngIf="!isLoading && isThisUsersEvent()">
       <ion-button (click)="onShowMenu()">
@@ -60,8 +60,8 @@
           <ion-button fill="clear" (click)="onInvite()">
             <ion-icon name="add" slot="icon-only"></ion-icon>
           </ion-button>
-          <ionic-selectable style="display: none;" [items]="loadedPeople" itemValueField="id"
-          itemTextField="username" [canSearch]="true" (onChange)="onInviteUser($event)" #inviteSelectable></ionic-selectable>
+          <ionic-selectable style="display: none;" [items]="loadedPeople" itemValueField="id" itemTextField="username"
+            [canSearch]="true" (onChange)="onInviteUser($event)" #inviteSelectable></ionic-selectable>
         </ion-col>
         <ion-col class="ion-text-center event-name">
           <ion-button fill="clear" (click)="onNewPost()">

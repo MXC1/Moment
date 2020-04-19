@@ -76,6 +76,16 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  onUnfollowEvent() {
+    
+    this.isFollowing = false;
+    this.authService.getUserId.pipe(take(1)).subscribe(id => {
+      this.eventsService.unfollow(id, this.event.id).subscribe(() => {
+        this.didFollow = true;
+      });
+    })
+  }
+
   onNewPost() {
     this.modalController.create({ component: NewPostComponent, componentProps: { event: this.event } }).then(modalElement => {
       modalElement.present();

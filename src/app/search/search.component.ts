@@ -74,7 +74,7 @@ export class SearchComponent implements OnInit {
     } else {
       this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
         this.usersService.getUsers.pipe(take(1)).subscribe(users => {
-          this.filteredUsers = users.filter(user => {            
+          this.filteredUsers = users.filter(user => {
             return ((user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase())) && user.id !== thisUserId);
           });
         });
@@ -99,22 +99,19 @@ export class SearchComponent implements OnInit {
   }
 
   filterPosts(searchValue: string) {
-    if (!this.filteredPosts) {
-      this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
-        this.filteredEvents = events;
-        this.postsService.fetchPosts().pipe(take(1)).subscribe(posts => {
-          this.filteredPosts = posts.filter(post => {
-            return (post.caption.includes(searchValue));
-          });
-        });
-      });
-    } else {
-      this.postsService.getPosts.pipe(take(1)).subscribe(posts => {
+    this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
+      this.filteredEvents = events;
+      this.postsService.fetchPosts().pipe(take(1)).subscribe(posts => {
         this.filteredPosts = posts.filter(post => {
-          return (post.caption.includes(searchValue) || post.caption.includes(searchValue.toUpperCase()) || post.caption.includes(searchValue.toLowerCase()));
-        });
+          if (post.caption) {
+
+            return (post.caption.includes(searchValue));
+          } else {
+            return null;
+          }
+        }).filter(e => e !== null);
       });
-    }
+    });
   }
 
   getEvent(eventId: string) {
@@ -134,12 +131,12 @@ export class SearchComponent implements OnInit {
     onEventDetailModal.present();
   }
 
-    /**
-   * Open post detail modal
-   *
-   * @param {string} postId
-   * @memberof FeedPage
-   */
+  /**
+ * Open post detail modal
+ *
+ * @param {string} postId
+ * @memberof FeedPage
+ */
   onPostDetail(postId: string) {
     this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
       modalElement.present();
