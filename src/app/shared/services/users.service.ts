@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Notification } from 'rxjs';
 import { take, map, switchMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
@@ -13,6 +13,12 @@ interface UserData {
   image: string;
   postIds: string[];
   username: string;
+}
+
+interface Notif {
+  text: string;
+  from: string;
+  type: 'user' | 'event';
 }
 
 /**
@@ -177,6 +183,20 @@ export class UsersService {
         return friendIds.some(id => {
           return id === userToCheckId;
         });
+      }));
+    }));
+  }
+
+  getNotifications(userId: string) {
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.http.get<Notif[]>(`https://mmnt-io.firebaseio.com/users/${userId}/notifications.json/?auth=${token}`).pipe(take(1), map(resData => {
+        let notifs = [];
+        for (const key in resData) {
+          if (resData.hasOwnProperty(key)) {
+            notifs.push({ text: resData[key].text, from: resData[key].from, type: resData[key].type });
+          }
+        }
+        return notifs.reverse();
       }));
     }));
   }
