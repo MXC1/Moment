@@ -249,7 +249,9 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   onPostLike(postId: string) {
-    this.postsService.likePost(postId);
+    this.postsService.likePost(postId).subscribe(() => {
+      this.loadedPosts.find(p => p.id === postId).likes++;
+    });
    }
 
   onPostComment(id: string) { }

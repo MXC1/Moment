@@ -8,7 +8,6 @@ import { EventsService } from '../../../events.service';
 import { UsersService } from '../../../users.service';
 import { EventContent } from '../../../event';
 import { User } from '../../../user';
-import { PostCommentService } from '../../../post-comment.service';
 import { take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 
@@ -46,7 +45,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   private usersSubscription: Subscription;
   isLoading = true;
 
-  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private commentsService: PostCommentService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
+  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
 
   ngOnInit() {
     this.isLoading = true;
@@ -117,8 +116,10 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     return this.thisUser.id === this.post.userId;
   }
 
-  onPostLike() {
-    this.postsService.likePost(this.postId);
+  onPostLike(postId: string) {
+    this.postsService.likePost(postId).subscribe(() => {
+      this.loadedPosts.find(p => p.id === postId).likes++;
+    });
    }
 
   onPostComment() {
