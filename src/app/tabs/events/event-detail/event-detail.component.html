@@ -35,7 +35,10 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col class="ion-no-margin" style="padding: 10px;">
+        <ion-col class="ion-no-margin">
+          <ion-row class="ion-justify-content-center" style="padding-bottom: 10px;">
+            <ion-label class="privacy">{{ event.isPrivate ? "Private Event" : "" }}</ion-label>
+          </ion-row>
           <ion-row class="ion-justify-content-center">
             <ion-label class="event-name">{{ event.name }}</ion-label>
           </ion-row>
