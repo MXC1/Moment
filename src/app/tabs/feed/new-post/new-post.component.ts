@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { PostsService } from '../../../posts.service';
+import { PostsService } from '../../../shared/services/posts.service';
 import { AuthService } from '../../../auth/auth.service';
 import { NavController, ModalController, LoadingController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { switchMap, take, tap } from 'rxjs/operators';
 import { ImageChooserComponent } from '../../../image-chooser/image-chooser.component';
-import { EventContent } from '../../../event';
-import { EventsService } from '../../../events.service';
+import { EventContent } from '../../../shared/models/event';
+import { EventsService } from '../../../shared/services/events.service';
 import { NewEventComponent } from '../../events/new-event/new-event.component';
 import { IonicSelectableComponent } from 'ionic-selectable';
 

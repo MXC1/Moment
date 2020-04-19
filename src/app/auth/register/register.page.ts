@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { UsersService } from 'src/app/users.service';
+import { UsersService } from 'src/app/shared/services/users.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { AlertController, ModalController } from '@ionic/angular';

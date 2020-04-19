@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
-import { Post } from '../../../post';
-import { PostsService } from '../../../posts.service';
+import { Post } from '../../../shared/models/post';
+import { PostsService } from '../../../shared/services/posts.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, AlertController, ModalController, IonSelect, IonInput } from '@ionic/angular';
-import { EventsService } from '../../../events.service';
-import { UsersService } from '../../../users.service';
-import { EventContent } from '../../../event';
-import { User } from '../../../user';
+import { EventsService } from '../../../shared/services/events.service';
+import { UsersService } from '../../../shared/services/users.service';
+import { EventContent } from '../../../shared/models/event';
+import { User } from '../../../shared/models/user';
 import { take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 

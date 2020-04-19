@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../../auth.service';
 import { Router } from '@angular/router';
-import { UsersService } from 'src/app/users.service';
+import { UsersService } from 'src/app/shared/services/users.service';
 import { switchMap } from 'rxjs/operators';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { ImageChooserComponent } from 'src/app/image-chooser/image-chooser.component';

@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
-import { UsersService } from 'src/app/users.service';
-import { User } from 'src/app/user';
-import { Post } from 'src/app/post';
-import { PostsService } from 'src/app/posts.service';
+import { UsersService } from 'src/app/shared/services/users.service';
+import { User } from 'src/app/shared/models/user';
+import { Post } from 'src/app/shared/models/post';
+import { PostsService } from 'src/app/shared/services/posts.service';
 import { filter, take, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { NewPostComponent } from '../feed/new-post/new-post.component';
@@ -94,8 +94,6 @@ export class ProfilePage implements OnInit {
 
           this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
             this.followerNumber = allUsers.filter(eachUser => {
-              console.log(eachUser.friendIds === this.user.id);
-
               return eachUser.friendIds.some(id => id === this.user.id);
             }).length;
           });

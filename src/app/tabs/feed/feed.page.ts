@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Post } from 'src/app/post';
-import { PostsService } from 'src/app/posts.service';
+import { Post } from 'src/app/shared/models/post';
+import { PostsService } from 'src/app/shared/services/posts.service';
 import { Subscription, of } from 'rxjs';
-import { UsersService } from 'src/app/users.service';
-import { User } from 'src/app/user';
-import { EventsService } from 'src/app/events.service';
-import { EventContent } from 'src/app/event';
+import { UsersService } from 'src/app/shared/services/users.service';
+import { User } from 'src/app/shared/models/user';
+import { EventsService } from 'src/app/shared/services/events.service';
+import { EventContent } from 'src/app/shared/models/event';
 import { Router } from '@angular/router';
 import { take, switchMap } from 'rxjs/operators';
 import { ModalController, IonInput } from '@ionic/angular';

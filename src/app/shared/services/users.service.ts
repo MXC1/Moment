@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { User } from './user';
+import { User } from '../models/user';
 import { BehaviorSubject } from 'rxjs';
 import { take, map, switchMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 interface UserData {
   bio: string;

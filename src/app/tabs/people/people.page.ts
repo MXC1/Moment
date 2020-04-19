@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/user';
+import { User } from 'src/app/shared/models/user';
 import { AuthService } from 'src/app/auth/auth.service';
-import { UsersService } from 'src/app/users.service';
+import { UsersService } from 'src/app/shared/services/users.service';
 import { take } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
 import { SearchComponent } from 'src/app/search/search.component';

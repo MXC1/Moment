@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Post } from './post';
+import { Post } from '../models/post';
 import { BehaviorSubject } from 'rxjs';
 import { take, tap, map, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 interface PostData {
   caption: string;

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { EventContent } from 'src/app/event';
+import { EventContent } from 'src/app/shared/models/event';
 import { Subscription } from 'rxjs';
-import { EventsService } from 'src/app/events.service';
+import { EventsService } from 'src/app/shared/services/events.service';
 import { take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { EventDetailComponent } from '../event-detail/event-detail.component';
-import { UsersService } from 'src/app/users.service';
+import { UsersService } from 'src/app/shared/services/users.service';
 import { SegmentChangeEventDetail } from '@ionic/core';
 
 @Component({

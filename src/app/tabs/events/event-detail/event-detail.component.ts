@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy, Input, Output, ViewChild } from '@angular/core';
-import { EventContent } from '../../../event';
+import { EventContent } from '../../../shared/models/event';
 import { Subscription } from 'rxjs';
-import { PostsService } from '../../../posts.service';
-import { EventsService } from '../../../events.service';
-import { UsersService } from '../../../users.service';
+import { PostsService } from '../../../shared/services/posts.service';
+import { EventsService } from '../../../shared/services/events.service';
+import { UsersService } from '../../../shared/services/users.service';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, AlertController, ModalController, IonSelect } from '@ionic/angular';
-import { Post } from '../../../post';
+import { Post } from '../../../shared/models/post';
 import { AuthService } from '../../../auth/auth.service';
 import { take } from 'rxjs/operators';
 import { NewPostComponent } from '../../../tabs/feed/new-post/new-post.component';
-import { User } from 'src/app/user';
+import { User } from 'src/app/shared/models/user';
 
 @Component({
   selector: 'app-event-detail',

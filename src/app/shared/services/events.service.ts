@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { EventContent } from './event';
+import { EventContent } from '../models/event';
 import { take, map, switchMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { UsersService } from './users.service';
 
 interface EventData {
