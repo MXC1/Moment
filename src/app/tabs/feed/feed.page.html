@@ -35,20 +35,24 @@
   <ion-list *ngIf="!isLoading" class="ion-text-center" style="padding-top: 0px;">
     <ion-card *ngFor="let post of loadedPosts" class="ion-no-margin">
       <div>
-        <ion-row>
-          <ion-col class="ion-text-start" size="8">
+        <ion-row class="ion-justify-content-center">
+          <ion-col class="ion-text-start ion-align-self-center" size="7" style="padding-bottom: 10px;">
             <ion-row style="padding-top: 10px; padding-left: 10px;">
-              <ion-label class="user-name" (click)="onClickUser(post.userId)">{{ getUser(post.userId)?.username }}</ion-label>
-            </ion-row>
-            <ion-row style="padding-top: 5px; padding-left: 10px;">
-                <ion-label class="caption">{{ post.caption }}</ion-label>
+              <ion-label style="font-style: italic;" class="caption">{{ post.caption }}</ion-label>
             </ion-row>
             <ion-row style="padding-top: 5px; padding-left: 10px">
-              <ion-label class="event-name" (click)="onEventDetail(post.eventId)"> @ {{ getEvent(post.eventId)?.name }}, {{ getEvent(post.eventId)?.location }} </ion-label>
+              <ion-label class="event-name" (click)="onEventDetail(post.eventId)"> {{ getEvent(post.eventId)?.name }},
+                {{ getEvent(post.eventId)?.location }} </ion-label>
+            </ion-row>
+            <ion-row style="padding-top: 5px; padding-left: 10px; padding-bottom: 5px;">
+              <ion-label class="user-name" (click)="onClickUser(post.userId)">Posted by
+                {{ getUser(post.userId)?.username }}
+              </ion-label>
             </ion-row>
           </ion-col>
-          <ion-col class="ion-text-end ion-align-self-center">
-            <ion-button (click)="onPostDetail(post.id)" class="moreinfo" fill="clear" size="large">
+          <ion-col size="5" class="ion-text-center ion-align-self-center" >
+            <ion-button (click)="onPostDetail(post.id)" class="moreinfo" fill="clear" >
+              <ion-label style="font-size: 16px;">View Post</ion-label>
               <ion-icon name="ios-arrow-forward" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-col>

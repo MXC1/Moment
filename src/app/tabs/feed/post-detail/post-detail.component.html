@@ -33,14 +33,13 @@
           </ion-col>
         </ion-row>
         <ion-row style="padding-top: 10px" class="ion-justify-content-center">
-          <ion-label class="user-name">{{ user.username }}</ion-label>
+          <ion-label style="font-style: italic;" class="caption">{{ post.caption }}</ion-label>
         </ion-row>
         <ion-row style="padding-top: 5px" class="ion-justify-content-center">
-          <ion-label class="event-name"> @ {{ event?.name }}, {{ event?.location }}</ion-label>
+          <ion-label class="event-name"> {{ event?.name }}, {{ event?.location }}</ion-label>
         </ion-row>
-        <hr>
         <ion-row style="padding-top: 5px" class="ion-justify-content-center">
-          <ion-label class="caption">{{ post.caption }}</ion-label>
+          <ion-label class="user-name">Posted by {{ user.username }}</ion-label>
         </ion-row>
         <ion-row style="padding-top: 5px" class="ion-text-center">
           <ion-col>
@@ -79,18 +78,16 @@
             <ion-list *ngIf="comments" lines="none">
             <ion-item *ngFor="let comment of comments" lines="none" style="border: 0px; padding-bottom: 5px;">
               <ion-row>
-                <ion-col>
-
+                <ion-col size="2">
                   <ion-avatar>
                     <ion-img [src]="getUser(comment.userId)?.image"></ion-img>
                   </ion-avatar>
                 </ion-col>
               </ion-row>
-              <br>
               <ion-row>
-                <ion-col>
+                <ion-col size="10">
                   <ion-label class="user-name">{{ getUser(comment.userId)?.username }}</ion-label>
-                  <ion-label>{{ comment?.commentContent }}</ion-label>
+                  <ion-label text-wrap>{{ comment?.commentContent }}</ion-label>
                 </ion-col>
               </ion-row>
             </ion-item>
