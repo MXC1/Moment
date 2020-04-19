@@ -57,7 +57,7 @@ export class NotificationsComponent implements OnInit {
 
   getFromName(notification: Notif) {
     if(notification.type === 'event') {
-      return this.loadedEvents.find(event => event.id === notification.from).name;
+      return this.loadedEvents.find(event => event.id === notification.from).name + " @ " + this.loadedEvents.find(event => event.id === notification.from).location;
     } else {
       return this.loadedUsers.find(user => user.id === notification.from).username;
     }
