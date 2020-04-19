@@ -204,8 +204,6 @@ export class UsersService {
   generateNotification(userId: string, text: string, from: string, type: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<Notif[]>(`https://mmnt-io.firebaseio.com/users/${userId}/notifications.json/?auth=${token}`).pipe(take(1), tap(currentNotifs => {
-
-      console.log(currentNotifs);
       
         let key;
         if (currentNotifs !== null) {

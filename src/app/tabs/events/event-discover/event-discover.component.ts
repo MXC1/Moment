@@ -96,8 +96,6 @@ export class EventDiscoverComponent implements OnInit {
           return null;
         }
       }).filter(each => each !== null));
-      console.log(this.displayedEvents);
-
       this.isLoading = false;
     });
   }
