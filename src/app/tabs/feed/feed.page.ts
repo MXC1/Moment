@@ -97,27 +97,7 @@ export class FeedPage implements OnInit, OnDestroy {
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
         this.loadedPosts = posts.filter(post => {
-          let followsUser;
-          let followsEvent;
-
-          currentUser.friendIds.forEach(person => {
-            if (!followsUser) {
-              followsUser = person === post.userId;
-            }
-
-          });
-
-          this.loadedEvents.forEach(event => {
-            if (event.id === post.eventId) {
-              event.followerIds.forEach(follower => {
-                if (!followsUser) {
-                  followsEvent = follower === userId;
-                }
-              });
-            }
-          });
-
-          return followsUser || followsEvent;
+          return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId))) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate)
         });
       });
       this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {

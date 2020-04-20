@@ -51,6 +51,9 @@ export class NewEventComponent implements OnInit {
       image: new FormControl(null, {
         validators: [Validators.required]
       }),
+      date: new FormControl(null, {
+        validators: [Validators.required]
+      }),
       private: new FormControl(false)
     });
   }
@@ -64,8 +67,8 @@ export class NewEventComponent implements OnInit {
     const location = this.form.value.location;
     const type = this.form.value.type;
     const isPrivate = this.form.value.private;
-
-    console.log(isPrivate);
+    const date = this.form.value.date;    
+    console.log(date);
     
 
     this.form.patchValue({ image: this.imageChooser.croppedImage });

@@ -18,7 +18,7 @@
       <ion-row class="ion-justify-content-center">
         <ion-col size="8">
           <ion-item class="ion-justify-content-center">
-            <ion-label class="ion-text-center" position="floating">Event Name</ion-label>
+            <ion-label position="floating">Event Name</ion-label>
             <ion-input type="text" formControlName="name"></ion-input>
           </ion-item>
         </ion-col>
@@ -26,16 +26,16 @@
       <ion-row class="ion-justify-content-center">
         <ion-col size="8">
           <ion-item class="ion-justify-content-center">
-            <ion-label class="ion-text-center" position="floating">Event Location</ion-label>
+            <ion-label position="floating">Event Location</ion-label>
             <ion-input type="text" formControlName="location"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row class="ion-justify-content-center" style="padding-top: 10px;">
+      <ion-row class="ion-justify-content-center">
         <ion-col size="8">
           <ion-item>
-            <ion-label>Type</ion-label>
-            <ion-select okText="Select" cancelText="Dismiss" formControlName="type">
+            <ion-label position="floating">Type</ion-label>
+            <ion-select style="padding-left:0px;" okText="Select" cancelText="Dismiss" formControlName="type">
               <ion-select-option value="music">Music</ion-select-option>
               <ion-select-option value="nightlife">Nightlife</ion-select-option>
               <ion-select-option value="festival">Festival</ion-select-option>
@@ -65,10 +65,17 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row class="ion-justify-content-center" style="padding-top: 10px;">
+      <ion-row class="ion-justify-content-center">
         <ion-col size="8">
           <ion-item class="ion-justify-content-center">
-            <!-- <ion-label class="ion-text-center" position="floating">Short Description</ion-label> -->
+            <ion-label position="floating">Date</ion-label>
+            <ion-datetime formControlName="date" displayFormat="DDD DD MMM YYYY"></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center" style="padding-top: 20px;">
+        <ion-col size="8">
+          <ion-item class="ion-justify-content-center">
             <ion-label>Private?</ion-label>
             <ion-checkbox formControlName="private" checked="false"></ion-checkbox>
           </ion-item>
