@@ -34,12 +34,16 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   @ViewChild('inviteSelectable', { static: false }) inviteSelectable: IonicSelectableComponent;
   private loadedPeople: User[];
 
+  date: string;
+
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
 
   ngOnInit() {
     this.isLoading = true;
     this.eventsSubscription = this.eventsService.getEvent(this.eventId).subscribe(event => {
       this.event = event;
+      const dateObject = new Date(event.date);
+      this.date = this.dayOfTheWeek(dateObject.getDay()) + " " + dateObject.getDate().toString() + " " + this.monthOfTheYear(dateObject.getMonth()+1) + " " + dateObject.getFullYear().toString();
       this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
         this.eventPosts = posts.filter(post => post.eventId === this.eventId);
         this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
@@ -65,6 +69,92 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         alertElement.present();
       });
     });
+  }
+
+  dayOfTheWeek(number: number) {
+    switch (number) {
+      case (1): {
+        return 'Mon';
+        break;
+      }
+      case (2): {
+        return 'Tue'
+        break;
+      }
+      case (3): {
+        return 'Wed'
+        break;
+      }
+      case (4): {
+        return 'Thu'
+        break;
+      }
+      case (5): {
+        return 'Fri'
+        break;
+      }
+      case (6): {
+        return 'Sat'
+        break;
+      }
+      case (7): {
+        return 'Sun'
+        break;
+      }
+    }
+  }
+
+  monthOfTheYear(number: number) {
+    switch (number) {
+      case (1): {
+        return 'Jan';
+        break;
+      }
+      case (2): {
+        return 'Feb'
+        break;
+      }
+      case (3): {
+        return 'Mar'
+        break;
+      }
+      case (4): {
+        return 'Apr'
+        break;
+      }
+      case (5): {
+        return 'May'
+        break;
+      }
+      case (6): {
+        return 'Jun'
+        break;
+      }
+      case (7): {
+        return 'Jul'
+        break;
+      }
+      case (8): {
+        return 'Aug'
+        break;
+      }
+      case (9): {
+        return 'Sept'
+        break;
+      }
+      case (10): {
+        return 'Oct'
+        break;
+      }
+      case (11): {
+        return 'Nov'
+        break;
+      }
+      case (12): {
+        return 'Dec'
+        break;
+      }
+    }
   }
 
   onFollowEvent() {

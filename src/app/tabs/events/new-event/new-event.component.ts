@@ -67,9 +67,7 @@ export class NewEventComponent implements OnInit {
     const location = this.form.value.location;
     const type = this.form.value.type;
     const isPrivate = this.form.value.private;
-    const date = this.form.value.date;    
-    console.log(date);
-    
+    const date = this.form.value.date;
 
     this.form.patchValue({ image: this.imageChooser.croppedImage });
 
@@ -83,7 +81,7 @@ export class NewEventComponent implements OnInit {
         if (!userId) {
           throw new Error('No User ID Found!');
         } else {
-          return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId, isPrivate).subscribe(newEvent => {
+          return this.eventsService.addEvent(name, location, type, uploadRes.imageUrl, userId, isPrivate, date).subscribe(newEvent => {
             loadingElement.dismiss();
             this.modalController.dismiss(newEvent);
           });

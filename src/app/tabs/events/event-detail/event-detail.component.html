@@ -9,8 +9,9 @@
         <ion-icon name="person-add"></ion-icon>
       </ion-button>
     </ion-buttons>
-      <ion-label slot="end" *ngIf="isFollowing && !isLoading" style="padding-right: 5px;" (click)="onUnfollowEvent()">Following</ion-label>
-      <ion-icon name="checkmark" slot="end" *ngIf="isFollowing && !isLoading"></ion-icon>
+    <ion-label slot="end" *ngIf="isFollowing && !isLoading" style="padding-right: 5px;" (click)="onUnfollowEvent()">
+      Following</ion-label>
+    <ion-icon name="checkmark" slot="end" *ngIf="isFollowing && !isLoading"></ion-icon>
     <ion-title>Moment</ion-title>
     <ion-buttons slot="end" *ngIf="!isLoading && isThisUsersEvent()">
       <ion-button (click)="onShowMenu()">
@@ -36,43 +37,47 @@
   <ion-grid class="ion-no-margin" *ngIf="!isLoading">
     <ion-card class="ion-no-margin">
       <ion-row>
-        <ion-col class="ion-align-self-center" style="padding: 10px;">
+        <ion-col class="ion-align-self-center">
           <img [src]="event.headerImage">
         </ion-col>
       </ion-row>
-      <ion-row>
-        <ion-col class="ion-no-margin">
-          <ion-row class="ion-justify-content-center" style="padding-bottom: 10px;">
-            <ion-label class="privacy">{{ event.isPrivate ? "Private Event" : "" }}</ion-label>
+      <ion-row style="padding-left: 10px;">
+        <ion-col size="12">
+          <ion-row class="ion-justify-content-start">
+            <ion-col class="event-name">
+              {{ event.name }}
+            </ion-col>
           </ion-row>
-          <ion-row class="ion-justify-content-center">
-            <ion-label class="event-name">{{ event.name }}</ion-label>
+          <ion-row class="ion-justify-content-start" style="padding-top: 10px;">
+            <ion-col class="location">
+              <ion-icon name="pin"></ion-icon>
+              {{ event.location }}
+            </ion-col>
           </ion-row>
-          <ion-row class="ion-justify-content-center">
-            <ion-label class="location">@ {{ event.location }}</ion-label>
+
+          <ion-row *ngIf="event.date">
+            <ion-col class="date">
+              <ion-icon name="clock"></ion-icon>
+              {{ date }}
+            </ion-col>
           </ion-row>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-justify-content-center" *ngIf="!isLoading">
-        <ion-col class="ion-text-center event-name">
-          {{ event.followerIds.length }} followers
-        </ion-col>
-        <ion-col class="ion-text-center event-name">
-          {{ eventPosts.length }} posts
-        </ion-col>
-      </ion-row>
-      <ion-row style="padding: 0px;">
-        <ion-col class="ion-text-center event-name">
-          <ion-button fill="clear" (click)="onInvite()">
-            <ion-icon name="add" slot="icon-only"></ion-icon>
-          </ion-button>
-          <ionic-selectable style="display: none;" [items]="loadedPeople" itemValueField="id" itemTextField="username"
-            [canSearch]="true" (onChange)="onInviteUser($event)" #inviteSelectable></ionic-selectable>
-        </ion-col>
-        <ion-col class="ion-text-center event-name">
-          <ion-button fill="clear" (click)="onNewPost()">
-            <ion-icon name="add" slot="icon-only"></ion-icon>
-          </ion-button>
+
+          <ion-row class="ion-justify-content-start" *ngIf="!isLoading">
+            <ion-col class="ion-text-start info">
+              <ion-icon name="contacts"></ion-icon>
+              {{ event.followerIds.length }} followers
+            </ion-col>
+            <ion-col class="ion-text-start info">
+              <ion-icon name="paper"></ion-icon>
+              {{ eventPosts.length }} posts
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-start">
+            <ion-col class="privacy">
+              <ion-icon name="lock"></ion-icon>
+              {{ event.isPrivate ? "Private Event" : "Public Event" }}
+            </ion-col>
+          </ion-row>
         </ion-col>
       </ion-row>
     </ion-card>

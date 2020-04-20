@@ -15,6 +15,7 @@ interface EventData {
   followerIds: string[];
   headerImage: string;
   isPrivate: boolean;
+  date: string;
 }
 
 /**
@@ -40,8 +41,8 @@ export class EventsService {
    * @returns
    * @memberof EventsService
    */
-  addEvent(name: string, location: string, type: string, headerImage: string, creatorId: string, isPrivate: boolean) {
-    const newEvent = new EventContent('', name, location, creatorId, [], [creatorId], headerImage, isPrivate);
+  addEvent(name: string, location: string, type: string, headerImage: string, creatorId: string, isPrivate: boolean, date: string) {
+    const newEvent = new EventContent('', name, location, creatorId, [], [creatorId], headerImage, isPrivate, date);
     let eventId;
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.post<{ name: string }>(`https://mmnt-io.firebaseio.com/events.json?auth=${token}`, { ...newEvent, id: null })
@@ -114,7 +115,8 @@ export class EventsService {
                 resData[key].postIds,
                 resData[key].followerIds,
                 resData[key].headerImage,
-                resData[key].isPrivate
+                resData[key].isPrivate,
+                resData[key].date
               ));
             }
           }
@@ -139,7 +141,7 @@ export class EventsService {
       return this.http.get<EventData>(`https://mmnt-io.firebaseio.com/events/${id}.json?auth=${token}`)
         .pipe(map(resData => {
           if (resData !== null) {
-            return new EventContent(id, resData.name, resData.location, resData.creatorId, resData.postIds, resData.followerIds, resData.headerImage, resData.isPrivate);
+            return new EventContent(id, resData.name, resData.location, resData.creatorId, resData.postIds, resData.followerIds, resData.headerImage, resData.isPrivate, resData.date);
           }
         }));
     }));
