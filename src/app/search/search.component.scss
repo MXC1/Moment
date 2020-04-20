@@ -13,3 +13,28 @@ ion-avatar {
     width: 50px !important;
   }
 }
+
+ion-card {
+  // box-shadow: none !important;
+  // border-bottom: solid var(--ion-color-primary-tint);
+  // border-radius: 0px;
+  padding-top: 5px !important;
+}
+
+.user-name {
+  color: #737373;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.event-name {
+  color: #262626;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.caption {
+  color: #262626;
+  font-size: 20px;
+}

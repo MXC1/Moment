@@ -22,6 +22,7 @@ export class SearchComponent implements OnInit {
   filteredUsers: User[];
   filteredPosts: Post[];
   filteredEvents: EventContent[];
+  loadedUsers: User[];
 
   isLoading = false;
 
@@ -29,6 +30,10 @@ export class SearchComponent implements OnInit {
 
   ngOnInit() {
     this.title = this.toSearch.charAt(0).toUpperCase() + this.toSearch.slice(1);
+
+    this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
+      this.loadedUsers = allUsers;
+    })
   }
 
   closeModal() {
@@ -111,6 +116,17 @@ export class SearchComponent implements OnInit {
     if (this.filteredEvents) {
       return this.filteredEvents.find(event => event.id === eventId);
     }
+  }
+
+  /**
+   * Get a single user 
+   *
+   * @param {string} id
+   * @returns {User}
+   * @memberof FeedPage
+   */
+  getUser(id: string): User {
+    return this.loadedUsers.find(user => user.id === id);
   }
 
   async onEventDetail(eventId: string) {
