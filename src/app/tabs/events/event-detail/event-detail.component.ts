@@ -77,7 +77,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   }
 
   onUnfollowEvent() {
-    
+
     this.isFollowing = false;
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.eventsService.unfollow(id, this.event.id).subscribe(() => {
@@ -100,9 +100,39 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     return this.thisUser.id === this.event.creatorId;
   }
 
+  handleSelectOption(menu) {
+    switch (menu.value) {
+      case 'delete': {
+        this.onDeleteEvent();
+        break;
+      }
+      case 'public': {
+        this.onMakePublic();
+        break;
+      }
+      case 'private': {
+        this.onMakePrivate();
+        break;
+      }
+    }
+  }
+
   onDeleteEvent() {
     this.eventsService.deleteEvent(this.event.id);
     this.modalController.dismiss();
+  }
+
+  onMakePublic() {
+    this.eventsService.makePublic(this.eventId).subscribe(() => {
+      this.event.isPrivate = false;
+    });
+  }
+
+
+  onMakePrivate() {
+    this.eventsService.makePrivate(this.eventId).subscribe(() => {
+      this.event.isPrivate = true;
+    });
   }
 
   closeModal() {

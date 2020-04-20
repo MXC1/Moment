@@ -115,7 +115,7 @@ export class EventsService {
                 resData[key].followerIds,
                 resData[key].headerImage,
                 resData[key].isPrivate
-                ));
+              ));
             }
           }
           return events.reverse();
@@ -185,8 +185,8 @@ export class EventsService {
           return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds.json/?auth=${token}`).pipe(take(1), map(followers => {
             const key = followers.findIndex(f => f === unfollowUserId);
             console.log(key);
-            
-          return this.http.delete(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds/${key}.json/?auth=${token}`, ).subscribe();
+
+            return this.http.delete(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds/${key}.json/?auth=${token}`).subscribe();
           }))
         }))
       }));
@@ -208,6 +208,18 @@ export class EventsService {
           return !!(id === userId);
         }));
       }));
+    }));
+  }
+
+  makePublic(eventId: string) {
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.http.patch(`https://mmnt-io.firebaseio.com/events/${eventId}.json/?auth=${token}`, { isPrivate: false });
+    }));
+  }
+
+  makePrivate(eventId: string) {
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.http.patch(`https://mmnt-io.firebaseio.com/events/${eventId}.json/?auth=${token}`, { isPrivate: true });
     }));
   }
 

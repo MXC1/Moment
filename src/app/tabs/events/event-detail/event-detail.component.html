@@ -21,9 +21,15 @@
 </ion-header>
 
 <ion-content>
-  <ion-select #menu hidden interface="action-sheet" (ionChange)="onDeleteEvent()">
-    <ion-select-option (click)="onDeleteEvent()">
+  <ion-select #menu hidden interface="action-sheet" (ionChange)="handleSelectOption(menu)" *ngIf="!isLoading">
+    <ion-select-option value="delete">
       <ion-label>Delete Event</ion-label>
+    </ion-select-option>
+    <ion-select-option value="public" *ngIf="event.isPrivate">
+      <ion-label>Make Public</ion-label>
+    </ion-select-option>
+    <ion-select-option value="private" *ngIf="!event.isPrivate">
+      <ion-label>Make Private</ion-label>
     </ion-select-option>
   </ion-select>
 
