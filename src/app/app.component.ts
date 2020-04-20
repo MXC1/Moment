@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Platform, ModalController } from '@ionic/angular';
+import { Platform, ModalController, AlertController } from '@ionic/angular';
 
-import { Plugins, Capacitor } from '@capacitor/core';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -25,11 +24,15 @@ export class AppComponent implements OnInit, OnDestroy {
   private authSubscription: Subscription;
   private previousAuthState = false;
 
+  isMobile: boolean;
+
   constructor(
     private authService: AuthService,
     private router: Router,
-    private modalController: ModalController
-  ) {}
+    private modalController: ModalController,
+    private platform: Platform,
+    private alertController: AlertController
+  ) { }
 
   /**
    * Check authentication status and navigate to login if not
@@ -37,12 +40,20 @@ export class AppComponent implements OnInit, OnDestroy {
    * @memberof AppComponent
    */
   ngOnInit() {
-    this.authSubscription = this.authService.isAuthenticated.subscribe(isAuthenticated => {
-      if (!isAuthenticated && this.previousAuthState !== isAuthenticated) {
-        this.router.navigateByUrl('/auth/login');
-      }
-      this.previousAuthState = isAuthenticated;
-    });
+    if (!this.platform.is('mobile') || this.platform.is('desktop')) {
+      this.alertController.create({ header: 'Incorrect Device', message: 'It looks like you\'re trying to access this site from a desktop browser. Please use the browser on your phone.', backdropDismiss: false}).then(alertElement => {
+        alertElement.present();
+      })
+      this.isMobile = false;
+    } else {
+      this.authSubscription = this.authService.isAuthenticated.subscribe(isAuthenticated => {
+        if (!isAuthenticated && this.previousAuthState !== isAuthenticated) {
+          this.router.navigateByUrl('/auth/login');
+        }
+        this.previousAuthState = isAuthenticated;
+      });
+    }
+    this.isMobile = true;
   }
 
   /**

@@ -43,7 +43,3 @@ import { NotificationsComponent } from './tabs/profile/notifications/notificatio
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
-
-// entryComponents: [ImageChooserComponent, ImageCropperComponent],
-// declarations: [FeedPage, ContentComponent, ImageChooserComponent, ImageCropperComponent],
