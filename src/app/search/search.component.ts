@@ -18,6 +18,7 @@ import { PostDetailComponent } from '../tabs/feed/post-detail/post-detail.compon
 })
 export class SearchComponent implements OnInit {
   @Input() toSearch: 'people' | 'posts' | 'events';
+  title: string;
   filteredUsers: User[];
   filteredPosts: Post[];
   filteredEvents: EventContent[];
@@ -26,7 +27,9 @@ export class SearchComponent implements OnInit {
 
   constructor(private modalController: ModalController, private usersService: UsersService, private postsService: PostsService, private eventsService: EventsService, private authService: AuthService) { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    this.title = this.toSearch.charAt(0).toUpperCase() + this.toSearch.slice(1);
+   }
 
   closeModal() {
     this.modalController.dismiss();
