@@ -76,7 +76,7 @@ export class SearchComponent implements OnInit {
   }
 
   userFind(user: User, searchValue: string, thisUserId: string) {
-    return ((user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase())) && user.id !== thisUserId);
+    return (user.username.toLowerCase().includes(searchValue.toLowerCase()) || user.fullName.toLowerCase().includes(searchValue.toLowerCase())) && user.id !== thisUserId;
   }
 
   filterEvents(searchValue: string) {
@@ -88,7 +88,7 @@ export class SearchComponent implements OnInit {
   }
 
   eventFind(event: EventContent, searchValue: string) {
-    return ((event.name.includes(searchValue) || event.name.includes(searchValue.toUpperCase()) || event.name.includes(searchValue.toLowerCase())) && !event.isPrivate);
+    return ((event.name.toLowerCase().includes(searchValue.toLowerCase())) && !event.isPrivate);
   }
 
   filterPosts(searchValue: string) {
@@ -104,7 +104,7 @@ export class SearchComponent implements OnInit {
   }
 
   postFind(post: Post, searchValue: string, connectedEvent: EventContent) {
-    return (post.caption.includes(searchValue) || post.caption.includes(searchValue.toUpperCase()) || post.caption.includes(searchValue.toLowerCase()) || connectedEvent.name.includes(searchValue) || connectedEvent.name.includes(searchValue.toUpperCase()) || connectedEvent.name.includes(searchValue.toLowerCase())) && !connectedEvent.isPrivate;
+    return (post.caption.toLowerCase().includes(searchValue.toLowerCase()) || connectedEvent.name.toLowerCase().includes(searchValue.toLowerCase())) && !connectedEvent.isPrivate;
   }
 
   getEvent(eventId: string) {

@@ -33,15 +33,7 @@ export class EventDiscoverComponent implements OnInit {
     this.displayedEvents = [];
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
-        this.loadedEvents = events.filter(event => {
-          let followedByUser = false;
-          event.followerIds.forEach(followerId => {
-            if (followerId === userId) {
-              followedByUser = followerId === userId;
-            }
-          });
-          return followedByUser;
-        });
+        this.loadedEvents = events.filter(e => e.followerIds.some(i => i === userId));
         this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
           this.loadedEvents.forEach(myFollowedEvent => {
             myFollowedEvent.followerIds.forEach(followerId => {
@@ -83,23 +75,26 @@ export class EventDiscoverComponent implements OnInit {
 
     this.displayedEvents = [];
 
-    this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
-      this.displayedEvents = this.displayedEvents.concat(allEvents.sort((e1, e2) => {
-        return e2.followerIds.length - e1.followerIds.length;
-      }).map(e => {
-        
-        if (!e.isPrivate || e.isPrivate === null) {
-          
-          if (!this.displayedEvents.some(currentEvent => currentEvent.event.id === e.id)) {
-            return { event: e, weight: 1 };
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+      this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
+        this.loadedEvents = allEvents.filter(e => e.followerIds.some(i => i === userId));
+        this.displayedEvents = this.displayedEvents.concat(allEvents.sort((e1, e2) => {
+          return e2.followerIds.length - e1.followerIds.length;
+        }).map(e => {
+
+          if (!e.isPrivate || e.isPrivate === null) {
+
+            if (!this.displayedEvents.some(currentEvent => currentEvent.event.id === e.id) && !this.loadedEvents.some(currentEvent => currentEvent.id === e.id)) {
+              return { event: e, weight: 1 };
+            } else {
+              return null;
+            }
           } else {
             return null;
           }
-        } else {
-          return null;
-        }
-      }).filter(each => each !== null));
-      this.isLoading = false;
+        }).filter(each => each !== null));
+        this.isLoading = false;
+      });
     });
   }
 
