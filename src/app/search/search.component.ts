@@ -27,9 +27,9 @@ export class SearchComponent implements OnInit {
 
   constructor(private modalController: ModalController, private usersService: UsersService, private postsService: PostsService, private eventsService: EventsService, private authService: AuthService) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.title = this.toSearch.charAt(0).toUpperCase() + this.toSearch.slice(1);
-   }
+  }
 
   closeModal() {
     this.modalController.dismiss();
@@ -66,39 +66,29 @@ export class SearchComponent implements OnInit {
   }
 
   filterUsers(searchValue: string) {
-    if (!this.filteredUsers) {
-      this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
-        this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
-          this.filteredUsers = users.filter(user => {
-            return ((user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase())) && user.id !== thisUserId);
-          });
+    this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+      this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
+        this.filteredUsers = users.filter(user => {
+          return this.userFind(user, searchValue, thisUserId);
         });
       });
-    } else {
-      this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
-        this.usersService.getUsers.pipe(take(1)).subscribe(users => {
-          this.filteredUsers = users.filter(user => {
-            return ((user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase())) && user.id !== thisUserId);
-          });
-        });
-      });
-    }
+    });
+  }
+
+  userFind(user: User, searchValue: string, thisUserId: string) {
+    return ((user.username.includes(searchValue) || user.fullName.includes(searchValue) || user.username.includes(searchValue.toUpperCase()) || user.fullName.includes(searchValue.toUpperCase()) || user.username.includes(searchValue.toLowerCase()) || user.fullName.includes(searchValue.toLowerCase())) && user.id !== thisUserId);
   }
 
   filterEvents(searchValue: string) {
-    if (!this.filteredEvents) {
-      this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
-        this.filteredEvents = events.filter(event => {
-          return ((event.name.includes(searchValue) || event.name.includes(searchValue.toUpperCase()) || event.name.includes(searchValue.toLowerCase())) && !event.isPrivate);
-        });
+    this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
+      this.filteredEvents = events.filter(event => {
+        return this.eventFind(event, searchValue);
       });
-    } else {
-      this.eventsService.getEvents.pipe(take(1)).subscribe(events => {
-        this.filteredEvents = events.filter(event => {
-          return ((event.name.includes(searchValue) || event.name.includes(searchValue.toUpperCase()) || event.name.includes(searchValue.toLowerCase())) && !event.isPrivate);
-        });
-      });
-    }
+    });
+  }
+
+  eventFind(event: EventContent, searchValue: string) {
+    return ((event.name.includes(searchValue) || event.name.includes(searchValue.toUpperCase()) || event.name.includes(searchValue.toLowerCase())) && !event.isPrivate);
   }
 
   filterPosts(searchValue: string) {
@@ -106,15 +96,15 @@ export class SearchComponent implements OnInit {
       this.filteredEvents = events;
       this.postsService.fetchPosts().pipe(take(1)).subscribe(posts => {
         this.filteredPosts = posts.filter(post => {
-          if (post.caption) {
-
-            return (post.caption.includes(searchValue));
-          } else {
-            return null;
-          }
-        }).filter(e => e !== null);
+          const connectedEvent = events.find(e => e.id === post.eventId);
+          return this.postFind(post, searchValue, connectedEvent);
+        });
       });
     });
+  }
+
+  postFind(post: Post, searchValue: string, connectedEvent: EventContent) {
+    return (post.caption.includes(searchValue) || post.caption.includes(searchValue.toUpperCase()) || post.caption.includes(searchValue.toLowerCase()) || connectedEvent.name.includes(searchValue) || connectedEvent.name.includes(searchValue.toUpperCase()) || connectedEvent.name.includes(searchValue.toLowerCase())) && !connectedEvent.isPrivate;
   }
 
   getEvent(eventId: string) {
