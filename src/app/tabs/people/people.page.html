@@ -29,7 +29,7 @@
     </ion-row>
     <ion-row *ngIf="!isLoading" style="padding-top:8px">
       <ion-col size="4" *ngFor="let person of loadedPeople">
-        <ion-img [src]="person.image" [routerLink]="person.id"></ion-img>
+        <img [src]="person.image" [routerLink]="person.id">
         <p class="ion-text-center">{{person.username}}</p>
       </ion-col>
     </ion-row>

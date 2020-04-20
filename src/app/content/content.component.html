@@ -3,5 +3,5 @@
   <ion-icon *ngIf="content.type === 'video' && this.playable !== 'false'" name="ios-arrow-dropright" class="play-button"
     slot="icon-only" id="playButton">
   </ion-icon>
-  <ion-img *ngIf="content.type === 'image'" [src]="content.content"></ion-img>
+  <img *ngIf="content.type === 'image'" [src]="content.content">
 </div>

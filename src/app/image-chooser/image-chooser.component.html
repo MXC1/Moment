@@ -10,7 +10,7 @@
     <ion-spinner *ngIf="isLoading"></ion-spinner>
   </ion-row>
 
-  <ion-img *ngIf="croppedImage && type === 'image' && finishedCropping" [src]="imagePreview"></ion-img>
+  <img *ngIf="croppedImage && type === 'image' && finishedCropping" [src]="imagePreview">
   <image-cropper *ngIf="!finishedCropping" [imageBase64]="selectedImage" [maintainAspectRatio]="true" [aspectRatio]="1/1" (imageCropped)="imageCropped($event)" (imageLoaded)="imageCropper.crop()" format="jpeg" outputType="dataUrl"></image-cropper>
   <ion-button expand="block" *ngIf="croppedImage && !finishedCropping && type === 'image'" (click)="onFinishCrop()" fill="clear">
     <ion-icon name="checkmark" slot="start"></ion-icon>
