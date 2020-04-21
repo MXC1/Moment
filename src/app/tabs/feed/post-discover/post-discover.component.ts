@@ -61,6 +61,7 @@ export class PostDiscoverComponent implements OnInit {
    * @memberof PostDiscoverComponent
    */
   fetchTailoredPosts() {
+    this.isLoading = true;
     this.displayedPosts = [];
 
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
@@ -72,8 +73,19 @@ export class PostDiscoverComponent implements OnInit {
             (currentUser.friendIds.some(f => f === p.userId) && this.loadedEvents.some(e => !e.isPrivate && e.id === p.eventId))
             || this.loadedEvents.some(e => e.id === p.eventId && e.followerIds.some(f => f === userId)));
 
-          // For each follower for each event that I follow
-          allPosts.filter(p => this.loadedEvents.filter(e => e.followerIds.some(f => f === userId)).some(e => e.followerIds.some(f => p.userId === f)))
+          // Return each post by followers of every event that I follow
+          // p = every post
+          // e = every event
+          // f = every follower of every event
+          // ef = every event I follow
+          // fe = every follower of an event I follow
+          allPosts.filter(p =>
+            this.loadedEvents.filter(e =>
+              e.followerIds.some(f =>
+                f === userId)).some(ef =>
+                  ef.followerIds.some(fe =>
+                    p.userId === fe)) && this.loadedEvents.some(e =>
+                      !e.isPrivate && p.eventId === e.id))
             .forEach(post => {
 
               // If the post has not already been added to the displayed posts array
@@ -90,15 +102,15 @@ export class PostDiscoverComponent implements OnInit {
                 !this.displayedPosts.find(p => p.post.id === post.id).weight++;
               }
             });
+          // Sort by post weight (how many times the post cropped up in the event => followers => posts search)
+          // Puts posts the user is most likely to enjoy at the top
+          this.displayedPosts = this.displayedPosts.sort((p1, p2) => {
+            return p2.weight - p1.weight;
+          });
+
+          this.isLoading = false;
         });
 
-        // Sort by post weight (how many times the post cropped up in the event => followers => posts search)
-        // Puts posts the user is most likely to enjoy at the top
-        this.displayedPosts = this.displayedPosts.sort((p1, p2) => {
-          return p2.weight - p1.weight;
-        });
-
-        this.isLoading = false;
       });
     });
   }
@@ -109,6 +121,7 @@ export class PostDiscoverComponent implements OnInit {
    * @memberof PostDiscoverComponent
    */
   fetchPopularPosts() {
+    this.isLoading = true;
     this.displayedPosts = [];
 
     this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
@@ -123,8 +136,8 @@ export class PostDiscoverComponent implements OnInit {
           }).map(p => {
             return { post: p, weight: 1 };
           });
+        this.isLoading = false;
       });
-      this.isLoading = false;
     });
   }
 
