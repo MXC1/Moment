@@ -64,60 +64,36 @@ export class PostDiscoverComponent implements OnInit {
     this.displayedPosts = [];
 
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-
       this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
-
         this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
-          this.loadedPosts = allPosts.filter(post => {
-            let followsUser;
-            let followsEvent;
 
-            currentUser.friendIds.forEach(person => {
-              if (!followsUser) {
-                followsUser = person === post.userId;
-              }
+          // Find every post that is posted by a friend and in a non-private event or that is under an event I follow
+          this.loadedPosts = allPosts.filter(p =>
+            (currentUser.friendIds.some(f => f === p.userId) && this.loadedEvents.some(e => !e.isPrivate && e.id === p.eventId))
+            || this.loadedEvents.some(e => e.id === p.eventId && e.followerIds.some(f => f === userId)));
 
-            });
+          // For each follower for each event that I follow
+          allPosts.filter(p => this.loadedEvents.filter(e => e.followerIds.some(f => f === userId)).some(e => e.followerIds.some(f => p.userId === f)))
+            .forEach(post => {
 
-            this.loadedEvents.forEach(event => {
-              if (event.id === post.eventId) {
-                event.followerIds.forEach(follower => {
-                  if (!followsUser) {
-                    followsEvent = follower === userId;
-                  }
-                });
-              }
-            });
+              // If the post has not already been added to the displayed posts array
+              if (!this.displayedPosts.some(p => p.post.id === post.id)) {
 
-            return followsUser || followsEvent;
-          });
+                // If the post is not already in the users feed
+                if (!this.loadedPosts.some(p => p.id === post.id)) {
 
-
-          this.loadedEvents.filter(eachEvent => {
-            let followedByUser = false;
-            eachEvent.followerIds.forEach(followerId => {
-              if (followerId === userId) {
-                followedByUser = followerId === userId;
-              }
-            });
-            return followedByUser;
-          }).forEach(eachMyFollowedEvent => {
-            eachMyFollowedEvent.followerIds.forEach(eachFollowerId => {
-              const tryPost = allPosts.filter(eachPost => {
-                return eachPost.userId === eachFollowerId;
-              });
-              if (tryPost.length > 0) {
-                if (!this.displayedPosts.some(p => p.post.id === tryPost[0].id)) {
-                  if (!this.loadedPosts.some(p => p.id === tryPost[0].id)) {
-                    this.displayedPosts = this.displayedPosts.concat({ post: tryPost[0], weight: 1 });
-                  }
-                } else {
-                  this.displayedPosts.find(p => p.post.id === tryPost[0].id).weight = this.displayedPosts.find(p => p.post.id === tryPost[0].id).weight + 1;
+                  // Add it to the displayed posts array
+                  this.displayedPosts = this.displayedPosts.concat({ post: post, weight: 1 });
                 }
+                // If the post has already been added to the displayed posts array, increment its weight
+              } else {
+                !this.displayedPosts.find(p => p.post.id === post.id).weight++;
               }
             });
-          });
         });
+
+        // Sort by post weight (how many times the post cropped up in the event => followers => posts search)
+        // Puts posts the user is most likely to enjoy at the top
         this.displayedPosts = this.displayedPosts.sort((p1, p2) => {
           return p2.weight - p1.weight;
         });
@@ -134,21 +110,21 @@ export class PostDiscoverComponent implements OnInit {
    */
   fetchPopularPosts() {
     this.displayedPosts = [];
-    
+
     this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
       this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
-        this.displayedPosts = this.displayedPosts.concat(allPosts.filter(p => allEvents.some(e => (e.id === p.eventId) && !e.isPrivate)).sort((p1, p2) => {
-          return p2.likes - p1.likes;
-        }).map(p => {
-          return { post: p, weight: 1 };
-        }));
-      })
-
-      this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
-        this.loadedUsers = allUsers;
-
-        this.isLoading = false;
+        // Filter out private events
+        this.displayedPosts = allPosts.filter(p => allEvents.some(e => (e.id === p.eventId) && !e.isPrivate))
+          // Sort by how many likes they have
+          .sort((p1, p2) => {
+            return p2.likes - p1.likes;
+            // Map to post and weight configuration
+            // Weight is never used but it means the view doesn't have to change depending on popular // tailored
+          }).map(p => {
+            return { post: p, weight: 1 };
+          });
       });
+      this.isLoading = false;
     });
   }
 
