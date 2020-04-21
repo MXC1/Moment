@@ -134,13 +134,15 @@ export class PostDiscoverComponent implements OnInit {
    */
   fetchPopularPosts() {
     this.displayedPosts = [];
-
+    
     this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
-      this.displayedPosts = this.displayedPosts.concat(allPosts.sort((p1, p2) => {
-        return p2.likes - p1.likes;
-      }).map(p => {
-        return { post: p, weight: 1 };
-      }));
+      this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
+        this.displayedPosts = this.displayedPosts.concat(allPosts.filter(p => allEvents.some(e => (e.id === p.eventId) && !e.isPrivate)).sort((p1, p2) => {
+          return p2.likes - p1.likes;
+        }).map(p => {
+          return { post: p, weight: 1 };
+        }));
+      })
 
       this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
         this.loadedUsers = allUsers;
