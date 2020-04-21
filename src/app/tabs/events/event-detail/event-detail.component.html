@@ -88,7 +88,7 @@
       </ion-col>
     </ion-row>
     <ion-row style="padding-top:8px" *ngIf="!isLoading && eventPosts.length !== 0">
-      <ion-col size="4" *ngFor="let post of eventPosts" [routerLink]="['/post-detail', post.id]">
+      <ion-col size="4" *ngFor="let post of eventPosts" (click)="onPostDetail(post.id)">
         <app-content [content]="this.post" playable="false" square="square"></app-content>
       </ion-col>
     </ion-row>

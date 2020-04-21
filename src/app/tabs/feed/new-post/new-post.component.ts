@@ -70,8 +70,10 @@ export class NewPostComponent implements OnInit {
   }
 
   fetchEvents() {
-    this.eventsSubscription = this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
-      this.loadedEvents = events;
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+      this.eventsSubscription = this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
+        this.loadedEvents = events.filter(e => !e.isPrivate || e.followerIds.some(f => f === userId));
+      })
     });
   }
 

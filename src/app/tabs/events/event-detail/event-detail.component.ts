@@ -12,6 +12,7 @@ import { take } from 'rxjs/operators';
 import { NewPostComponent } from '../../../tabs/feed/new-post/new-post.component';
 import { User } from 'src/app/shared/models/user';
 import { IonicSelectableComponent } from 'ionic-selectable';
+import { PostDetailComponent } from '../../feed/post-detail/post-detail.component';
 
 @Component({
   selector: 'app-event-detail',
@@ -72,9 +73,11 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   }
 
   dayOfTheWeek(number: number) {
+    console.log(number);
+    
     switch (number) {
-      case (1): {
-        return 'Mon';
+      case (0): {
+        return 'Sun';
         break;
       }
       case (2): {
@@ -95,10 +98,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       }
       case (6): {
         return 'Sat'
-        break;
-      }
-      case (7): {
-        return 'Sun'
         break;
       }
     }
@@ -244,6 +243,12 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     const userToInvite = event.value;
 
     this.usersService.generateNotification(userToInvite.id, 'You were invited to this event', this.event.id, 'event').subscribe();
+  }
+
+  onPostDetail(postId: string) {
+    this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
+      modalElement.present();
+    });
   }
 
   ngOnDestroy() {

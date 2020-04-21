@@ -64,7 +64,7 @@ export class AuthService {
 
   logout() {
     this.user.next(null);
-    Plugins.Storage.remove({key: 'authData'});
+    Plugins.Storage.clear();
   }
 
   register(email: string, password: string) {
