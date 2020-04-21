@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { EventDetailComponent } from '../event-detail/event-detail.component';
 import { UsersService } from 'src/app/shared/services/users.service';
 import { SegmentChangeEventDetail } from '@ionic/core';
+import { E2BIG } from 'constants';
 
 @Component({
   selector: 'app-event-discover',
@@ -77,22 +78,16 @@ export class EventDiscoverComponent implements OnInit {
 
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
+
         this.loadedEvents = allEvents.filter(e => e.followerIds.some(i => i === userId));
-        this.displayedEvents = this.displayedEvents.concat(allEvents.sort((e1, e2) => {
-          return e2.followerIds.length - e1.followerIds.length;
-        }).map(e => {
 
-          if (!e.isPrivate || e.isPrivate === null) {
+        this.displayedEvents = allEvents.filter(e => !e.isPrivate
+          && !this.loadedEvents.some(le => le.id === e.id))
+          .sort((e1, e2) => e2.followerIds.length - e1.followerIds.length)
+          .map(e => {
+            return { event: e, weight: 1 };
+          });
 
-            if (!this.displayedEvents.some(currentEvent => currentEvent.event.id === e.id) && !this.loadedEvents.some(currentEvent => currentEvent.id === e.id)) {
-              return { event: e, weight: 1 };
-            } else {
-              return null;
-            }
-          } else {
-            return null;
-          }
-        }).filter(each => each !== null));
         this.isLoading = false;
       });
     });
