@@ -33,39 +33,33 @@ export class EventDiscoverComponent implements OnInit {
     this.isLoading = true;
     this.displayedEvents = [];
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-      this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
-        this.loadedEvents = events.filter(e => e.followerIds.some(i => i === userId));
-        this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
-          this.loadedEvents.forEach(myFollowedEvent => {
-            myFollowedEvent.followerIds.forEach(followerId => {
-              allEvents.filter(eachEvent => {
-                let followedByUser = false;
-                eachEvent.followerIds.forEach(eventFollowerId => {
-                  if (eventFollowerId === followerId) {
-                    followedByUser = eventFollowerId === followerId;
-                  }
-                });
-                return followedByUser;
-              }).forEach(followerFollowedEvent => {
-                if (!followerFollowedEvent.isPrivate || followerFollowedEvent.isPrivate === null) {
-                  if (!this.displayedEvents.some(e => e.event.id === followerFollowedEvent.id)) {
-                    if (!this.loadedEvents.some(e => e.id === followerFollowedEvent.id)) {
-                      this.displayedEvents = this.displayedEvents.concat({ event: followerFollowedEvent, weight: 1 });
-                    }
-                  } else {
-                    this.displayedEvents.find(e => e.event.id === followerFollowedEvent.id).weight = this.displayedEvents.find(e => e.event.id === followerFollowedEvent.id).weight + 1;
-                  }
-                }
-              });
+      this.eventsSubscription = this.eventsService.fetchEvents().subscribe(allEvents => {
+        this.loadedEvents = allEvents.filter(e => e.followerIds.some(i => i === userId));
 
-            });
-          });
-          this.displayedEvents = this.displayedEvents.sort((e1, e2) => {
-            return e2.weight - e1.weight;
+        // Return each event followed by someone who is also a follower of an event I follow
+        // e = every event
+        // f = every follower of every event
+        // le = every event I follow
+        // lef = every follower of every event I follow
+        allEvents.filter(e =>
+          e.followerIds.some(f =>
+            this.loadedEvents.some(le =>
+              le.followerIds.some(lef =>
+                lef === f))) && !e.isPrivate)
+          .forEach(event => {
+            if (!this.displayedEvents.some(e => e.event.id === event.id)) {
+              if (!this.loadedEvents.some(e => e.id === event.id)) {
+                this.displayedEvents = this.displayedEvents.concat({ event: event, weight: 1 });
+              }
+            } else {
+              this.displayedEvents.find(e => e.event.id === event.id).weight++;
+            }
           });
 
-          this.isLoading = false;
+        this.displayedEvents = this.displayedEvents.sort((e1, e2) => {
+          return e2.weight - e1.weight;
         });
+        this.isLoading = false;
       });
 
     });
