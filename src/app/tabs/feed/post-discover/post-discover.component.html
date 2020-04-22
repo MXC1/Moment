@@ -21,27 +21,29 @@
         <ion-list *ngIf="!isLoading" class="ion-text-center" style="padding-top: 0px;">
           <ion-card *ngFor="let post of displayedPosts" class="ion-no-margin">
             <div>
-              <ion-row>
-                <ion-col class="ion-text-start" size="8">
-                  <ion-row style="padding-top: 10px; padding-left: 15px;">
-                    <ion-label class="user-name" (click)="onClickUser(post.post.userId)">{{ getUser(post.post.userId)?.username }}</ion-label>
+              <ion-row class="ion-justify-content-center">
+                <ion-col class="ion-text-start ion-align-self-center" size="7" style="padding-bottom: 10px;">
+                  <ion-row style="padding-top: 10px; padding-left: 10px;">
+                    <ion-label style="font-style: italic;" class="caption">{{ post.post.caption }}</ion-label>
                   </ion-row>
                   <ion-row style="padding-top: 5px; padding-left: 10px">
-                    <ion-label class="event-name"> @ {{ getEvent(post.post.eventId)?.name }}, {{ getEvent(post.post.eventId)?.location }} </ion-label>
+                    <ion-label class="event-name" (click)="onEventDetail(post.post.eventId)"> {{ getEvent(post.post.eventId)?.name }},
+                      {{ getEvent(post.post.eventId)?.location }} </ion-label>
+                  </ion-row>
+                  <ion-row style="padding-top: 5px; padding-left: 10px; padding-bottom: 5px;">
+                    <ion-label class="user-name" (click)="onClickUser(post.post.userId)">Posted by
+                      {{ getUser(post.post.userId)?.username }}
+                    </ion-label>
                   </ion-row>
                 </ion-col>
-                <ion-col class="ion-text-end ion-align-self-center">
-                  <ion-button (click)="onPostDetail(post.post.id)" class="moreinfo" fill="clear" size="large">
+                <ion-col size="5" class="ion-text-center ion-align-self-center">
+                  <ion-button (click)="onPostDetail(post.post.id)" class="moreinfo" fill="clear">
+                    <ion-label style="font-size: 16px;">View Post</ion-label>
                     <ion-icon name="ios-arrow-forward" slot="icon-only"></ion-icon>
                   </ion-button>
                 </ion-col>
               </ion-row>
               <app-content [content]="post.post"></app-content>
-              <ion-row style="padding-top: 10px;" class="ion-text-center">
-                <ion-col>
-                  <ion-label class="caption">{{ post.post.caption }}</ion-label>
-                </ion-col>
-              </ion-row>
             </div>
             <ion-card-content>
               <ion-row style="padding:0%">
@@ -52,16 +54,10 @@
                   <p *ngIf="post.post.likes !== 0">{{ post.post.likes }}</p>
                 </ion-col>
                 <ion-col>
-                  <ion-button class="post-interaction" (click)="onPostLike(post.post.id)">
+                  <ion-button class="post-interaction" (click)="onPostComment(post.post.id)">
                     <ion-icon name="chatbubbles" slot="icon-only"></ion-icon>
                   </ion-button>
                   <p *ngIf="post.post.comments">{{ post.post.comments.length }}</p>
-                </ion-col>
-                <ion-col>
-                  <ion-button class="post-interaction" (click)="onPostLike(post.post.id)">
-                    <ion-icon name="share" slot="icon-only"></ion-icon>
-                  </ion-button>
-                  <p *ngIf="post.post.shares !== 0">{{ post.post.shares }}</p>
                 </ion-col>
               </ion-row>
             </ion-card-content>

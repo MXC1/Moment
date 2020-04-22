@@ -215,7 +215,11 @@ export class PostDiscoverComponent implements OnInit {
     });
   }
 
-  onPostLike(id: string) { }
+  onPostLike(postId: string) {
+    this.postsService.likePost(postId).subscribe(() => {
+      this.displayedPosts.find(p => p.post.id === postId).post.likes++;
+    });
+  }
 
   onPostComment(id: string) { }
 
