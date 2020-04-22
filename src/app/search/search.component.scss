@@ -1,7 +1,8 @@
 ion-avatar {
-  padding: 10px;
-  width: 100% !important;
-  height: 100% !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 70px;
+  height: 70px;
 }
 
 .square {
@@ -21,20 +22,14 @@ ion-card {
   padding-top: 5px !important;
 }
 
+.full-name {
+  color: #000000;
+  font-size: 18px;
+  font-weight: 500;
+}
+
 .user-name {
   color: #737373;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
-}
-
-.event-name {
-  color: #262626;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1.2;
-}
-
-.caption {
-  color: #262626;
-  font-size: 20px;
 }

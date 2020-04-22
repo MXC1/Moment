@@ -18,21 +18,13 @@
 
     <ion-list *ngIf="toSearch === 'people'">
       <ion-item *ngFor="let user of filteredUsers" [routerLink]="['tabs', 'people', user.id]" (click)="closeModal()">
-        <ion-row>
-          <ion-col size="3">
-            <ion-avatar>
-              <img [src]="user.image">
-            </ion-avatar>
-          </ion-col>
-          <ion-col size="9" style="margin-top: auto; margin-bottom: auto;">
-            <ion-row>
-              <ion-label class="fullName" style="height: 20px;">{{ user.fullName }}</ion-label>
-            </ion-row>
-            <ion-row style="padding-top: 10px;">
-              <ion-label class="username">{{ user.username }}</ion-label>
-            </ion-row>
-          </ion-col>
-        </ion-row>
+        <ion-avatar slot="start">
+          <img [src]="user.image">
+        </ion-avatar>
+        <ion-label>
+          <p class="full-name">{{ user.fullName }}</p>
+          <p class="user-name">{{ user.username }}</p>
+        </ion-label>
       </ion-item>
     </ion-list>
     <ion-list *ngIf="toSearch === 'events'">
