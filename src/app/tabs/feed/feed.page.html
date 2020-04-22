@@ -22,10 +22,11 @@
 
 <ion-content>
   <ion-row *ngIf="!isLoading && loadedPosts.length === 0" class="ion-justify-content-center ion-text-center">
+
     <ion-col size="10">
       <p>Can't find any posts!</p> <br>
-      <p>Try following another user or an event,
-        <br>or use the search and discover buttons at the top to find new content</p>
+      <p>Try using the discover and search buttons at the top to find posts you're interested in,
+        <br> or use the navigation tabs at the bottom to find users or events.</p>
     </ion-col>
   </ion-row>
   <ion-row *ngIf="isLoading" class="ion-justify-content-center">
