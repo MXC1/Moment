@@ -101,11 +101,6 @@ export class EventDiscoverComponent implements OnInit {
 
   async onEventDetail(eventId: string) {
     const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId } });
-    onEventDetailModal.onDidDismiss().then(didFollow => {
-      if (didFollow) {
-        this.fetchTailoredEvents();
-      }
-    });
     onEventDetailModal.present();
   }
 }

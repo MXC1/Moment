@@ -255,6 +255,4 @@ export class FeedPage implements OnInit, OnDestroy {
     });
   }
 
-  onPostShare(id: string) { }
-
 }

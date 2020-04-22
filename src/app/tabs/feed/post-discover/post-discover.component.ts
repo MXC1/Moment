@@ -12,6 +12,7 @@ import { User } from 'src/app/shared/models/user';
 import { PostDetailComponent } from '../post-detail/post-detail.component';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import { Router } from '@angular/router';
+import { EventDetailComponent } from '../../events/event-detail/event-detail.component';
 
 
 /**
@@ -193,6 +194,17 @@ export class PostDiscoverComponent implements OnInit {
     });
   }
 
+  async onEventDetail(eventId: string) {
+    const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId } });
+    onEventDetailModal.onDidDismiss().then(didFollow => {
+      if (didFollow.data.didFollow) {
+        this.eventsService.fetchEvents().subscribe();
+        this.postsService.fetchPosts().subscribe();
+      }
+    });
+    onEventDetailModal.present();
+  }
+
   closeModal() {
     this.modalController.dismiss();
   }
@@ -209,8 +221,10 @@ export class PostDiscoverComponent implements OnInit {
     this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
       if (thisUserId === postUserId) {
         this.router.navigateByUrl('/tabs/profile');
+        this.closeModal();
       } else {
         this.router.navigateByUrl('/tabs/people/' + postUserId);
+        this.closeModal();
       }
     });
   }
@@ -221,7 +235,7 @@ export class PostDiscoverComponent implements OnInit {
     });
   }
 
-  onPostComment(id: string) { }
-
-  onPostShare(id: string) { }
+  onPostComment(id: string) {
+    this.onPostDetail(id);
+  }
 }
