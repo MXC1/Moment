@@ -63,7 +63,7 @@ export class ProfilePage implements OnInit {
             this.isThisUser = true;
           } else {
             this.isThisUser = false;
-          }
+          }          
 
           this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
             this.usersService.isFollowing(thisUserId, userId).pipe(take(1)).subscribe(isFollowing => {
@@ -89,7 +89,7 @@ export class ProfilePage implements OnInit {
     this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
       this.user = user;
       this.postsService.fetchPosts().pipe(map(posts => posts.filter(
-        post => post.userId === userId && (this.isThisUser ? true : post.isPrivate)))).subscribe(posts => {
+        post => post.userId === userId && (this.isThisUser ? true : !post.isPrivate)))).subscribe(posts => {
           this.posts = posts;
 
           this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
