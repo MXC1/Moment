@@ -13,15 +13,23 @@
       <ion-button (click)="onSearch()">
         <ion-icon name="search" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button (click)="onNewEvent()">
-        <ion-icon name="add" slot="icon-only"></ion-icon>
-      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-grid>
+    <ion-row style="padding: 0px;" class="ion-justify-content-center">
+      <ion-col class="ion-align-items-center" size="8">
+        <ion-searchbar placeholder="Search Your Events"></ion-searchbar>
+      </ion-col>
+      <ion-col size="3" class="ion-align-items-center">
+        <ion-button *ngIf="!isLoading && loadedEvents.length !== 0" (click)="onFilter($event)">
+          <ion-label>Filter</ion-label>
+          <ion-icon name="ios-funnel" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
     <ion-row *ngIf="!isLoading && loadedEvents.length === 0" class="ion-justify-content-center ion-text-center">
       <ion-col size="10">
         <p>You don't follow any events yet!</p> <br>
@@ -40,4 +48,9 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="onNewEvent()">
+      <ion-icon name="add" style="font-size: 75px;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

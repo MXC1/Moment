@@ -71,4 +71,9 @@
   --ion-toolbar-color: var(--ion-color-light);
 
   --ion-transparent: #00FFFFFF;
+
+  ion-popover {
+    --width: 320px;
+    --max-width: 320px;
+  }
 }

@@ -23,6 +23,7 @@ import { FeedbackComponent } from './shared/feedback/feedback.component';
 import { EventDiscoverComponent } from './tabs/events/event-discover/event-discover.component';
 import { PostDiscoverComponent } from './tabs/feed/post-discover/post-discover.component';
 import { NotificationsComponent } from './tabs/profile/notifications/notifications.component';
+import { FilterOptionsComponent } from './tabs/events/filter-options/filter-options.component';
 
 
 /**
@@ -32,8 +33,8 @@ import { NotificationsComponent } from './tabs/profile/notifications/notificatio
  * @class AppModule
  */
 @NgModule({
-  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent],
-  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent],
+  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent, FilterOptionsComponent],
+  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent, FilterOptionsComponent],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicSelectableModule, ContentModule],
   providers: [
     StatusBar,

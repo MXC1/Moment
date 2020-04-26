@@ -4,11 +4,12 @@ import { Subscription } from 'rxjs';
 import { EventsService } from 'src/app/shared/services/events.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { take } from 'rxjs/operators';
-import { ModalController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 import { SearchComponent } from 'src/app/shared/search/search.component';
 import { NewEventComponent } from './new-event/new-event.component';
 import { EventDetailComponent } from './event-detail/event-detail.component';
 import { EventDiscoverComponent } from './event-discover/event-discover.component';
+import { FilterOptionsComponent } from './filter-options/filter-options.component';
 
 @Component({
   selector: 'app-events',
@@ -20,7 +21,7 @@ export class EventsPage implements OnInit, OnDestroy {
   private eventsSubscription: Subscription;
   isLoading = false;
 
-  constructor(private eventsService: EventsService, private authService: AuthService, private modalController: ModalController) { }
+  constructor(private eventsService: EventsService, private authService: AuthService, private modalController: ModalController, private popoverController: PopoverController) { }
 
   ngOnInit() {
     this.isLoading = true;
@@ -105,5 +106,13 @@ export class EventsPage implements OnInit, OnDestroy {
       this.fetchFollowedEvents();
     });
     onDiscoverEventsModal.present();
+  }
+
+  async onFilter(event) {
+    const popover = await this.popoverController.create({
+      component: FilterOptionsComponent,
+      event: event
+    });
+    return popover.present();
   }
 }
