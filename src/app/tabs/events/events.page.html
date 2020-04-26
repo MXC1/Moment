@@ -19,12 +19,12 @@
 
 <ion-content>
   <ion-grid>
-    <ion-row style="padding: 0px;" class="ion-justify-content-center">
-      <ion-col class="ion-align-items-center" size="8">
-        <ion-searchbar placeholder="Search Your Events" (ionInput)="searchEvents($event)" #searchbar></ion-searchbar>
+    <ion-row style="padding: 0px; margin: 0px; align-items: center!important;" class="ion-justify-content-center">
+      <ion-col style="padding: 0px; margin: 0px;" class="ion-justify-content-center" size="9">
+        <ion-searchbar placeholder="Search Events" (ionInput)="searchEvents($event)" #searchbar></ion-searchbar>
       </ion-col>
-      <ion-col size="3" class="ion-align-items-center">
-        <ion-button (click)="onFilter($event)">
+      <ion-col style="padding: 0px; margin: 0px;" class="ion-justify-content-center" size="3">
+        <ion-button (click)="onFilter($event)" expand="block">
           <ion-label>Filter</ion-label>
           <ion-icon name="ios-funnel" slot="icon-only"></ion-icon>
         </ion-button>
