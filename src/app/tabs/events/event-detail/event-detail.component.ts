@@ -40,11 +40,15 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
 
   ngOnInit() {
+    this.fetchEventDetails();
+  }
+
+  fetchEventDetails() {
     this.isLoading = true;
     this.eventsSubscription = this.eventsService.getEvent(this.eventId).subscribe(event => {
       this.event = event;
       const dateObject = new Date(event.date);
-      this.date = this.dayOfTheWeek(dateObject.getDay()) + " " + dateObject.getDate().toString() + " " + this.monthOfTheYear(dateObject.getMonth()+1) + " " + dateObject.getFullYear().toString();
+      this.date = this.dayOfTheWeek(dateObject.getDay()) + " " + dateObject.getDate().toString() + " " + this.monthOfTheYear(dateObject.getMonth() + 1) + " " + dateObject.getFullYear().toString();
       this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
         this.eventPosts = posts.filter(post => post.eventId === this.eventId);
         this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
@@ -173,10 +177,12 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     })
   }
 
-  onNewPost() {
-    this.modalController.create({ component: NewPostComponent, componentProps: { event: this.event } }).then(modalElement => {
-      modalElement.present();
+  async onNewPost() {
+    const newPostModal = await this.modalController.create({ component: NewPostComponent, componentProps: { event: this.event } });
+    newPostModal.onDidDismiss().then(() => {
+      this.fetchEventDetails();
     });
+    newPostModal.present();
   }
 
   onShowMenu() {

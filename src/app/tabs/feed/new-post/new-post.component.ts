@@ -47,8 +47,6 @@ export class NewPostComponent implements OnInit {
   @ViewChild(IonicSelectableComponent, { static: false }) eventSelector;
   @Input() event: EventContent;
 
-  imagefiledata;
-
   constructor(private postsService: PostsService, private authService: AuthService, private eventsService: EventsService, private navController: NavController, private router: Router, private modalController: ModalController, private loadingController: LoadingController) { }
 
   ngOnInit() {
