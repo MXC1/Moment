@@ -6,6 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
 import { UsersService } from './users.service';
 import { logging } from 'protractor';
+import { Post } from '../models/post';
+import { PostsService } from './posts.service';
 
 interface EventData {
   name: string;
@@ -16,6 +18,17 @@ interface EventData {
   headerImage: string;
   isPrivate: boolean;
   date: string;
+}
+
+interface PostData {
+  caption: string;
+  content: string;
+  eventId: string;
+  likes: number;
+  shares: number;
+  userId: string;
+  type: 'image' | 'video';
+  comments: { [key: string]: { [key: string]: string } };
 }
 
 /**
@@ -73,7 +86,28 @@ export class EventsService {
         return this.events.next(events.filter(event => {
           return event.id !== eventId;
         }));
-      })).subscribe();
+      })).subscribe(() => {
+        this.http.get<{ [key: string]: PostData }>(`https://mmnt-io.firebaseio.com/posts.json?auth=${token}`).pipe(take(1)).subscribe(resData => {
+          const posts = [];
+          for (const key in resData) {
+            if (resData.hasOwnProperty(key)) {
+              posts.push(new Post(key,
+                resData[key].userId,
+                resData[key].eventId,
+                resData[key].caption,
+                resData[key].content,
+                resData[key].type,
+                resData[key].comments,
+                resData[key].likes,
+                resData[key].shares
+              ));
+            }
+          }
+          posts.filter(p => p.eventId === eventId).forEach(p => {
+            this.postsService.deletePost(p.id);
+          });
+        });
+      });
     });
   }
 
@@ -223,5 +257,5 @@ export class EventsService {
     }));
   }
 
-  constructor(private http: HttpClient, private authService: AuthService, private userService: UsersService) { }
+  constructor(private http: HttpClient, private authService: AuthService, private userService: UsersService, private postsService: PostsService) { }
 }
