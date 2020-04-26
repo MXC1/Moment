@@ -23,6 +23,9 @@
 
 <ion-content>
   <ion-select #menu hidden interface="action-sheet" (ionChange)="handleSelectOption(menu)" *ngIf="!isLoading">
+    <ion-select-option value="invite">
+      <ion-label>Invite User</ion-label>
+    </ion-select-option>
     <ion-select-option value="delete">
       <ion-label>Delete Event</ion-label>
     </ion-select-option>
@@ -93,4 +96,6 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+  <ionic-selectable style="display: none;" [items]="loadedPeople" itemValueField="id" itemTextField="username"
+    [canSearch]="true" (onChange)="onInviteUser($event)" #inviteSelectable></ionic-selectable>
 </ion-content>

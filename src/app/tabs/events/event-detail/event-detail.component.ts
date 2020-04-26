@@ -198,6 +198,8 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   }
 
   handleSelectOption(menu) {
+    console.log(menu.value);
+    
     switch (menu.value) {
       case 'delete': {
         this.onDeleteEvent();
@@ -209,6 +211,10 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       }
       case 'private': {
         this.onMakePrivate();
+        break;
+      }
+      case 'invite': {
+        this.onInvite();
         break;
       }
     }
