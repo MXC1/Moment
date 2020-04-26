@@ -82,6 +82,10 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         return 'Sun';
         break;
       }
+      case (1): {
+        return 'Mon';
+        break;
+      }
       case (2): {
         return 'Tue'
         break;
