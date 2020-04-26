@@ -24,7 +24,10 @@ export class PeoplePage implements OnInit {
 
   constructor(private authService: AuthService, private usersService: UsersService, private modalController: ModalController) { }
 
-  ngOnInit() {  }
+  ngOnInit() {
+    this.isLoading = true;
+    this.fetchFollowedUsers();
+  }
 
   /**
    * Fetch all users and filter by those followed by current user
@@ -32,11 +35,18 @@ export class PeoplePage implements OnInit {
    * @memberof PeoplePage
    */
   ionViewWillEnter() {
-    this.isLoading = true;
+    this.fetchFollowedUsers();
+  }
+
+  fetchFollowedUsers() {
     this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
       this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
         this.usersService.getUser(thisUserId).pipe(take(1)).subscribe(thisUser => {
-          this.loadedPeople = users.filter(user => thisUser.friendIds.some(u => u === user.id && u !== thisUserId));
+          users.filter(user => thisUser.friendIds.some(u => u === user.id && u !== thisUserId)).forEach(u => {
+            if (this.loadedPeople.some(user => user.id === u.id)) {
+              this.loadedPeople = this.loadedPeople.reverse().concat(u).reverse();
+            }
+          });
           this.isLoading = false;
         });
       });
