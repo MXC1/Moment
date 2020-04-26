@@ -186,8 +186,6 @@ export class EventsService {
         return this.authService.getToken.pipe(take(1), switchMap(token => {
           return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds.json/?auth=${token}`).pipe(take(1), map(followers => {
             const key = followers.findIndex(f => f === unfollowUserId);
-            console.log(key);
-
             return this.http.delete(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds/${key}.json/?auth=${token}`).subscribe();
           }))
         }))

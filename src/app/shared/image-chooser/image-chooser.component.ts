@@ -32,7 +32,7 @@ const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
 export class ImageChooserComponent implements OnInit {
   @Input() public message;
   @Input() public accepts: 'image/*,video/*' | 'image/*';
-  // @Output() chosenImage = new EventEmitter<string | File>();
+  @Output() chosenImage = new EventEmitter<string | File>();
   selectedImage: string;
   type: 'image' | 'video';
   @Output() isLoading = false;
@@ -42,7 +42,7 @@ export class ImageChooserComponent implements OnInit {
 
   @Output() croppedImage: File;
   imagePreview: string;
-  finishedCropping;
+  finishedCropping: boolean;
   @ViewChild(ImageCropperComponent, { static: false }) imageCropper: ImageCropperComponent;
 
   constructor(private platform: Platform) { }
@@ -67,11 +67,10 @@ export class ImageChooserComponent implements OnInit {
       source: CameraSource.Prompt,
       correctOrientation: true,
       height: 320,
-      width: 200,
+      width: 320,
       resultType: CameraResultType.DataUrl
     }).then(image => {
       this.selectedImage = image.dataUrl;
-      // this.chosenImage.emit(image.dataUrl);
       this.type = this.selectedImage.includes('image') ? 'image' : 'video';
     }).catch(error => {
       console.log(error);
@@ -80,7 +79,6 @@ export class ImageChooserComponent implements OnInit {
   }
 
   dataURLtoFile(dataurl) {
-
     const arr = dataurl.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
     const bstr = atob(arr[1]);
@@ -102,17 +100,18 @@ export class ImageChooserComponent implements OnInit {
 
   onFileChosen(event: Event) {
     const chosenFile = (event.target as HTMLInputElement).files[0];
-
+    
     if (!chosenFile) {
       return;
     }
     const fileReader = new FileReader();
     fileReader.onload = () => {
       const dataUrl = fileReader.result.toString();
+      
       this.selectedImage = dataUrl;
-      // this.chosenImage.emit(chosenFile);
       this.type = chosenFile.type.includes('image') ? 'image' : 'video';
       if (this.type === 'video') {
+        this.chosenImage.emit(this.selectedImage);
         this.croppedImage = this.dataURLtoFile(this.selectedImage);
       } else {
         this.isLoading = true;

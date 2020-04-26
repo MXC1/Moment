@@ -11,6 +11,7 @@ import { ModalController } from '@ionic/angular';
 import { PostDetailComponent } from '../feed/post-detail/post-detail.component';
 import { Subscription } from 'rxjs';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { EventsService } from 'src/app/shared/services/events.service';
 
 /**
  * Page for viewing both the users own profile and other users profiles
@@ -34,7 +35,7 @@ export class ProfilePage implements OnInit {
   isThisUser: boolean;
   isFollowing: boolean;
 
-  constructor(private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private route: ActivatedRoute, private modalController: ModalController) { }
+  constructor(private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private route: ActivatedRoute, private modalController: ModalController, private eventService: EventsService) { }
 
   /**
    * Check URL for a user ID and determine whether it is the users own profile or anothers
@@ -63,7 +64,7 @@ export class ProfilePage implements OnInit {
             this.isThisUser = true;
           } else {
             this.isThisUser = false;
-          }          
+          }
 
           this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
             this.usersService.isFollowing(thisUserId, userId).pipe(take(1)).subscribe(isFollowing => {
@@ -86,20 +87,23 @@ export class ProfilePage implements OnInit {
    * @memberof ProfilePage
    */
   getUser(userId: string) {
-    this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
-      this.user = user;
-      this.postsService.fetchPosts().pipe(map(posts => posts.filter(
-        post => post.userId === userId && (this.isThisUser ? true : !post.isPrivate)))).subscribe(posts => {
-          this.posts = posts;
+    this.eventService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
+      this.usersSubscription = this.usersService.getUser(userId).subscribe(user => {
+        this.user = user;
+        this.postsService.fetchPosts().pipe(map(posts => posts.filter(
+          // Find all posts posted by this users and, if it is not our own profile we are looking at, are posted under a private event
+          post => post.userId === userId && (this.isThisUser ? true : allEvents.some(e => !e.isPrivate && post.eventId === e.id))))).subscribe(posts => {
+            this.posts = posts;
 
-          this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
-            this.followerNumber = allUsers.filter(eachUser => {
-              return eachUser.friendIds.some(id => id === this.user.id);
-            }).length;
+            this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
+              this.followerNumber = allUsers.filter(eachUser => {
+                return eachUser.friendIds.some(id => id === this.user.id);
+              }).length;
+            });
+
+            this.isLoading = false;
           });
-
-          this.isLoading = false;
-        });
+      });
     });
   }
 

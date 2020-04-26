@@ -47,6 +47,8 @@ export class NewPostComponent implements OnInit {
   @ViewChild(IonicSelectableComponent, { static: false }) eventSelector;
   @Input() event: EventContent;
 
+  imagefiledata;
+
   constructor(private postsService: PostsService, private authService: AuthService, private eventsService: EventsService, private navController: NavController, private router: Router, private modalController: ModalController, private loadingController: LoadingController) { }
 
   ngOnInit() {
@@ -99,13 +101,7 @@ export class NewPostComponent implements OnInit {
     const caption = this.form.value.caption;
     const eventId = this.form.value.event;
 
-    this.form.patchValue({ image: this.imageChooser.croppedImage });
-
-    
-
-    if (!this.form.valid || !this.form.get('image').value) {
-      return;
-    }
+    // this.form.patchValue({ image: this.imagefiledata });
 
     this.postsService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
       const type = this.form.get('image').value.type.includes('image') ? 'image' : 'video';
@@ -127,6 +123,8 @@ export class NewPostComponent implements OnInit {
   }
 
   onImageChosen(imageData: string) {
+    console.log("onImageChosen");
+
     let imageFile;
     if (typeof imageData === 'string') {
       try {
@@ -139,6 +137,8 @@ export class NewPostComponent implements OnInit {
     } else {
       imageFile = imageData;
     }
+
+    // this.imagefiledata = imageFile.target.files[0];
 
     this.form.patchValue({ image: imageFile.target.files[0] });
   }

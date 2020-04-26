@@ -97,7 +97,8 @@ export class FeedPage implements OnInit, OnDestroy {
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
         this.loadedPosts = posts.filter(post => {
-          return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId)) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate)
+          // Find every post that is posted by a friend OR is posted under an event I follow AND is not private OR is posted by me
+          return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId)) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate || post.userId === userId)
         });
       });
       this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {

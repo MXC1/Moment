@@ -73,8 +73,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   }
 
   dayOfTheWeek(number: number) {
-    console.log(number);
-    
     switch (number) {
       case (0): {
         return 'Sun';
