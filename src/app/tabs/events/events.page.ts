@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { EventContent } from 'src/app/shared/models/event';
 import { Subscription } from 'rxjs';
 import { EventsService } from 'src/app/shared/services/events.service';
@@ -29,6 +29,7 @@ export class EventsPage implements OnInit, OnDestroy {
     privateEvents: boolean;
     publicEvents: boolean;
   };
+  @ViewChild('searchbar', { static: false }) searchbar;
 
   constructor(private eventsService: EventsService, private authService: AuthService, private modalController: ModalController, private popoverController: PopoverController) { }
 
@@ -144,16 +145,10 @@ export class EventsPage implements OnInit, OnDestroy {
     popover.onDidDismiss().then(filters => {
       this.filters.pastEvents = filters.data.pastEvents;
       this.filters.upcomingEvents = filters.data.upcomingEvents;
-      if (filters.data.fromDate) {
-        this.filters.fromDate = filters.data.fromDate;
-      }
-      if (filters.data.toDate) {
-        this.filters.toDate = filters.data.toDate;
-      }
+      this.filters.fromDate = filters.data.fromDate;
+      this.filters.toDate = filters.data.toDate;
       this.filters.privateEvents = filters.data.privateEvents;
       this.filters.publicEvents = filters.data.publicEvents;
-      console.log(this.filters.publicEvents);
-      
       this.filterEvents();
     });
     return popover.present();
@@ -168,8 +163,6 @@ export class EventsPage implements OnInit, OnDestroy {
   }
 
   filterFromDate(events: EventContent[], fromDate: string) {
-    console.log(new Date("2019").getTime() < new Date("2020").getTime());
-
     return events.filter(e => new Date(e.date).getTime() >= new Date(fromDate).getTime());
   }
 
@@ -206,6 +199,16 @@ export class EventsPage implements OnInit, OnDestroy {
     if (!this.filters.publicEvents) {
       filteredEvents = this.filterPublicEvents(filteredEvents);
     }
+
+    this.searchbar.value = "";
+    // this.searchbar.getInputElement.value = "";
+
     this.loadedEvents = filteredEvents;
+  }
+
+  searchEvents(event) {
+    const searchValue = event.srcElement.value.toLowerCase();
+
+    this.loadedEvents = this.allEvents.filter(e => e.name.toLowerCase().includes(searchValue) || e.location.toLowerCase().includes(searchValue));
   }
 }
