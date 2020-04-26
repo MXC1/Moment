@@ -121,8 +121,6 @@ export class NewPostComponent implements OnInit {
   }
 
   onImageChosen(imageData: string) {
-    console.log("onImageChosen");
-
     let imageFile;
     if (typeof imageData === 'string') {
       try {

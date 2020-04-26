@@ -58,5 +58,7 @@ export class FilterOptionsComponent implements OnInit {
     this.upcomingEvents = true;
     this.fromDate = null;
     this.toDate = null;
+    this.privateEvents = true;
+    this.publicEvents = true;
   }
 }
