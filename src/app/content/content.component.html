@@ -1,7 +1,0 @@
-<div (click)="playPause(thisVideo)" [class]="square" #thisVideo>
-  <video *ngIf="content.type === 'video'" id="video" [src]="content.content"></video>
-  <ion-icon *ngIf="content.type === 'video' && this.playable !== 'false'" name="ios-arrow-dropright" class="play-button"
-    slot="icon-only" id="playButton">
-  </ion-icon>
-  <img *ngIf="content.type === 'image'" [src]="content.content">
-</div>

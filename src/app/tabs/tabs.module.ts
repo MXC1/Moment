@@ -9,7 +9,7 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 import { TabsPage } from './tabs.page';
 import { SearchComponent } from '../shared/search/search.component';
 import { FeedPageModule } from './feed/feed.module';
-import { ContentComponent } from '../content/content.component';
+import { ContentComponent } from '../shared/content/content.component';
 
 @NgModule({
   imports: [

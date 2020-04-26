@@ -8,7 +8,7 @@ import { FeedPageRoutingModule } from './feed-routing.module';
 
 import { FeedPage } from './feed.page';
 import { AppModule } from 'src/app/app.module';
-import { ContentComponent } from 'src/app/content/content.component';
+import { ContentComponent } from 'src/app/shared/content/content.component';
 import { ContentModule } from 'src/app/shared/content/content.module';
 import { PostDetailComponent } from './post-detail/post-detail.component';
 
