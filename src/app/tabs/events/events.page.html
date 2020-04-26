@@ -24,7 +24,7 @@
         <ion-searchbar placeholder="Search Your Events"></ion-searchbar>
       </ion-col>
       <ion-col size="3" class="ion-align-items-center">
-        <ion-button *ngIf="!isLoading && loadedEvents.length !== 0" (click)="onFilter($event)">
+        <ion-button (click)="onFilter($event)">
           <ion-label>Filter</ion-label>
           <ion-icon name="ios-funnel" slot="icon-only"></ion-icon>
         </ion-button>

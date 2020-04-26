@@ -1,36 +1,47 @@
 <ion-list>
-  <ion-list-header>Filter Events</ion-list-header>
-  <!-- <ion-item>
-    <ion-label>See:</ion-label>
-  </ion-item> -->
+  <ion-list-header>Filter</ion-list-header>
   <ion-item>
-    <ion-checkbox checked></ion-checkbox>
+    <ion-checkbox [checked]="pastEvents" (ionChange)="changePastEvents($event)"></ion-checkbox>
     <ion-label>Past Events</ion-label>
   </ion-item>
   <ion-item>
-    <ion-checkbox checked></ion-checkbox>
+    <ion-checkbox [checked]="upcomingEvents" (ionChange)="changeUpcomingEvents($event)"></ion-checkbox>
     <ion-label>Upcoming Events</ion-label>
   </ion-item>
   <ion-item>
-    <ion-col>
+    <ion-col style="padding: 0px;">
       <ion-item lines="none" detail>
         <ion-label>From</ion-label>
-        <ion-datetime></ion-datetime>
+        <ion-datetime [value]="fromDate" displayFormat="DD-MM-YYYY" (ionChange)="changeFromDate($event)"></ion-datetime>
       </ion-item>
     </ion-col>
-    <ion-col>
+    <ion-col style="padding: 0px;">
       <ion-item lines="none" detail>
         <ion-label>To</ion-label>
-        <ion-datetime></ion-datetime>
+        <ion-datetime [value]="toDate" displayFormat="DD-MM-YYYY" (ionChange)="changeToDate($event)"></ion-datetime>
       </ion-item>
     </ion-col>
   </ion-item>
   <ion-item>
-    <ion-checkbox checked></ion-checkbox>
+    <ion-checkbox [checked]="privateEvents" (ionChange)="changePrivateEvents($event)"></ion-checkbox>
     <ion-label>Private Events</ion-label>
   </ion-item>
   <ion-item>
-    <ion-checkbox checked></ion-checkbox>
+    <ion-checkbox [checked]="publicEvents" (ionChange)="changePublicEvents($event)"></ion-checkbox>
     <ion-label>Public Events</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-col>
+      <ion-item button (click)="clearFilters()" start lines="none">
+        <ion-icon name="close-circle" slot="start"></ion-icon>
+        <p slot="start">Clear</p>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item button (click)="dismissPopover()" end lines="none">
+        <ion-icon name="checkmark" slot="end"></ion-icon>
+        <p slot="end">Apply</p>
+      </ion-item>
+    </ion-col>
   </ion-item>
 </ion-list>

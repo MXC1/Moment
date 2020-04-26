@@ -20,6 +20,15 @@ export class EventsPage implements OnInit, OnDestroy {
   loadedEvents: EventContent[];
   private eventsSubscription: Subscription;
   isLoading = false;
+  allEvents: EventContent[];
+  filters: {
+    pastEvents: boolean;
+    upcomingEvents: boolean;
+    fromDate: string;
+    toDate: string;
+    privateEvents: boolean;
+    publicEvents: boolean;
+  };
 
   constructor(private eventsService: EventsService, private authService: AuthService, private modalController: ModalController, private popoverController: PopoverController) { }
 
@@ -41,6 +50,7 @@ export class EventsPage implements OnInit, OnDestroy {
           });
           return followedByUser;
         });
+        this.allEvents = this.loadedEvents;
 
         this.isLoading = false;
       });
@@ -72,6 +82,15 @@ export class EventsPage implements OnInit, OnDestroy {
 
     this.isLoading = true;
     this.fetchFollowedEvents();
+
+    this.filters = {
+      pastEvents: true,
+      upcomingEvents: true,
+      fromDate: null,
+      toDate: null,
+      privateEvents: true,
+      publicEvents: true
+    }
   }
 
   onSearch() {
@@ -93,7 +112,7 @@ export class EventsPage implements OnInit, OnDestroy {
   async onEventDetail(eventId: string) {
     const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId } });
     onEventDetailModal.onDidDismiss().then(didFollow => {
-      if (didFollow) {
+      if (didFollow.data.didFollow) {
         this.fetchFollowedEvents();
       }
     });
@@ -111,8 +130,82 @@ export class EventsPage implements OnInit, OnDestroy {
   async onFilter(event) {
     const popover = await this.popoverController.create({
       component: FilterOptionsComponent,
-      event: event
+      event: event,
+      backdropDismiss: false,
+      componentProps: {
+        pastEvents: this.filters.pastEvents,
+        upcomingEvents: this.filters.upcomingEvents,
+        fromDate: this.filters.fromDate,
+        toDate: this.filters.toDate,
+        privateEvents: this.filters.privateEvents,
+        publicEvents: this.filters.publicEvents
+      }
+    });
+    popover.onDidDismiss().then(filters => {
+      this.filters.pastEvents = filters.data.pastEvents;
+      this.filters.upcomingEvents = filters.data.upcomingEvents;
+      if (filters.data.fromDate) {
+        this.filters.fromDate = filters.data.fromDate;
+      }
+      if (filters.data.toDate) {
+        this.filters.toDate = filters.data.toDate;
+      }
+      this.filters.privateEvents = filters.data.privateEvents;
+      this.filters.publicEvents = filters.data.publicEvents;
+      console.log(this.filters.publicEvents);
+      
+      this.filterEvents();
     });
     return popover.present();
+  }
+
+  filterPastEvents(events: EventContent[]) {
+    return events.filter(e => new Date(e.date).getTime() > new Date().getTime());
+  }
+
+  filterFutureEvents(events: EventContent[]) {
+    return events.filter(e => new Date(e.date).getTime() < new Date().getTime());
+  }
+
+  filterFromDate(events: EventContent[], fromDate: string) {
+    console.log(new Date("2019").getTime() < new Date("2020").getTime());
+
+    return events.filter(e => new Date(e.date).getTime() >= new Date(fromDate).getTime());
+  }
+
+  filterToDate(events: EventContent[], toDate: string) {
+    return events.filter(e => new Date(e.date).getTime() <= new Date(toDate).getTime());
+  }
+
+  filterPrivateEvents(events: EventContent[]) {
+    return events.filter(e => !e.isPrivate);
+  }
+
+  filterPublicEvents(events: EventContent[]) {
+    return events.filter(e => e.isPrivate);
+  }
+
+  filterEvents() {
+    let filteredEvents = this.allEvents;
+
+    if (!this.filters.pastEvents) {
+      filteredEvents = this.filterPastEvents(filteredEvents);
+    }
+    if (!this.filters.upcomingEvents) {
+      filteredEvents = this.filterFutureEvents(filteredEvents);
+    }
+    if (this.filters.fromDate) {
+      filteredEvents = this.filterFromDate(filteredEvents, this.filters.fromDate);
+    }
+    if (this.filters.toDate) {
+      filteredEvents = this.filterToDate(filteredEvents, this.filters.toDate);
+    }
+    if (!this.filters.privateEvents) {
+      filteredEvents = this.filterPrivateEvents(filteredEvents);
+    }
+    if (!this.filters.publicEvents) {
+      filteredEvents = this.filterPublicEvents(filteredEvents);
+    }
+    this.loadedEvents = filteredEvents;
   }
 }
