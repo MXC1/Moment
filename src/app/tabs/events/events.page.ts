@@ -5,7 +5,7 @@ import { EventsService } from 'src/app/shared/services/events.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { take } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
-import { SearchComponent } from 'src/app/search/search.component';
+import { SearchComponent } from 'src/app/shared/search/search.component';
 import { NewEventComponent } from './new-event/new-event.component';
 import { EventDetailComponent } from './event-detail/event-detail.component';
 import { EventDiscoverComponent } from './event-discover/event-discover.component';

@@ -6,7 +6,7 @@ import { NavController, ModalController, LoadingController } from '@ionic/angula
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { switchMap, take, tap } from 'rxjs/operators';
-import { ImageChooserComponent } from '../../../image-chooser/image-chooser.component';
+import { ImageChooserComponent } from '../../../shared/image-chooser/image-chooser.component';
 import { EventContent } from '../../../shared/models/event';
 import { EventsService } from '../../../shared/services/events.service';
 import { NewEventComponent } from '../../events/new-event/new-event.component';
@@ -100,6 +100,8 @@ export class NewPostComponent implements OnInit {
     const eventId = this.form.value.event;
 
     this.form.patchValue({ image: this.imageChooser.croppedImage });
+
+    
 
     if (!this.form.valid || !this.form.get('image').value) {
       return;

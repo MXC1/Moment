@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { UsersService } from 'src/app/shared/services/users.service';
 import { switchMap } from 'rxjs/operators';
 import { ModalController, LoadingController } from '@ionic/angular';
-import { ImageChooserComponent } from 'src/app/image-chooser/image-chooser.component';
+import { ImageChooserComponent } from 'src/app/shared/image-chooser/image-chooser.component';
 import { FeedbackComponent } from 'src/app/shared/feedback/feedback.component';
 
 /**

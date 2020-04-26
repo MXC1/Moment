@@ -1,15 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { User } from '../shared/models/user';
-import { EventContent } from '../shared/models/event';
-import { Post } from '../shared/models/post';
-import { UsersService } from '../shared/services/users.service';
-import { PostsService } from '../shared/services/posts.service';
-import { EventsService } from '../shared/services/events.service';
+import { User } from '../models/user';
+import { EventContent } from '../models/event';
+import { Post } from '../models/post';
+import { UsersService } from '../services/users.service';
+import { PostsService } from '../services/posts.service';
+import { EventsService } from '../services/events.service';
 import { take } from 'rxjs/operators';
-import { AuthService } from '../auth/auth.service';
-import { EventDetailComponent } from '../tabs/events/event-detail/event-detail.component';
-import { PostDetailComponent } from '../tabs/feed/post-detail/post-detail.component';
+import { AuthService } from '../../auth/auth.service';
+import { EventDetailComponent } from '../../tabs/events/event-detail/event-detail.component';
+import { PostDetailComponent } from '../../tabs/feed/post-detail/post-detail.component';
 
 @Component({
   selector: 'app-search',

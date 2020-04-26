@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ImageChooserComponent } from 'src/app/image-chooser/image-chooser.component';
+import { ImageChooserComponent } from 'src/app/shared/image-chooser/image-chooser.component';
 import { EventsService } from 'src/app/shared/services/events.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NavController, ModalController, LoadingController } from '@ionic/angular';

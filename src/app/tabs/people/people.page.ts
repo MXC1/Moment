@@ -4,7 +4,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { UsersService } from 'src/app/shared/services/users.service';
 import { take } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
-import { SearchComponent } from 'src/app/search/search.component';
+import { SearchComponent } from 'src/app/shared/search/search.component';
 
 /**
  * Shows list of followed users

@@ -9,7 +9,7 @@ import { EventContent } from 'src/app/shared/models/event';
 import { Router } from '@angular/router';
 import { take, switchMap } from 'rxjs/operators';
 import { ModalController, IonInput } from '@ionic/angular';
-import { SearchComponent } from 'src/app/search/search.component';
+import { SearchComponent } from 'src/app/shared/search/search.component';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NewPostComponent } from './new-post/new-post.component';
 import { PostDetailComponent } from './post-detail/post-detail.component';
