@@ -17,7 +17,7 @@ import { FilterOptionsComponent } from './filter-options/filter-options.componen
   styleUrls: ['./events.page.scss'],
 })
 export class EventsPage implements OnInit, OnDestroy {
-  loadedEvents: EventContent[];
+  loadedEvents: EventContent[] = [];
   private eventsSubscription: Subscription;
   isLoading = false;
   allEvents: EventContent[];
@@ -38,10 +38,23 @@ export class EventsPage implements OnInit, OnDestroy {
     this.fetchFollowedEvents();
   }
 
+  ionViewWillEnter() {
+    this.fetchFollowedEvents();
+
+    this.filters = {
+      pastEvents: true,
+      upcomingEvents: true,
+      fromDate: null,
+      toDate: null,
+      privateEvents: true,
+      publicEvents: true
+    }
+  }
+
   fetchFollowedEvents() {
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
-        this.loadedEvents = events.filter(event => {
+        events.filter(event => {
           let followedByUser = false;
           event.followerIds.forEach(followerId => {
             if (followerId === userId) {
@@ -50,6 +63,12 @@ export class EventsPage implements OnInit, OnDestroy {
             return followedByUser;
           });
           return followedByUser;
+        }).forEach(e => {
+          if (!this.loadedEvents.some(event => event.id === e.id)) {
+            this.isLoading = true;
+            this.loadedEvents = this.loadedEvents.reverse().concat(e).reverse();
+            this.isLoading = false;
+          }
         });
         this.allEvents = this.loadedEvents;
 
@@ -61,36 +80,6 @@ export class EventsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.eventsSubscription) {
       this.eventsSubscription.unsubscribe();
-    }
-  }
-
-  ionViewWillEnter() {
-    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-      if (!userId) {
-        throw new Error('No User ID Found!');
-      } else {
-        this.eventsSubscription = this.eventsService.getEvents.subscribe(events => {
-          this.loadedEvents = events.filter(event => {
-            let followedByUser = false;
-            event.followerIds.forEach(followerId => {
-              followedByUser = followerId === userId;
-            });
-            return followedByUser;
-          });
-        });
-      }
-    });
-
-    this.isLoading = true;
-    this.fetchFollowedEvents();
-
-    this.filters = {
-      pastEvents: true,
-      upcomingEvents: true,
-      fromDate: null,
-      toDate: null,
-      privateEvents: true,
-      publicEvents: true
     }
   }
 

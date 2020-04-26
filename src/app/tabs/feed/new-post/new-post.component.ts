@@ -92,7 +92,7 @@ export class NewPostComponent implements OnInit {
   }
 
   async onPost() {
-    const loadingElement = await this.loadingController.create({ message: 'Creating Post... \n This could take a while if you are uploading a video.' });
+    const loadingElement = await this.loadingController.create({ message: 'Creating Post...' });
 
     loadingElement.present();
 

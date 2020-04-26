@@ -154,7 +154,7 @@ export class EventsService {
               ));
             }
           }
-          return events.reverse();
+          return events;
         }), tap(events => {
           this.events.next(events);
         })

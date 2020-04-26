@@ -53,7 +53,7 @@ export class PostsService {
               ));
             }
           }
-          return posts.reverse();
+          return posts;
         }), tap(posts => {
           this.posts.next(posts);
         })

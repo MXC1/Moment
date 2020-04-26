@@ -48,7 +48,14 @@ export class FeedPage implements OnInit, OnDestroy {
 
   constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController, private authService: AuthService) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.isLoading = true;
+    this.fetchFollowedPosts();
+   }
+
+  ionViewWillEnter() {
+    this.fetchFollowedPosts();
+  }
 
   /**
    * Load in all events and posts
@@ -62,6 +69,41 @@ export class FeedPage implements OnInit, OnDestroy {
         this.filterPosts(posts);
       });
     });
+  }
+
+  /**
+   * Check whether a post was made by a user or event that the current user follows
+   * Filter the array accordingly
+   *
+   * @param {*} posts
+   * @memberof FeedPage
+   */
+  filterPosts(posts) {
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+      this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
+        posts.filter(post => {
+          // Find every post that is posted by a friend OR is posted under an event I follow AND is not private OR is posted by me
+          return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId)) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate || post.userId === userId)
+        }).forEach(p => {
+          // If it's not already in the loadedposts
+          if (!this.loadedPosts.some(post => post.id === p.id)) {
+            // Add it to the top
+            this.isLoading = true;
+            this.loadedPosts = this.loadedPosts.reverse().concat(p).reverse();
+            this.isLoading = false;
+          }
+        });
+        // this.loadedPosts = posts.filter(post => {
+        //   // Find every post that is posted by a friend OR is posted under an event I follow AND is not private OR is posted by me
+        //   return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId)) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate || post.userId === userId)
+        // });
+      });
+      this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
+        this.loadedUsers = users;
+        this.isLoading = false;
+      });
+    });
+
   }
 
   /**
@@ -79,34 +121,6 @@ export class FeedPage implements OnInit, OnDestroy {
     if (this.eventsSubscription) {
       this.eventsSubscription.unsubscribe();
     }
-  }
-
-  ionViewWillEnter() {
-    this.isLoading = true;
-    this.fetchFollowedPosts();
-  }
-
-  /**
-   * Check whether a post was made by a user or event that the current user follows
-   * Filter the array accordingly
-   *
-   * @param {*} posts
-   * @memberof FeedPage
-   */
-  filterPosts(posts) {
-    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-      this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
-        this.loadedPosts = posts.filter(post => {
-          // Find every post that is posted by a friend OR is posted under an event I follow AND is not private OR is posted by me
-          return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId)) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate || post.userId === userId)
-        });
-      });
-      this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
-        this.loadedUsers = users;
-        this.isLoading = false;
-      });
-    });
-
   }
 
   /**
