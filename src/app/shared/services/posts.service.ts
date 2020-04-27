@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { take, tap, map, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
+import { UsersService } from './users.service';
 
 interface PostData {
   caption: string;
@@ -198,7 +199,12 @@ export class PostsService {
           }
 
 
-          return this.http.patch(`https://mmnt-io.firebaseio.com/posts/${postId}/likers.json?auth=${token}`, { [key]: userId });
+          return this.http.patch(`https://mmnt-io.firebaseio.com/posts/${postId}/likers.json?auth=${token}`, { [key]: userId }).pipe(take(1), map(() => {
+
+            this.getPost(postId).pipe(take(1)).subscribe(post => {
+              this.usersService.generateNotification(post.userId, 'Someone liked this post', postId, 'post').subscribe();
+            });
+          }));
         }));
       }));
     }));
@@ -215,5 +221,5 @@ export class PostsService {
     }));
   }
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient, private authService: AuthService, private usersService: UsersService) { }
 }

@@ -8,11 +8,14 @@ import { User } from 'src/app/shared/models/user';
 import { EventContent } from 'src/app/shared/models/event';
 import { EventDetailComponent } from '../../events/event-detail/event-detail.component';
 import { Router } from '@angular/router';
+import { PostDetailComponent } from '../../feed/post-detail/post-detail.component';
+import { PostsService } from 'src/app/shared/services/posts.service';
+import { Post } from 'src/app/shared/models/post';
 
 interface Notif {
   text: string;
   from: string;
-  type: 'user' | 'event';
+  type: 'event' | 'post';
 }
 
 @Component({
@@ -24,19 +27,23 @@ export class NotificationsComponent implements OnInit {
 
   loadedUsers: User[];
   loadedEvents: EventContent[];
+  loadedPosts: Post[];
 
   notifications: Notif[] = [];
 
-  constructor(private modalController: ModalController, private authService: AuthService, private usersService: UsersService, private eventsService: EventsService, private router: Router) { }
+  constructor(private modalController: ModalController, private authService: AuthService, private usersService: UsersService, private eventsService: EventsService, private router: Router, private postsService: PostsService) { }
 
   ngOnInit() {
     this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
       this.loadedUsers = allUsers;
       this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
         this.loadedEvents = allEvents;
-        this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-          this.usersService.getNotifications(userId).subscribe(notifs => {
-            this.notifications = notifs;
+        this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
+          this.loadedPosts = allPosts;
+          this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+            this.usersService.getNotifications(userId).subscribe(notifs => {
+              this.notifications = notifs.reverse();
+            });
           });
         });
       });
@@ -48,27 +55,28 @@ export class NotificationsComponent implements OnInit {
   }
 
   getFromImage(notification: Notif) {
-    if(notification.type === 'event') {
+    if (notification.type === 'event') {
       return this.loadedEvents.find(event => event.id === notification.from).headerImage;
-    } else {
-      return this.loadedUsers.find(user => user.id === notification.from).image;
+    } else if (notification.type = 'post') {
+      return this.loadedPosts.find(post => post.id === notification.from).content;
     }
   }
 
   getFromName(notification: Notif) {
-    if(notification.type === 'event') {
+    if (notification.type === 'event') {
       return this.loadedEvents.find(event => event.id === notification.from).name + " @ " + this.loadedEvents.find(event => event.id === notification.from).location;
-    } else {
-      return this.loadedUsers.find(user => user.id === notification.from).username;
+    } else if (notification.type === 'post') {
+      return this.loadedPosts.find(post => post.id === notification.from).caption;
     }
   }
 
   async onClickNotif(notification: Notif) {
-    if(notification.type === 'event') {
+    if (notification.type === 'event') {
       const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId: notification.from } });
       onEventDetailModal.present();
-    } else {
-      this.router.navigateByUrl('/tabs/people/' + notification.from);
+    } else if (notification.type = 'post') {
+      const onPostDetailModal = await this.modalController.create({ component: PostDetailComponent, componentProps: { postId: notification.from } });
+      onPostDetailModal.present();
     }
   }
 }

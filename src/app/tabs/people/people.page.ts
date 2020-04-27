@@ -43,7 +43,7 @@ export class PeoplePage implements OnInit {
       this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
         this.usersService.getUser(thisUserId).pipe(take(1)).subscribe(thisUser => {
           users.filter(user => thisUser.friendIds.some(u => u === user.id && u !== thisUserId)).forEach(u => {
-            if (this.loadedPeople.some(user => user.id === u.id)) {
+            if (!this.loadedPeople.some(user => user.id === u.id)) {
               this.loadedPeople = this.loadedPeople.reverse().concat(u).reverse();
             }
           });

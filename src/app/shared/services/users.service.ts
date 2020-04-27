@@ -18,7 +18,7 @@ interface UserData {
 interface Notif {
   text: string;
   from: string;
-  type: 'user' | 'event';
+  type: 'event' | 'post';
 }
 
 /**
@@ -190,13 +190,13 @@ export class UsersService {
   getNotifications(userId: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<Notif[]>(`https://mmnt-io.firebaseio.com/users/${userId}/notifications.json/?auth=${token}`).pipe(take(1), map(resData => {
-        let notifs = [];
+        let notifs: Notif[] = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
             notifs.push({ text: resData[key].text, from: resData[key].from, type: resData[key].type });
           }
         }
-        return notifs.reverse();
+        return notifs;
       }));
     }));
   }
