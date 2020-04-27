@@ -122,8 +122,9 @@ export class PostsService {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<PostData>(`https://mmnt-io.firebaseio.com/posts/${id}.json?auth=${token}`)
         .pipe(map(resData => {
-          const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type, resData.comments, resData.likers, resData.shares);
-          return newPost;
+          if (resData !== null) {
+            return new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type, resData.comments, resData.likers, resData.shares);
+          }
         }));
     }));
   }

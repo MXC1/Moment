@@ -45,7 +45,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   private eventsSubscription: Subscription;
   private usersSubscription: Subscription;
   isLoading = true;
-  didLike: boolean;
+  update: boolean;
 
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
 
@@ -107,7 +107,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   closeModal() {
-    this.modalController.dismiss({ didLike: this.didLike, postId: this.postId });
+    this.modalController.dismiss({ update: this.update, postId: this.postId });
   }
 
   onShowMenu() {
@@ -115,6 +115,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   onDeletePost() {
+    this.update = true;
     this.postsService.deletePost(this.post.id);
     this.closeModal();
   }
@@ -125,7 +126,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   onPostLike() {
     this.hasLiked = true;
-    this.didLike = true;
+    this.update = true;
     this.postsService.likePost(this.postId).subscribe(() => {
       this.updatePost();
     });
@@ -133,7 +134,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   onPostUnLike() {
     this.hasLiked = false;
-    this.didLike = true;
+    this.update = true;
     this.postsService.unLikePost(this.postId).subscribe(() => {
       this.updatePost();
     });

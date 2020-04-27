@@ -16,6 +16,7 @@ import { PostDetailComponent } from './post-detail/post-detail.component';
 import { PostDiscoverComponent } from './post-discover/post-discover.component';
 import { EventDetailComponent } from '../events/event-detail/event-detail.component';
 import { PostExtra } from 'src/app/shared/models/post-extra';
+import { isUndefined } from 'util';
 
 /**
  * Feed of all posts by users or events the current user follows
@@ -160,7 +161,7 @@ export class FeedPage implements OnInit, OnDestroy {
     const postDetailModal = await this.modalController.create({ component: PostDetailComponent, componentProps: { postId } });
 
     postDetailModal.onDidDismiss().then(resData => {
-      if (resData.data.didLike) {
+      if (resData.data.update) {
         this.isLoading = true;
         this.updatePost(resData.data.postId);
       }
@@ -245,24 +246,32 @@ export class FeedPage implements OnInit, OnDestroy {
   updatePost(postId: string) {
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.postsService.getPost(postId).pipe(take(1)).subscribe(post => {
-        this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
-          this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
+        if (isUndefined(post)) {
+          this.loadedPosts = this.loadedPosts.filter(p => p.id !== postId);
+          this.isLoading = false;
+        } else {
+          this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
+            this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
 
-            const postUser = users.find(user => user.id === post.userId);
-            const postEvent = events.find(event => event.id === post.eventId);
+              const postUser = users.find(user => user.id === post.userId);
+              const postEvent = events.find(event => event.id === post.eventId);
 
-            let postHasLiked;
-            if (post.likers) {
-              postHasLiked = post.likers.some(l => l === userId);
-            } else {
-              postHasLiked = false;
-            }
+              let postHasLiked;
+              if (post.likers) {
+                postHasLiked = post.likers.some(l => l === userId);
+              } else {
+                postHasLiked = false;
+              }
 
-            this.loadedPosts[this.loadedPosts.findIndex(p => p.id === postId)] = new PostExtra(post.id, post.userId, post.eventId, post.caption, post.content, post.type, post.comments, post.likers, post.shares, postUser, postEvent, postHasLiked);
-          
-            this.isLoading = false;
+              const index = this.loadedPosts.findIndex(p => p.id === postId);
+
+
+              this.loadedPosts[index] = new PostExtra(post.id, post.userId, post.eventId, post.caption, post.content, post.type, post.comments, post.likers, post.shares, postUser, postEvent, postHasLiked);
+
+              this.isLoading = false;
+            })
           })
-        })
+        }
       })
     });
   }
