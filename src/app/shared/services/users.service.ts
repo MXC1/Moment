@@ -18,7 +18,7 @@ interface UserData {
 interface Notif {
   text: string;
   from: string;
-  type: 'event' | 'post';
+  type: string;
 }
 
 /**
@@ -143,7 +143,9 @@ export class UsersService {
         const key = ids.length;
         return this.http.patch<{ name: string }>(`https://mmnt-io.firebaseio.com/users/${userId}/friendIds.json/?auth=${token}`, {
           [key]: toFollowId
-        }).subscribe();
+        }).subscribe(() => {
+          this.generateNotification(toFollowId, 'Someone followed you', userId, 'user').subscribe();
+        });
       }));
     }));
   }
@@ -191,11 +193,15 @@ export class UsersService {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<Notif[]>(`https://mmnt-io.firebaseio.com/users/${userId}/notifications.json/?auth=${token}`).pipe(take(1), map(resData => {
         let notifs: Notif[] = [];
+        
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
-            notifs.push({ text: resData[key].text, from: resData[key].from, type: resData[key].type });
+            notifs.push({ 
+              text: resData[key].text, 
+              from: resData[key].from, 
+              type: resData[key].type });
+            }
           }
-        }
         return notifs;
       }));
     }));

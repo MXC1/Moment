@@ -15,7 +15,7 @@ import { Post } from 'src/app/shared/models/post';
 interface Notif {
   text: string;
   from: string;
-  type: 'event' | 'post';
+  type: string;
 }
 
 @Component({
@@ -41,8 +41,10 @@ export class NotificationsComponent implements OnInit {
         this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
           this.loadedPosts = allPosts;
           this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-            this.usersService.getNotifications(userId).subscribe(notifs => {
-              this.notifications = notifs.reverse();
+            this.usersService.getNotifications(userId).pipe(take(1)).subscribe(notifs => {
+              
+              this.notifications = notifs;
+              console.log(this.notifications);
             });
           });
         });
@@ -54,11 +56,13 @@ export class NotificationsComponent implements OnInit {
     this.modalController.dismiss();
   }
 
-  getFromImage(notification: Notif) {
+  getFromImage(notification: Notif) { 
     if (notification.type === 'event') {
       return this.loadedEvents.find(event => event.id === notification.from).headerImage;
-    } else if (notification.type = 'post') {
+    } else if (notification.type === 'post') {
       return this.loadedPosts.find(post => post.id === notification.from).content;
+    } else if (notification.type === 'user') {
+      return this.loadedUsers.find(user => user.id === notification.from).image;
     }
   }
 
@@ -67,6 +71,8 @@ export class NotificationsComponent implements OnInit {
       return this.loadedEvents.find(event => event.id === notification.from).name + " @ " + this.loadedEvents.find(event => event.id === notification.from).location;
     } else if (notification.type === 'post') {
       return this.loadedPosts.find(post => post.id === notification.from).caption;
+    } else if (notification.type === 'user') {
+      return this.loadedUsers.find(user => user.id === notification.from).username;
     }
   }
 
@@ -74,9 +80,12 @@ export class NotificationsComponent implements OnInit {
     if (notification.type === 'event') {
       const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId: notification.from } });
       onEventDetailModal.present();
-    } else if (notification.type = 'post') {
+    } else if (notification.type === 'post') {
       const onPostDetailModal = await this.modalController.create({ component: PostDetailComponent, componentProps: { postId: notification.from } });
       onPostDetailModal.present();
+    } else if (notification.type === 'user') {
+      this.router.navigateByUrl('/tabs/people/' + notification.from);
+      this.closeModal();
     }
   }
 }

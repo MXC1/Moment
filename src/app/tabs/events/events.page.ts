@@ -87,8 +87,6 @@ export class EventsPage implements OnInit, OnDestroy {
   async onSearch() {
     const searchModal = await this.modalController.create({ component: SearchComponent, componentProps: { toSearch: 'events' } });
     searchModal.onDidDismiss().then(resData => {
-      console.log(resData);
-      
       if (resData.data.update) {
         this.updateEvent(resData.data.eventId);
       }
