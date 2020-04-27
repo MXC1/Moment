@@ -30,7 +30,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   isLoading = false;
   @Input() eventId;
   @ViewChild('menu', { static: false }) menu: IonSelect;
-  didFollow = false;
+  update: boolean = false;
 
   @ViewChild('inviteSelectable', { static: false }) inviteSelectable: IonicSelectableComponent;
   private loadedPeople: User[];
@@ -166,7 +166,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     this.isFollowing = true;
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.eventsService.follow(id, this.event.id).subscribe(() => {
-        this.didFollow = true;
+        this.update = true;
       });
     });
   }
@@ -176,7 +176,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     this.isFollowing = false;
     this.authService.getUserId.pipe(take(1)).subscribe(id => {
       this.eventsService.unfollow(id, this.event.id).subscribe(() => {
-        this.didFollow = true;
+        this.update = true;
       });
     })
   }
@@ -219,8 +219,9 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   }
 
   onDeleteEvent() {
+    this.update = true;
     this.eventsService.deleteEvent(this.event.id);
-    this.modalController.dismiss();
+    this.closeModal();
   }
 
   onMakePublic() {
@@ -237,7 +238,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   }
 
   closeModal() {
-    this.modalController.dismiss({ didFollow: this.didFollow });
+    this.modalController.dismiss({ update: this.update, eventId: this.eventId });
   }
 
   onInvite() {

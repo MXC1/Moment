@@ -26,6 +26,9 @@ export class SearchComponent implements OnInit {
 
   isLoading = false;
 
+  update: boolean;
+  eventId: string;
+
   constructor(private modalController: ModalController, private usersService: UsersService, private postsService: PostsService, private eventsService: EventsService, private authService: AuthService) { }
 
   ngOnInit() {
@@ -37,7 +40,7 @@ export class SearchComponent implements OnInit {
   }
 
   closeModal() {
-    this.modalController.dismiss();
+    this.modalController.dismiss({ update: this.update, eventId: this.eventId });
   }
 
   filterList(event) {
@@ -131,11 +134,9 @@ export class SearchComponent implements OnInit {
 
   async onEventDetail(eventId: string) {
     const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId } });
-    onEventDetailModal.onDidDismiss().then(didFollow => {
-      if (didFollow.data.didFollow) {
-        this.eventsService.fetchEvents().subscribe();
-        this.postsService.fetchPosts().subscribe();
-      }
+    onEventDetailModal.onDidDismiss().then(resData => {
+      this.update = resData.data.update;
+      this.eventId = resData.data.eventId;
     });
     onEventDetailModal.present();
   }

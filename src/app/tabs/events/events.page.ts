@@ -10,6 +10,7 @@ import { NewEventComponent } from './new-event/new-event.component';
 import { EventDetailComponent } from './event-detail/event-detail.component';
 import { EventDiscoverComponent } from './event-discover/event-discover.component';
 import { FilterOptionsComponent } from './filter-options/filter-options.component';
+import { isUndefined } from 'util';
 
 @Component({
   selector: 'app-events',
@@ -83,10 +84,16 @@ export class EventsPage implements OnInit, OnDestroy {
     }
   }
 
-  onSearch() {
-    this.modalController.create({ component: SearchComponent, componentProps: { toSearch: 'events' } }).then(modalElement => {
-      modalElement.present();
-    });
+  async onSearch() {
+    const searchModal = await this.modalController.create({ component: SearchComponent, componentProps: { toSearch: 'events' } });
+    searchModal.onDidDismiss().then(resData => {
+      console.log(resData);
+      
+      if (resData.data.update) {
+        this.updateEvent(resData.data.eventId);
+      }
+    })
+    searchModal.present();
   }
 
   async onNewEvent() {
@@ -101,12 +108,31 @@ export class EventsPage implements OnInit, OnDestroy {
 
   async onEventDetail(eventId: string) {
     const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId } });
-    onEventDetailModal.onDidDismiss().then(didFollow => {
-      if (didFollow.data.didFollow) {
-        this.fetchFollowedEvents();
+    onEventDetailModal.onDidDismiss().then(resData => {
+      if (resData.data.update) {
+        this.updateEvent(resData.data.eventId);
       }
     });
     onEventDetailModal.present();
+  }
+
+  updateEvent(eventId: string) {
+    this.eventsService.getEvent(eventId).pipe(take(1)).subscribe(event => {
+
+      if (isUndefined(event)) {
+        // Event was deleted
+        this.loadedEvents = this.loadedEvents.filter(e => e.id !== eventId);
+      } else {
+        const index = this.loadedEvents.findIndex(e => e.id === eventId);
+        if (index === -1) {
+          // Event was followed
+          this.loadedEvents = this.loadedEvents.reverse().concat(event).reverse();
+        } else {
+          // Event was unfollowed
+          this.loadedEvents = this.loadedEvents.filter(e => e.id !== eventId);
+        }
+      }
+    });
   }
 
   async onDiscoverEvents() {
@@ -190,7 +216,6 @@ export class EventsPage implements OnInit, OnDestroy {
     }
 
     this.searchbar.value = "";
-    // this.searchbar.getInputElement.value = "";
 
     this.loadedEvents = filteredEvents;
   }
