@@ -3,15 +3,16 @@
     <ion-buttons slot="start">
       <ion-back-button (click)="closeModal()" defaultHref="."></ion-back-button>
     </ion-buttons>
-    <ion-buttons slot="end" *ngIf="!isFollowing && !isLoading">
-      <ion-button (click)="onFollowEvent()">
+    <ion-buttons slot="end" *ngIf="!isLoading">
+      <ion-button (click)="onFollowEvent()" *ngIf="!isFollowing">
         <ion-label>Follow</ion-label>
         <ion-icon name="person-add"></ion-icon>
       </ion-button>
+      <ion-button (click)="onUnfollowEvent()" *ngIf="isFollowing">
+        <ion-label>Following</ion-label>
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-label slot="end" *ngIf="isFollowing && !isLoading" style="padding-right: 5px;" (click)="onUnfollowEvent()">
-      Following</ion-label>
-    <ion-icon name="checkmark" slot="end" *ngIf="isFollowing && !isLoading"></ion-icon>
     <ion-title>Moment</ion-title>
     <ion-buttons slot="end" *ngIf="!isLoading && isThisUsersEvent()">
       <ion-button (click)="onShowMenu()">
@@ -98,4 +99,9 @@
   </ion-grid>
   <ionic-selectable style="display: none;" [items]="loadedPeople" itemValueField="id" itemTextField="username"
     [canSearch]="true" (onChange)="onInviteUser($event)" #inviteSelectable></ionic-selectable>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="onNewPost()">
+      <ion-icon name="add" style="font-size: 75px;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
