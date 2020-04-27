@@ -11,16 +11,12 @@
         <ion-label style="padding-right: 5px;">Discover</ion-label>
         <ion-icon name="compass" mode="md" size="large"></ion-icon>
       </ion-button>
-      <!-- <ion-button (click)="onSearch()" size="small">
-        <ion-icon name="search" slot="icon-only"></ion-icon>
-      </ion-button> -->
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-row *ngIf="!isLoading && loadedPosts.length === 0" class="ion-justify-content-center ion-text-center">
-
     <ion-col size="10">
       <p>Can't find any posts!</p> <br>
       <p>Try using the discover and search buttons at the top to find posts you're interested in,
@@ -57,7 +53,8 @@
             </ion-button>
           </ion-col>
         </ion-row>
-        <app-content [content]="this.post"></app-content>
+        <app-content [content]="post" *ngIf="post.type === 'video'"></app-content>
+        <app-content [content]="post" *ngIf="post.type === 'image'" (click)="onPostDetail(post.id)"></app-content>
       </div>
       <ion-card-content>
         <ion-row style="padding:0%">
