@@ -2,7 +2,7 @@
   <ion-toolbar mode="md">
     <ion-buttons slot="start">
       <ion-menu-button *ngIf="isThisUser"></ion-menu-button>
-      <ion-back-button *ngIf="!isThisUser" defaultHref="/tabs/people"></ion-back-button>
+      <ion-back-button *ngIf="!isThisUser" defaultHref="."></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end" *ngIf="!isFollowing && !isThisUser">
       <ion-button (click)="onFollow()">
