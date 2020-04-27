@@ -13,6 +13,7 @@ import { PostDetailComponent } from '../post-detail/post-detail.component';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import { Router } from '@angular/router';
 import { EventDetailComponent } from '../../events/event-detail/event-detail.component';
+import { isUndefined } from 'util';
 
 
 /**
@@ -29,8 +30,9 @@ import { EventDetailComponent } from '../../events/event-detail/event-detail.com
 })
 export class PostDiscoverComponent implements OnInit {
   loadedEvents: EventContent[] = [];
-  loadedPosts: Post[] = [];
+  followedPosts: Post[] = [];
   displayedPosts: { post: Post, weight: number }[] = [];
+  loadedPosts: { post: Post, weight: number }[] = [];
   loadedUsers: User[];
   private eventsSubscription: Subscription;
   isLoading = false;
@@ -49,7 +51,7 @@ export class PostDiscoverComponent implements OnInit {
       this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
         this.loadedEvents = allEvents;
 
-        this.fetchPopularPosts();
+        this.fetchAllPosts();
       });
     });
   }
@@ -63,14 +65,14 @@ export class PostDiscoverComponent implements OnInit {
    */
   fetchTailoredPosts() {
     this.isLoading = true;
-    this.displayedPosts = [];
+    this.loadedPosts = [];
 
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
         this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
 
           // Find every post that is posted by a friend and in a non-private event or that is under an event I follow
-          this.loadedPosts = allPosts.filter(p =>
+          this.followedPosts = allPosts.filter(p =>
             (currentUser.friendIds.some(f => f === p.userId) && this.loadedEvents.some(e => !e.isPrivate && e.id === p.eventId))
             || this.loadedEvents.some(e => e.id === p.eventId && e.followerIds.some(f => f === userId)));
 
@@ -90,24 +92,26 @@ export class PostDiscoverComponent implements OnInit {
             .forEach(post => {
 
               // If the post has not already been added to the displayed posts array
-              if (!this.displayedPosts.some(p => p.post.id === post.id)) {
+              if (!this.loadedPosts.some(p => p.post.id === post.id)) {
 
                 // If the post is not already in the users feed
-                if (!this.loadedPosts.some(p => p.id === post.id)) {
+                if (!this.followedPosts.some(p => p.id === post.id)) {
 
                   // Add it to the displayed posts array
-                  this.displayedPosts = this.displayedPosts.concat({ post: post, weight: 1 });
+                  this.loadedPosts = this.loadedPosts.concat({ post: post, weight: 1 });
                 }
                 // If the post has already been added to the displayed posts array, increment its weight
               } else {
-                !this.displayedPosts.find(p => p.post.id === post.id).weight++;
+                !this.loadedPosts.find(p => p.post.id === post.id).weight++;
               }
             });
           // Sort by post weight (how many times the post cropped up in the event => followers => posts search)
           // Puts posts the user is most likely to enjoy at the top
-          this.displayedPosts = this.displayedPosts.sort((p1, p2) => {
+          this.loadedPosts = this.loadedPosts.sort((p1, p2) => {
             return p2.weight - p1.weight;
           });
+
+          this.displayedPosts = this.loadedPosts;
 
           this.isLoading = false;
         });
@@ -123,20 +127,50 @@ export class PostDiscoverComponent implements OnInit {
    */
   fetchPopularPosts() {
     this.isLoading = true;
-    this.displayedPosts = [];
+    this.loadedPosts = [];
 
     this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
       this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
         // Filter out private events
-        this.displayedPosts = allPosts.filter(p => allEvents.some(e => (e.id === p.eventId) && !e.isPrivate))
+        this.loadedPosts = allPosts.filter(p => allEvents.some(e => (e.id === p.eventId) && !e.isPrivate))
           // Sort by how many likes they have
           .sort((p1, p2) => {
-            return p2.likers.length - p1.likers.length;
+
+            let p1Likes;
+            let p2Likes;
+
+            isUndefined(p1.likers) ? p1Likes = 0 : p1Likes = p1.likers.length;
+            isUndefined(p2.likers) ? p2Likes = 0 : p2Likes = p2.likers.length;
+
+            return p2Likes - p1Likes;
+
             // Map to post and weight configuration
             // Weight is never used but it means the view doesn't have to change depending on popular // tailored
           }).map(p => {
             return { post: p, weight: 1 };
           });
+
+          this.displayedPosts = this.loadedPosts;
+
+        this.isLoading = false;
+      });
+    });
+  }
+
+  fetchAllPosts() {
+    this.isLoading = true;
+    this.loadedPosts = [];
+
+    this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
+      this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
+        this.loadedPosts = allPosts.filter(p => allEvents.some(e => (e.id === p.eventId) && !e.isPrivate))
+          .reverse()
+          .map(p => {
+            return { post: p, weight: 1 };
+          });
+
+          this.displayedPosts = this.loadedPosts;
+
         this.isLoading = false;
       });
     });
@@ -151,9 +185,17 @@ export class PostDiscoverComponent implements OnInit {
   onChangeSegment(event: CustomEvent<SegmentChangeEventDetail>) {
     if (event.detail.value === 'popular') {
       this.fetchPopularPosts();
-    } else {
+    } else if (event.detail.value === 'tailored') {
       this.fetchTailoredPosts();
+    } else if (event.detail.value === 'all') {
+      this.fetchAllPosts();
     }
+  }
+
+  onSearch(event) {
+    const searchValue = event.srcElement.value.toLowerCase();
+    
+    this.displayedPosts = this.loadedPosts.filter(p => p.post.caption.toLowerCase().includes(searchValue) || this.loadedEvents.some(e => e.name.toLowerCase().includes(searchValue) && e.id === p.post.eventId));
   }
 
   /**

@@ -8,13 +8,17 @@
 </ion-header>
 
 <ion-content>
-  <ion-segment (ionChange)="onChangeSegment($event)">
-    <ion-segment-button value="popular" checked mode="md">Popular</ion-segment-button>
-    <ion-segment-button value="tailored" mode="md">Tailored For You</ion-segment-button>
+  <ion-segment (ionChange)="onChangeSegment($event)" style="padding: 10px; padding-bottom: 0px;">
+    <ion-segment-button value="popular" mode="ios" style="font-size: 25px; padding: 5px;">Popular</ion-segment-button>
+    <ion-segment-button value="all" checked mode="ios" style="font-size: 25px; padding: 5px;">All</ion-segment-button>
+    <ion-segment-button value="tailored" mode="ios" style="font-size: 25px; padding: 5px;">Tailored For You</ion-segment-button>
   </ion-segment>
   <ion-grid>
-    <ion-row *ngIf="displayedPosts.length === 0 && !isLoading" class="ion-text-center" style="padding-top: 10px;">
-      Nothing here yet - try following some users or events.
+    <ion-searchbar placeholder="Search" (ionInput)="onSearch($event)" #searchbar></ion-searchbar>
+    <ion-row *ngIf="displayedPosts.length === 0 && !isLoading" class="ion-justify-content-center" style="padding-top: 10px;">
+      <ion-col size="10" class="ion-text-center">
+        Nothing here yet - try following some users or events.
+      </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
@@ -51,7 +55,7 @@
                   <ion-button class="post-interaction" (click)="onPostLike(post.post.id)">
                     <ion-icon name="heart" slot="icon-only"></ion-icon>
                   </ion-button>
-                  <p *ngIf="post.post.likers.length !== 0">{{ post.post.likers.length }}</p>
+                  <p *ngIf="post.post.likers">{{ post.post.likers.length }}</p>
                 </ion-col>
                 <ion-col>
                   <ion-button class="post-interaction" (click)="onPostComment(post.post.id)">

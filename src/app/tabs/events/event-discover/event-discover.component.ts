@@ -8,7 +8,6 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { EventDetailComponent } from '../event-detail/event-detail.component';
 import { UsersService } from 'src/app/shared/services/users.service';
 import { SegmentChangeEventDetail } from '@ionic/core';
-import { E2BIG } from 'constants';
 
 @Component({
   selector: 'app-event-discover',
@@ -124,7 +123,7 @@ export class EventDiscoverComponent implements OnInit {
   onSearch(event) {
     const searchValue = event.srcElement.value.toLowerCase();
     
-    this.displayedEvents = this.loadedEvents.filter(e => e.event.name.includes(searchValue) || e.event.location.includes(searchValue));
+    this.displayedEvents = this.loadedEvents.filter(e => e.event.name.toLowerCase().includes(searchValue) || e.event.location.toLowerCase().includes(searchValue));
   }
 
   onChangeSegment(event: CustomEvent<SegmentChangeEventDetail>) {
