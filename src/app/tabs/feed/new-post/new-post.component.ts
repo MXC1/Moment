@@ -98,8 +98,10 @@ export class NewPostComponent implements OnInit {
 
     const caption = this.form.value.caption;
     const eventId = this.form.value.event;
-
-    // this.form.patchValue({ image: this.imagefiledata });
+    
+    if (this.imageChooser.croppedImage) {
+      this.form.patchValue({ image: this.imageChooser.croppedImage });
+    }
 
     this.postsService.uploadImage(this.form.get('image').value).pipe(switchMap(uploadRes => {
       const type = this.form.get('image').value.type.includes('image') ? 'image' : 'video';
