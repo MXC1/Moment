@@ -198,8 +198,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   }
 
   handleSelectOption(menu) {
-    console.log(menu.value);
-    
     switch (menu.value) {
       case 'delete': {
         this.onDeleteEvent();

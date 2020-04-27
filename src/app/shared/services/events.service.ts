@@ -24,7 +24,7 @@ interface PostData {
   caption: string;
   content: string;
   eventId: string;
-  likes: number;
+  likers: string[];
   shares: number;
   userId: string;
   type: 'image' | 'video';
@@ -98,7 +98,7 @@ export class EventsService {
                 resData[key].content,
                 resData[key].type,
                 resData[key].comments,
-                resData[key].likes,
+                resData[key].likers,
                 resData[key].shares
               ));
             }
@@ -213,11 +213,11 @@ export class EventsService {
   }
 
   unfollow(unfollowUserId: string, eventId: string) {
-    return this.authService.getUserId.pipe(take(1), switchMap(userId => {
-      return this.getEvent(eventId).pipe(take(1), switchMap(event => {
-        event.followerIds = event.followerIds.filter(e => e !== userId);
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.authService.getUserId.pipe(take(1), switchMap(userId => {
+        return this.getEvent(eventId).pipe(take(1), switchMap(event => {
+          event.followerIds = event.followerIds.filter(e => e !== userId);
 
-        return this.authService.getToken.pipe(take(1), switchMap(token => {
           return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds.json/?auth=${token}`).pipe(take(1), map(followers => {
             const key = followers.findIndex(f => f === unfollowUserId);
             return this.http.delete(`https://mmnt-io.firebaseio.com/events/${eventId}/followerIds/${key}.json/?auth=${token}`).subscribe();

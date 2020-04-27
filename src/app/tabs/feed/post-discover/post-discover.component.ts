@@ -131,7 +131,7 @@ export class PostDiscoverComponent implements OnInit {
         this.displayedPosts = allPosts.filter(p => allEvents.some(e => (e.id === p.eventId) && !e.isPrivate))
           // Sort by how many likes they have
           .sort((p1, p2) => {
-            return p2.likes - p1.likes;
+            return p2.likers.length - p1.likers.length;
             // Map to post and weight configuration
             // Weight is never used but it means the view doesn't have to change depending on popular // tailored
           }).map(p => {
@@ -230,9 +230,7 @@ export class PostDiscoverComponent implements OnInit {
   }
 
   onPostLike(postId: string) {
-    this.postsService.likePost(postId).subscribe(() => {
-      this.displayedPosts.find(p => p.post.id === postId).post.likes++;
-    });
+    this.postsService.likePost(postId).subscribe();
   }
 
   onPostComment(id: string) {

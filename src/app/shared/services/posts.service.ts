@@ -9,7 +9,7 @@ interface PostData {
   caption: string;
   content: string;
   eventId: string;
-  likes: number;
+  likers: string[];
   shares: number;
   userId: string;
   type: 'image' | 'video';
@@ -48,7 +48,7 @@ export class PostsService {
                 resData[key].content,
                 resData[key].type,
                 resData[key].comments,
-                resData[key].likes,
+                resData[key].likers,
                 resData[key].shares
               ));
             }
@@ -73,7 +73,7 @@ export class PostsService {
    * @memberof PostsService
    */
   newPost(userId: string, eventId: string, caption: string, content: string, type: 'image' | 'video') {
-    const newPost = new Post('', userId, eventId, caption, content, type, null, 0, 0);
+    const newPost = new Post('', userId, eventId, caption, content, type, null, [], 0);
     let postId: string;
 
     return this.authService.getToken.pipe(take(1), switchMap(token => {
@@ -110,7 +110,7 @@ export class PostsService {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.get<PostData>(`https://mmnt-io.firebaseio.com/posts/${id}.json?auth=${token}`)
         .pipe(map(resData => {
-          const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type, resData.comments, resData.likes, resData.shares);
+          const newPost = new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type, resData.comments, resData.likers, resData.shares);
           return newPost;
         }));
     }));
@@ -186,8 +186,31 @@ export class PostsService {
 
   likePost(postId: string) {
     return this.authService.getToken.pipe(take(1), switchMap(token => {
-      return this.http.get<number>(`https://mmnt-io.firebaseio.com/posts/${postId}/likes.json?auth=${token}`).pipe(map(postLikes => {
-        return this.http.patch(`https://mmnt-io.firebaseio.com/posts/${postId}.json?auth=${token}`, { likes: postLikes+1 }).subscribe();
+      return this.authService.getUserId.pipe(take(1), switchMap(userId => {
+
+        return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/posts/${postId}/likers.json?auth=${token}`).pipe(take(1), switchMap(likers => {
+
+          let key;
+          if (likers !== null) {
+            key = likers.length;
+          } else {
+            key = 0;
+          }
+
+
+          return this.http.patch(`https://mmnt-io.firebaseio.com/posts/${postId}/likers.json?auth=${token}`, { [key]: userId });
+        }));
+      }));
+    }));
+  }
+
+  unLikePost(postId: string) {
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
+      return this.authService.getUserId.pipe(take(1), switchMap(userId => {
+        return this.http.get<string[]>(`https://mmnt-io.firebaseio.com/posts/${postId}/likers.json?auth=${token}`).pipe(take(1), switchMap(likers => {
+          const key = likers.findIndex(l => l === userId);
+          return this.http.delete(`https://mmnt-io.firebaseio.com/posts/${postId}/likers/${key}.json?auth=${token}`);
+        }))
       }));
     }));
   }

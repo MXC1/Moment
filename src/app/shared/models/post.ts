@@ -7,6 +7,6 @@ export class Post {
                 public content: string,
                 public type: 'image' | 'video',
                 public comments: { [key: string]: {[key: string]: string} },
-                public likes: number,
+                public likers: string[],
                 public shares: number) {}
 }

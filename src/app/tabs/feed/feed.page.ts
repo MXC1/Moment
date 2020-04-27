@@ -15,11 +15,7 @@ import { NewPostComponent } from './new-post/new-post.component';
 import { PostDetailComponent } from './post-detail/post-detail.component';
 import { PostDiscoverComponent } from './post-discover/post-discover.component';
 import { EventDetailComponent } from '../events/event-detail/event-detail.component';
-
-interface Comment {
-  userId: string;
-  commentContent: string;
-}
+import { PostExtra } from 'src/app/shared/models/post-extra';
 
 /**
  * Feed of all posts by users or events the current user follows
@@ -35,7 +31,7 @@ interface Comment {
   styleUrls: ['./feed.page.scss'],
 })
 export class FeedPage implements OnInit, OnDestroy {
-  loadedPosts: Post[] = [];
+  loadedPosts: PostExtra[] = [];
   loadedUsers: User[];
   loadedEvents: EventContent[];
   private postsSubscription: Subscription;
@@ -51,7 +47,7 @@ export class FeedPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.fetchFollowedPosts();
-   }
+  }
 
   ionViewWillEnter() {
     this.fetchFollowedPosts();
@@ -81,26 +77,30 @@ export class FeedPage implements OnInit, OnDestroy {
   filterPosts(posts) {
     this.authService.getUserId.pipe(take(1)).subscribe(userId => {
       this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
-        posts.filter(post => {
-          // Find every post that is posted by a friend OR is posted under an event I follow AND is not private OR is posted by me
-          return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId)) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate || post.userId === userId)
-        }).forEach(p => {
-          // If it's not already in the loadedposts
-          if (!this.loadedPosts.some(post => post.id === p.id)) {
-            // Add it to the top
-            this.isLoading = true;
-            this.loadedPosts = this.loadedPosts.reverse().concat(p).reverse();
-            this.isLoading = false;
-          }
+        this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
+          this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
+            posts.filter(post => {
+              // Find every post that is posted by a friend OR is posted under an event I follow AND is not private OR is posted by me
+              return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId)) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate || post.userId === userId)
+            }).forEach(p => {
+              p.user = users.find(user => user.id === p.userId);
+              p.event = events.find(event => event.id === p.eventId);
+
+              if (p.likers) {
+                p.hasLiked = p.likers.some(l => l === userId);
+              }
+
+              // If it's not already in the loadedposts
+              if (!this.loadedPosts.some(post => post.id === p.id)) {
+                // Add it to the top
+                this.isLoading = true;
+                this.loadedPosts = this.loadedPosts.reverse().concat(p).reverse();
+                this.isLoading = false;
+              }
+            });
+            // this.isLoading = false;
+          });
         });
-        // this.loadedPosts = posts.filter(post => {
-        //   // Find every post that is posted by a friend OR is posted under an event I follow AND is not private OR is posted by me
-        //   return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId)) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate || post.userId === userId)
-        // });
-      });
-      this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
-        this.loadedUsers = users;
-        this.isLoading = false;
       });
     });
 
@@ -120,32 +120,6 @@ export class FeedPage implements OnInit, OnDestroy {
     }
     if (this.eventsSubscription) {
       this.eventsSubscription.unsubscribe();
-    }
-  }
-
-  /**
-   * Get a single user 
-   *
-   * @param {string} id
-   * @returns {User}
-   * @memberof FeedPage
-   */
-  getUser(id: string): User {
-    if (this.loadedUsers) {
-      return this.loadedUsers.find(user => user.id === id);
-    }
-  }
-
-  /**
-   * Get a single event
-   *
-   * @param {string} id
-   * @returns {EventContent}
-   * @memberof FeedPage
-   */
-  getEvent(id: string): EventContent {
-    if (this.loadedEvents) {
-      return this.loadedEvents.find(event => event.id === id);
     }
   }
 
@@ -185,8 +159,11 @@ export class FeedPage implements OnInit, OnDestroy {
 
     const postDetailModal = await this.modalController.create({ component: PostDetailComponent, componentProps: { postId } });
 
-    postDetailModal.onDidDismiss().then(() => {
-      this.fetchFollowedPosts();
+    postDetailModal.onDidDismiss().then(resData => {
+      if (resData.data.didLike) {
+        this.isLoading = true;
+        this.updatePost(resData.data.postId);
+      }
     });
     postDetailModal.present();
   }
@@ -252,8 +229,41 @@ export class FeedPage implements OnInit, OnDestroy {
   }
 
   onPostLike(postId: string) {
+    this.loadedPosts.find(p => p.id === postId).hasLiked = true;
     this.postsService.likePost(postId).subscribe(() => {
-      this.loadedPosts.find(p => p.id === postId).likes++;
+      this.updatePost(postId);
+    });
+  }
+
+  onPostUnLike(postId: string) {
+    this.loadedPosts.find(p => p.id === postId).hasLiked = false;
+    this.postsService.unLikePost(postId).subscribe(() => {
+      this.updatePost(postId);
+    });
+  }
+
+  updatePost(postId: string) {
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+      this.postsService.getPost(postId).pipe(take(1)).subscribe(post => {
+        this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
+          this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
+
+            const postUser = users.find(user => user.id === post.userId);
+            const postEvent = events.find(event => event.id === post.eventId);
+
+            let postHasLiked;
+            if (post.likers) {
+              postHasLiked = post.likers.some(l => l === userId);
+            } else {
+              postHasLiked = false;
+            }
+
+            this.loadedPosts[this.loadedPosts.findIndex(p => p.id === postId)] = new PostExtra(post.id, post.userId, post.eventId, post.caption, post.content, post.type, post.comments, post.likers, post.shares, postUser, postEvent, postHasLiked);
+          
+            this.isLoading = false;
+          })
+        })
+      })
     });
   }
 
@@ -269,5 +279,4 @@ export class FeedPage implements OnInit, OnDestroy {
       this.commentBox.value = '';
     });
   }
-
 }

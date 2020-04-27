@@ -39,11 +39,13 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   comments: Comment[] = [];
   comment: string;
   commentUsers: User[];
+  hasLiked: boolean;
   @ViewChild(IonInput, { static: false }) commentBox;
   private postsSubscription: Subscription;
   private eventsSubscription: Subscription;
   private usersSubscription: Subscription;
   isLoading = true;
+  didLike: boolean;
 
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
 
@@ -63,6 +65,11 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         this.usersSubscription = this.usersService.getUser(this.post.userId).subscribe(user => {
           this.user = user;
           this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+
+            if (post.likers) {
+              this.hasLiked = post.likers.some(l => l === userId);
+            }
+
             this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
               this.thisUser = thisUser;
               this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
@@ -100,7 +107,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   closeModal() {
-    this.modalController.dismiss();
+    this.modalController.dismiss({ didLike: this.didLike, postId: this.postId });
   }
 
   onShowMenu() {
@@ -109,24 +116,54 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   onDeletePost() {
     this.postsService.deletePost(this.post.id);
-    this.modalController.dismiss();
+    this.closeModal();
   }
 
   isThisUsersPost() {
     return this.thisUser.id === this.post.userId;
   }
 
-  onPostLike(postId: string) {
-    this.postsService.likePost(postId).subscribe(() => {
-      this.post.likes++;
+  onPostLike() {
+    this.hasLiked = true;
+    this.didLike = true;
+    this.postsService.likePost(this.postId).subscribe(() => {
+      this.updatePost();
     });
-   }
+  }
+
+  onPostUnLike() {
+    this.hasLiked = false;
+    this.didLike = true;
+    this.postsService.unLikePost(this.postId).subscribe(() => {
+      this.updatePost();
+    });
+  }
+
+  updatePost() {
+    this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+      this.postsService.getPost(this.postId).pipe(take(1)).subscribe(post => {
+        this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
+          this.eventsService.fetchEvents().pipe(take(1)).subscribe(events => {
+
+            this.user = users.find(user => user.id === post.userId);
+            this.event = events.find(event => event.id === post.eventId);
+
+            if (post.likers) {
+              this.hasLiked = post.likers.some(l => l === userId);
+            } else {
+              this.hasLiked = false;
+            }
+
+            this.post = post;
+          })
+        })
+      })
+    });
+  }
 
   onPostComment() {
     this.commentBox.setFocus();
   }
-
-  onPostShare(id: string) { }
 
   onAddComment() {
     const userId = this.thisUser.id;
@@ -143,6 +180,4 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       return this.commentUsers.find(user => user.id === userId);
     }
   }
-
-
 }
