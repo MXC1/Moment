@@ -1,4 +1,4 @@
-<ion-list>
+<ion-list style="margin: 0px;">
   <ion-list-header>Filter Past</ion-list-header>
   <ion-item>
     <ion-checkbox [checked]="pastEvents" (ionChange)="changePastEvents($event)"></ion-checkbox>
@@ -8,6 +8,7 @@
     <ion-checkbox [checked]="upcomingEvents" (ionChange)="changeUpcomingEvents($event)"></ion-checkbox>
     <ion-label>Upcoming Events</ion-label>
   </ion-item>
+  <ion-list-header></ion-list-header>
   <ion-list-header>Filter Date</ion-list-header>
   <ion-item>
     <ion-col style="padding: 0px;">
@@ -23,6 +24,7 @@
       </ion-item>
     </ion-col>
   </ion-item>
+  <ion-list-header></ion-list-header>
   <ion-list-header>Filter Privacy</ion-list-header>
   <ion-item>
     <ion-checkbox [checked]="privateEvents" (ionChange)="changePrivateEvents($event)"></ion-checkbox>

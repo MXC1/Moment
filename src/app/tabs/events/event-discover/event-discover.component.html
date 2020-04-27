@@ -8,13 +8,15 @@
 </ion-header>
 
 <ion-content>
-  <ion-segment (ionChange)="onChangeSegment($event)">
-    <ion-segment-button value="popular" checked mode="md">Popular</ion-segment-button>
-    <ion-segment-button value="tailored" mode="md">Tailored For You</ion-segment-button>
+  <ion-segment (ionChange)="onChangeSegment($event)" style="padding: 10px; padding-bottom: 0px;">
+    <ion-segment-button value="popular" mode="ios" style="font-size: 25px; padding: 5px;">Popular</ion-segment-button>
+    <ion-segment-button value="all" checked mode="ios" style="font-size: 25px; padding: 5px;">All</ion-segment-button>
+    <ion-segment-button value="tailored" mode="ios" style="font-size: 25px; padding: 5px;">Tailored For You</ion-segment-button>
   </ion-segment>
   <ion-grid>
-    <ion-col>
-      <ion-row *ngIf="displayedEvents.length === 0 && !isLoading" class="ion-text-center" style="padding-top: 10px;">
+    <ion-searchbar placeholder="Search" (ionInput)="onSearch($event)" #searchbar></ion-searchbar>
+    <ion-col size="10">
+      <ion-row *ngIf="displayedEvents.length === 0 && !isLoading" class="ion-justify-content-center" style="padding-top: 10px;">
         Nothing here yet - try following some users or events.
       </ion-row>
       <ion-row *ngIf="!isLoading">
