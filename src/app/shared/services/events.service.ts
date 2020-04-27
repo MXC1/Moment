@@ -43,6 +43,8 @@ interface PostData {
 export class EventsService {
   private events = new BehaviorSubject<EventContent[]>([]);
 
+  constructor(private http: HttpClient, private authService: AuthService) { }
+
   /**
    * Add an event to the database 
    *
@@ -104,7 +106,8 @@ export class EventsService {
             }
           }
           posts.filter(p => p.eventId === eventId).forEach(p => {
-            this.postsService.deletePost(p.id);
+            const postsService = new PostsService(this.http, this.authService, new UsersService(this.http, this.authService))
+            postsService.deletePost(p.id);
           });
         });
       });
@@ -256,6 +259,4 @@ export class EventsService {
       return this.http.patch(`https://mmnt-io.firebaseio.com/events/${eventId}.json/?auth=${token}`, { isPrivate: true });
     }));
   }
-
-  constructor(private http: HttpClient, private authService: AuthService, private userService: UsersService, private postsService: PostsService) { }
 }

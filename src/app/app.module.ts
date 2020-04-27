@@ -27,7 +27,7 @@ import { FilterOptionsComponent } from './tabs/events/filter-options/filter-opti
 
 
 /**
- * Declar and import necessary Components and Modules
+ * Declare and import necessary Components and Modules
  *
  * @export
  * @class AppModule

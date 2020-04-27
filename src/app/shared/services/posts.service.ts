@@ -5,6 +5,7 @@ import { take, tap, map, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
 import { UsersService } from './users.service';
+import { EventsService } from './events.service';
 
 interface PostData {
   caption: string;
@@ -28,6 +29,8 @@ interface PostData {
 })
 export class PostsService {
   private posts = new BehaviorSubject<Post[]>([]);
+
+  constructor(private http: HttpClient, private authService: AuthService, private usersService: UsersService) { }
 
   /**
    * Fetch all posts from the database and add them to a local BehaviourSubject
@@ -86,6 +89,14 @@ export class PostsService {
           tap(posts => {
             newPost.id = postId;
             this.posts.next(posts.reverse().concat(newPost).reverse());
+
+            const eventsService = new EventsService(this.http, this.authService);
+
+            eventsService.getEvent(eventId).pipe(take(1)).subscribe(event => {
+              event.followerIds.forEach(f => {
+                this.usersService.generateNotification(f, 'There is a new post in an event you follow', eventId, 'event').subscribe();
+              })
+            });
           }));
     }));
   }
@@ -180,7 +191,11 @@ export class PostsService {
             [key]:
               { [userId]: commentContent }
           }
-        ).subscribe();
+        ).subscribe(() => {
+          this.getPost(postId).subscribe(post => {
+            this.usersService.generateNotification(post.userId, 'Someone commented on your post', postId, 'post').subscribe();
+          })
+        });
       }));
     });
   }
@@ -202,7 +217,7 @@ export class PostsService {
           return this.http.patch(`https://mmnt-io.firebaseio.com/posts/${postId}/likers.json?auth=${token}`, { [key]: userId }).pipe(take(1), map(() => {
 
             this.getPost(postId).pipe(take(1)).subscribe(post => {
-              this.usersService.generateNotification(post.userId, 'Someone liked this post', postId, 'post').subscribe();
+              this.usersService.generateNotification(post.userId, 'Someone liked your post', postId, 'post').subscribe();
             });
           }));
         }));
@@ -220,6 +235,4 @@ export class PostsService {
       }));
     }));
   }
-
-  constructor(private http: HttpClient, private authService: AuthService, private usersService: UsersService) { }
 }
