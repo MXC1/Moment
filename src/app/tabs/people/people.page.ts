@@ -35,6 +35,8 @@ export class PeoplePage implements OnInit {
    * @memberof PeoplePage
    */
   ionViewWillEnter() {
+    console.log("yes");
+
     this.fetchFollowedUsers();
   }
 
@@ -42,11 +44,27 @@ export class PeoplePage implements OnInit {
     this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
       this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
         this.usersService.getUser(thisUserId).pipe(take(1)).subscribe(thisUser => {
-          users.filter(user => thisUser.friendIds.some(u => u === user.id && u !== thisUserId)).forEach(u => {
+
+          const followedUsers = users.filter(user => thisUser.friendIds.some(u => u === user.id && u !== thisUserId));
+
+          // Check for follow
+          followedUsers.forEach(u => {
             if (!this.loadedPeople.some(user => user.id === u.id)) {
+              this.isLoading = true;
               this.loadedPeople = this.loadedPeople.reverse().concat(u).reverse();
+              this.isLoading = false;
             }
           });
+
+          // Check for unfollow
+          this.loadedPeople.forEach(u => {
+            if (!followedUsers.find(user => u.id === user.id)) {
+              this.isLoading = true;
+              this.loadedPeople = this.loadedPeople.filter(user => user.id !== u.id);
+              this.isLoading = false;
+            }
+          });
+
           this.isLoading = false;
         });
       });
