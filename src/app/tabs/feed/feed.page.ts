@@ -80,10 +80,13 @@ export class FeedPage implements OnInit, OnDestroy {
       this.usersService.getUser(userId).pipe(take(1)).subscribe(currentUser => {
         this.usersSubscription = this.usersService.fetchUsers().subscribe(users => {
           this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
-            posts.filter(post => {
+
+            const followedPosts = posts.filter(post => {
               // Find every post that is posted by a friend OR is posted under an event I follow AND is not private OR is posted by me
               return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId)) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate || post.userId === userId)
-            }).forEach(p => {
+            });
+
+            followedPosts.forEach(p => {
               p.user = users.find(user => user.id === p.userId);
               p.event = events.find(event => event.id === p.eventId);
 
@@ -99,6 +102,15 @@ export class FeedPage implements OnInit, OnDestroy {
                 this.isLoading = false;
               }
             });
+
+            this.loadedPosts.forEach(p => {
+              if (!followedPosts.some(post => post.id === p.id)) {
+                // Remove it
+                this.isLoading = true;
+                this.loadedPosts = this.loadedPosts.filter(post => post.id !== p.id);
+                this.isLoading = false;
+              }
+            })
             this.isLoading = false;
           });
         });

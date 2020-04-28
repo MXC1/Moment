@@ -35,8 +35,6 @@ export class PeoplePage implements OnInit {
    * @memberof PeoplePage
    */
   ionViewWillEnter() {
-    console.log("yes");
-
     this.fetchFollowedUsers();
   }
 
