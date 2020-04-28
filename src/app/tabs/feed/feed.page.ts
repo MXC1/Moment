@@ -286,6 +286,7 @@ export class FeedPage implements OnInit, OnDestroy {
 
       this.postsService.addComment(postId, { [thisUserId]: comment });
       this.commentBox.value = '';
+      this.updatePost(postId);
     });
   }
 }

@@ -174,6 +174,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.commentUsers = this.commentUsers.concat(this.thisUser);
     this.comments = this.comments.concat({ userId, commentContent: comment });
     this.commentBox.value = '';
+    this.updatePost();
   }
 
   getUser(userId: string) {
