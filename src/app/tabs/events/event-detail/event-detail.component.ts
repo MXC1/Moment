@@ -13,6 +13,9 @@ import { NewPostComponent } from '../../../tabs/feed/new-post/new-post.component
 import { User } from 'src/app/shared/models/user';
 import { IonicSelectableComponent } from 'ionic-selectable';
 import { PostDetailComponent } from '../../feed/post-detail/post-detail.component';
+import { PlacesService } from 'src/app/shared/services/places.service';
+import { Place } from 'src/app/shared/models/place';
+import { isUndefined } from 'util';
 
 @Component({
   selector: 'app-event-detail',
@@ -36,8 +39,9 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   private loadedPeople: User[];
 
   date: string;
+  placeName: string;
 
-  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
+  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController, private placesService: PlacesService) { }
 
   ngOnInit() {
     this.fetchEventDetails();
@@ -49,15 +53,24 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       this.event = event;
       const dateObject = new Date(event.date);
       this.date = this.dayOfTheWeek(dateObject.getDay()) + " " + dateObject.getDate().toString() + " " + this.monthOfTheYear(dateObject.getMonth() + 1) + " " + dateObject.getFullYear().toString();
-      this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
-        this.eventPosts = posts.filter(post => post.eventId === this.eventId);
-        this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
-          this.eventsService.isFollowing(thisUserId, this.eventId).pipe(take(1)).subscribe(isFollowing => {
-            this.isFollowing = isFollowing;
-            this.authService.getUserId.pipe(take(1)).subscribe(userId => {
-              this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
-                this.thisUser = thisUser;
-                this.isLoading = false;
+      this.placesService.getPlace(this.event.location).pipe(take(1)).subscribe(place => {
+
+        // For backwards compatibility
+        if (isUndefined(place)) {
+          this.placeName = this.event.location;
+        } else {
+          this.placeName = place.name;
+        }
+        this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
+          this.eventPosts = posts.filter(post => post.eventId === this.eventId);
+          this.authService.getUserId.pipe(take(1)).subscribe(thisUserId => {
+            this.eventsService.isFollowing(thisUserId, this.eventId).pipe(take(1)).subscribe(isFollowing => {
+              this.isFollowing = isFollowing;
+              this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+                this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
+                  this.thisUser = thisUser;
+                  this.isLoading = false;
+                });
               });
             });
           });

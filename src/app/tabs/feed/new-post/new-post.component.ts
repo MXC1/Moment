@@ -86,6 +86,7 @@ export class NewPostComponent implements OnInit {
     newEventModal.onDidDismiss().then(newEvent => {
       this.event = newEvent.data;
       this.form.patchValue({ event: newEvent.data.id });
+      this.fetchEvents();
       this.eventSelector.close();
     });
     await newEventModal.present();
