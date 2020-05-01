@@ -47,8 +47,6 @@ export class NewEventComponent implements OnInit {
 
   place: Place;
 
-  isLoading: boolean;
-
   constructor(private eventsService: EventsService, private authService: AuthService, private navController: NavController, private router: Router, private modalController: ModalController, private loadingController: LoadingController, private placesService: PlacesService, private popoverController: PopoverController) { }
 
   ngOnInit() {
@@ -69,7 +67,7 @@ export class NewEventComponent implements OnInit {
       private: new FormControl(false)
     });
   }
-
+  
   async onIonFocus() {
     const input = await this.mapsInput.getInputElement();
 
@@ -84,7 +82,7 @@ export class NewEventComponent implements OnInit {
       this.place = new Place('',
         autocomplete.getPlace().name,
         autocomplete.getPlace().id,
-        autocomplete.getPlace().photos[0].getUrl({}),
+        autocomplete.getPlace().photos[0].getUrl({maxWidth: 500, maxHeight: 500}),
         autocomplete.getPlace().rating,
         autocomplete.getPlace().types[0],
         autocomplete.getPlace().vicinity);
@@ -92,20 +90,21 @@ export class NewEventComponent implements OnInit {
   }
 
   async onCreate() {
-    const loadingElement = await this.loadingController.create({ message: 'Creating Event...' });
-
-    loadingElement.present();
-
+    
     const name = this.form.value.name;
     const type = this.form.value.type;
     const isPrivate = this.form.value.private;
     const date = this.form.value.date;
-
+    
     this.form.patchValue({ image: this.imageChooser.croppedImage });
-
-    if (!this.form.valid) {
+    
+    if (!this.form.valid || this.place == undefined) {
       return;
     }
+    
+    const loadingElement = await this.loadingController.create({ message: 'Creating Event...' });
+
+    loadingElement.present();
 
     this.eventsService.uploadImage(this.form.get('image').value).pipe(take(1)).subscribe(uploadRes => {
       return this.authService.getUserId.pipe(take(1)).subscribe(userId => {
@@ -117,7 +116,6 @@ export class NewEventComponent implements OnInit {
           this.placesService.getPlaceByGoogleId(this.place.googleId).subscribe(async existingPlaceRes => {
 
             if (isUndefined(existingPlaceRes)) {
-              console.log(existingPlaceRes);
 
               // Add it if not
               this.placesService.addPlace(this.place.name, this.place.googleId, this.place.image, this.place.rating, this.place.type, this.place.vicinity).subscribe((newPlaceRes: Place) => {
@@ -140,7 +138,6 @@ export class NewEventComponent implements OnInit {
   }
 
   onImageChosen(imageData: string) {
-    this.isLoading = true;
     let imageFile;
     if (typeof imageData === 'string') {
       try {
@@ -155,7 +152,6 @@ export class NewEventComponent implements OnInit {
     }
 
     this.form.patchValue({ image: imageFile.target.files[0] });
-    this.isLoading = false;
   }
 
   closeModal() {
