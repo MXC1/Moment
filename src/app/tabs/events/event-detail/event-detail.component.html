@@ -53,7 +53,11 @@
             </ion-col>
           </ion-row>
           <ion-row class="ion-justify-content-start" style="padding-top: 10px;">
-            <ion-col class="location">
+            <ion-col class="location" (click)="onPlaceDetail()" *ngIf="clickablePlace" style="text-decoration: underline;">
+              <ion-icon name="pin"></ion-icon>
+              {{ this.placeName }}
+            </ion-col>
+            <ion-col class="location" (click)="onPlaceDetail()" *ngIf="!clickablePlace">
               <ion-icon name="pin"></ion-icon>
               {{ this.placeName }}
             </ion-col>

@@ -16,6 +16,7 @@ import { PostDetailComponent } from '../../feed/post-detail/post-detail.componen
 import { PlacesService } from 'src/app/shared/services/places.service';
 import { Place } from 'src/app/shared/models/place';
 import { isUndefined } from 'util';
+import { PlaceComponent } from 'src/app/shared/place/place.component';
 
 @Component({
   selector: 'app-event-detail',
@@ -41,6 +42,8 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   date: string;
   placeName: string;
 
+  clickablePlace: boolean;
+
   constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController, private placesService: PlacesService) { }
 
   ngOnInit() {
@@ -57,8 +60,10 @@ export class EventDetailComponent implements OnInit, OnDestroy {
 
         // For backwards compatibility
         if (isUndefined(place)) {
+          this.clickablePlace = false;
           this.placeName = this.event.location;
         } else {
+          this.clickablePlace = true;
           this.placeName = place.name;
         }
         this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
@@ -275,6 +280,13 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     this.modalController.create({ component: PostDetailComponent, componentProps: { postId } }).then(modalElement => {
       modalElement.present();
     });
+  }
+
+  async onPlaceDetail() {
+    if (this.clickablePlace) {
+      const placeDetailModal = await this.modalController.create({ component: PlaceComponent, componentProps: { placeId: this.event.location } });
+      placeDetailModal.present();
+    }
   }
 
   ngOnDestroy() {

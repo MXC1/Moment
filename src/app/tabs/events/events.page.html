@@ -40,8 +40,8 @@
       </ion-col>
     </ion-row>
     <ion-row *ngIf="!isLoading" style="padding-top:8px">
-      <ion-col size="4" *ngFor="let event of loadedEvents">
-        <img [src]="event.headerImage" (click)="onEventDetail(event.id)">
+      <ion-col size="4" *ngFor="let event of loadedEvents" (click)="onEventDetail(event.id)">
+        <img [src]="event.headerImage">
         <p class="ion-text-center">{{event.name}}</p>
       </ion-col>
     </ion-row>

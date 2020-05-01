@@ -24,7 +24,7 @@ import { EventDiscoverComponent } from './tabs/events/event-discover/event-disco
 import { PostDiscoverComponent } from './tabs/feed/post-discover/post-discover.component';
 import { NotificationsComponent } from './tabs/profile/notifications/notifications.component';
 import { FilterOptionsComponent } from './tabs/events/filter-options/filter-options.component';
-import { GooglePlaceModule } from "ngx-google-places-autocomplete";
+import { PlaceComponent } from './shared/place/place.component';
 
 /**
  * Declare and import necessary Components and Modules
@@ -33,9 +33,9 @@ import { GooglePlaceModule } from "ngx-google-places-autocomplete";
  * @class AppModule
  */
 @NgModule({
-  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent, FilterOptionsComponent],
-  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent, FilterOptionsComponent],
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicSelectableModule, ContentModule,  GooglePlaceModule],
+  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent, FilterOptionsComponent, PlaceComponent],
+  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent, FilterOptionsComponent, PlaceComponent],
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicSelectableModule, ContentModule],
   providers: [
     StatusBar,
     SplashScreen,

@@ -10,6 +10,8 @@ import { Place } from 'src/app/shared/models/place';
 import { PlacesService } from 'src/app/shared/services/places.service';
 import { IonicSelectableComponent } from 'ionic-selectable';
 import { isUndefined } from 'util';
+import { google } from 'google-maps';
+
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -67,7 +69,7 @@ export class NewEventComponent implements OnInit {
       private: new FormControl(false)
     });
   }
-  
+
   async onIonFocus() {
     const input = await this.mapsInput.getInputElement();
 
@@ -82,7 +84,7 @@ export class NewEventComponent implements OnInit {
       this.place = new Place('',
         autocomplete.getPlace().name,
         autocomplete.getPlace().id,
-        autocomplete.getPlace().photos[0].getUrl({maxWidth: 500, maxHeight: 500}),
+        autocomplete.getPlace().photos[0].getUrl({ maxWidth: 500, maxHeight: 500 }),
         autocomplete.getPlace().rating,
         autocomplete.getPlace().types[0],
         autocomplete.getPlace().vicinity);
@@ -90,18 +92,18 @@ export class NewEventComponent implements OnInit {
   }
 
   async onCreate() {
-    
+
     const name = this.form.value.name;
     const type = this.form.value.type;
     const isPrivate = this.form.value.private;
     const date = this.form.value.date;
-    
+
     this.form.patchValue({ image: this.imageChooser.croppedImage });
-    
+
     if (!this.form.valid || this.place == undefined) {
       return;
     }
-    
+
     const loadingElement = await this.loadingController.create({ message: 'Creating Event...' });
 
     loadingElement.present();

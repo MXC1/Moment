@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-back-button (click)="closeModal()" defaultHref="."></ion-back-button>
+    </ion-buttons>
+    <ion-title>Moment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-margin" *ngIf="!isLoading">
+    <ion-card class="ion-no-margin">
+      <ion-row>
+        <ion-col class="ion-align-self-center">
+          <img [src]="place.image">
+        </ion-col>
+      </ion-row>
+      <ion-row style="padding-left: 10px;">
+        <ion-col size="12">
+          <ion-row class="ion-justify-content-start">
+            <ion-col class="event-name">
+              {{ place.name }}
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-start">
+            <ion-col class="type">
+              {{ place.type }}
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-start">
+            <ion-col class="info">
+              <ion-icon name="star"></ion-icon>
+              {{ place.rating }}
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-start">
+            <ion-col class="info">
+              <ion-icon name="pin"></ion-icon>
+              {{ place.vicinity }}
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-start" *ngIf="!isLoading">
+            <ion-col class="ion-text-start info">
+              <ion-icon name="paper"></ion-icon>
+              {{ placeEvents.length }} events
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+    <ion-row *ngIf="!isLoading && placeEvents.length === 0" class="ion-justify-content-center">
+      <ion-col class="ion-text-center">
+        <p>This place has had no events posted yet</p>
+        <ion-button (click)="onNewPost()">Upload Something</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row style="padding-top:8px" *ngIf="!isLoading && placeEvents.length !== 0">
+      <ion-col size="4" *ngFor="let event of placeEvents" (click)="onEventDetail(event.id)">
+        <img [src]="event.headerImage">
+        <p class="ion-text-center">{{ event.name }}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="onNewEvent()">
+      <ion-icon name="add" style="font-size: 75px;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
