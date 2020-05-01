@@ -24,7 +24,6 @@ import { EventDiscoverComponent } from './tabs/events/event-discover/event-disco
 import { PostDiscoverComponent } from './tabs/feed/post-discover/post-discover.component';
 import { NotificationsComponent } from './tabs/profile/notifications/notifications.component';
 import { FilterOptionsComponent } from './tabs/events/filter-options/filter-options.component';
-import { NewPlaceComponent } from './shared/new-place/new-place.component';
 import { GooglePlaceModule } from "ngx-google-places-autocomplete";
 
 /**
@@ -34,8 +33,8 @@ import { GooglePlaceModule } from "ngx-google-places-autocomplete";
  * @class AppModule
  */
 @NgModule({
-  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent, FilterOptionsComponent, NewPlaceComponent],
-  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent, FilterOptionsComponent, NewPlaceComponent],
+  declarations: [AppComponent, ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent, FilterOptionsComponent],
+  entryComponents: [ImageChooserComponent, ImageCropperComponent, SearchComponent, NewPostComponent, NewEventComponent, EventDetailComponent, PersonalInfoComponent, FeedbackComponent, EventDiscoverComponent, PostDiscoverComponent, NotificationsComponent, FilterOptionsComponent],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicSelectableModule, ContentModule,  GooglePlaceModule],
   providers: [
     StatusBar,
