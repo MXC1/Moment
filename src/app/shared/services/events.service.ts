@@ -29,6 +29,7 @@ interface PostData {
   userId: string;
   type: 'image' | 'video';
   comments: { [key: string]: { [key: string]: string } };
+  posted: Date;
 }
 
 /**
@@ -101,7 +102,8 @@ export class EventsService {
                 resData[key].type,
                 resData[key].comments,
                 resData[key].likers,
-                resData[key].shares
+                resData[key].shares,
+                resData[key].posted
               ));
             }
           }

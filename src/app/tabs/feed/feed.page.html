@@ -38,14 +38,16 @@
             <ion-row style="padding-top: 10px; padding-left: 10px;">
               <ion-label style="font-style: italic;" class="caption">{{ post.caption }}</ion-label>
             </ion-row>
-            <ion-row style="padding-top: 5px; padding-left: 10px">
-              <ion-label class="event-name" (click)="onEventDetail(post.eventId)"> {{ post.event.name }},
-                {{ post.event.location }} </ion-label>
+            <ion-row style="padding-top: 5px; padding-left: 10px" class="event-name">
+              <ion-label (click)="onEventDetail(post.eventId)"> {{ post.event.name }},
+                {{ post.locationName }}</ion-label>
+                <ion-icon name="arrow-forward"></ion-icon>
             </ion-row>
-            <ion-row style="padding-top: 5px; padding-left: 10px; padding-bottom: 5px;">
-              <ion-label class="user-name" (click)="onClickUser(post.userId)">Posted by
-                {{ post.user.username }}
+            <ion-row style="padding-top: 5px; padding-left: 10px; padding-bottom: 5px;" class="user-name">
+              <ion-label (click)="onClickUser(post.userId)">Posted by
+                {{ post.user.username }} 
               </ion-label>
+              <ion-icon name="arrow-forward"></ion-icon>
             </ion-row>
           </ion-col>
           <ion-col size="5" class="ion-text-center ion-align-self-center">

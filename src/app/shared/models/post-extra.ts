@@ -14,5 +14,7 @@ export class PostExtra {
         public user: User,
         public event: EventContent,
         public hasLiked: boolean,
+        public locationName: string,
+        public posted: Date
     ) { }
 }

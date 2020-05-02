@@ -16,6 +16,7 @@ interface PostData {
   userId: string;
   type: 'image' | 'video';
   comments: { [key: string]: { [key: string]: string } };
+  posted: Date;
 }
 
 /**
@@ -53,7 +54,8 @@ export class PostsService {
                 resData[key].type,
                 resData[key].comments,
                 resData[key].likers,
-                resData[key].shares
+                resData[key].shares,
+                resData[key].posted
               ));
             }
           }
@@ -77,7 +79,7 @@ export class PostsService {
    * @memberof PostsService
    */
   newPost(userId: string, eventId: string, caption: string, content: string, type: 'image' | 'video') {
-    const newPost = new Post('', userId, eventId, caption, content, type, null, [], 0);
+    const newPost = new Post('', userId, eventId, caption, content, type, null, [], 0, new Date());
     let postId: string;
 
     return this.authService.getToken.pipe(take(1), switchMap(token => {
@@ -123,7 +125,7 @@ export class PostsService {
       return this.http.get<PostData>(`https://mmnt-io.firebaseio.com/posts/${id}.json?auth=${token}`)
         .pipe(map(resData => {
           if (resData !== null) {
-            return new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type, resData.comments, resData.likers, resData.shares);
+            return new Post(id, resData.userId, resData.eventId, resData.caption, resData.content, resData.type, resData.comments, resData.likers, resData.shares, resData.posted);
           }
         }));
     }));

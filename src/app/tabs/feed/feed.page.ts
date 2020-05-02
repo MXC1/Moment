@@ -17,6 +17,7 @@ import { PostDiscoverComponent } from './post-discover/post-discover.component';
 import { EventDetailComponent } from '../events/event-detail/event-detail.component';
 import { PostExtra } from 'src/app/shared/models/post-extra';
 import { isUndefined } from 'util';
+import { PlacesService } from 'src/app/shared/services/places.service';
 
 /**
  * Feed of all posts by users or events the current user follows
@@ -43,14 +44,14 @@ export class FeedPage implements OnInit, OnDestroy {
   @ViewChild(IonInput, { static: false }) commentBox;
   comment: string;
 
-  constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController, private authService: AuthService) { }
+  constructor(private postsService: PostsService, private usersService: UsersService, private eventsService: EventsService, public router: Router, private modalController: ModalController, private authService: AuthService, private placesService: PlacesService) { }
 
   ngOnInit() {
     this.isLoading = true;
     this.fetchFollowedPosts();
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.fetchFollowedPosts();
   }
 
@@ -64,6 +65,7 @@ export class FeedPage implements OnInit, OnDestroy {
       this.loadedEvents = events;
       this.postsSubscription = this.postsService.fetchPosts().subscribe(posts => {
         this.filterPosts(posts);
+        this.isLoading = false;              
       });
     });
   }
@@ -82,8 +84,11 @@ export class FeedPage implements OnInit, OnDestroy {
           this.eventsSubscription = this.eventsService.fetchEvents().subscribe(events => {
 
             const followedPosts = posts.filter(post => {
-              // Find every post that is posted by a friend OR is posted under an event I follow AND is not private OR is posted by me
-              return (currentUser.friendIds.some(p => p === post.userId) || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId)) && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate || post.userId === userId)
+              // Find every post that is (posted by a friend OR is posted under an event I follow) AND (is not private OR is posted by me)
+              return (currentUser.friendIds.some(p => p === post.userId)
+                || this.loadedEvents.some(e => e.followerIds.some(f => f === userId) && e.id === post.eventId))
+                && this.loadedEvents.some(e => e.id === post.eventId && !e.isPrivate
+                  || post.userId === userId)
             });
 
             followedPosts.forEach(p => {
@@ -94,24 +99,37 @@ export class FeedPage implements OnInit, OnDestroy {
                 p.hasLiked = p.likers.some(l => l === userId);
               }
 
-              // If it's not already in the loadedposts
-              if (!this.loadedPosts.some(post => post.id === p.id)) {
-                // Add it to the top
-                this.isLoading = true;
-                this.loadedPosts = this.loadedPosts.reverse().concat(p).reverse();
-                this.isLoading = false;
-              }
-            });
+              this.placesService.getPlace(p.event.location).pipe(take(1)).subscribe(place => {
 
-            this.loadedPosts.forEach(p => {
-              if (!followedPosts.some(post => post.id === p.id)) {
-                // Remove it
-                this.isLoading = true;
-                this.loadedPosts = this.loadedPosts.filter(post => post.id !== p.id);
-                this.isLoading = false;
-              }
-            })
-            this.isLoading = false;
+                let placeName;
+                // For backwards compatibility
+                if (isUndefined(place)) {
+                  placeName = p.event.location;
+                } else {
+                  placeName = place.name;
+                }
+                p.locationName = placeName;
+
+                // If it's not already in the loadedposts
+                if (!this.loadedPosts.some(post => post.id === p.id)) {
+                  // Add it to the top
+                  this.isLoading = true;
+                  this.loadedPosts = this.loadedPosts.reverse().concat(p).reverse();
+                  this.isLoading = false;
+                }
+              });
+
+              // Check for posts under no-longer-followed events or users
+              this.loadedPosts.forEach(p => {
+                if (!followedPosts.some(post => post.id === p.id)) {
+                  // Remove it
+                  this.isLoading = true;
+                  this.loadedPosts = this.loadedPosts.filter(post => post.id !== p.id);
+                  this.isLoading = false;
+                }
+              })
+              this.loadedPosts = this.loadedPosts.sort((p1, p2) => new Date(p1.posted).getTime() - new Date(p2.posted).getTime()).reverse();
+            });
           });
         });
       });
@@ -275,13 +293,23 @@ export class FeedPage implements OnInit, OnDestroy {
                 postHasLiked = false;
               }
 
-              const index = this.loadedPosts.findIndex(p => p.id === postId);
+              this.placesService.getPlace(postEvent.location).pipe(take(1)).subscribe(place => {
 
+                let placeName;
+                // For backwards compatibility
+                if (isUndefined(place)) {
+                  placeName = postEvent.location;
+                } else {
+                  placeName = place.name;
+                }
 
-              this.loadedPosts[index] = new PostExtra(post.id, post.userId, post.eventId, post.caption, post.content, post.type, post.comments, post.likers, post.shares, postUser, postEvent, postHasLiked);
+                const index = this.loadedPosts.findIndex(p => p.id === postId);
 
-              this.isLoading = false;
-            })
+                this.loadedPosts[index] = new PostExtra(post.id, post.userId, post.eventId, post.caption, post.content, post.type, post.comments, post.likers, post.shares, postUser, postEvent, postHasLiked, placeName, post.posted);
+
+                this.isLoading = false;
+              });
+            });
           })
         }
       })

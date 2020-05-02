@@ -10,6 +10,8 @@ import { EventContent } from '../../../shared/models/event';
 import { User } from '../../../shared/models/user';
 import { take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
+import { PlacesService } from 'src/app/shared/services/places.service';
+import { isUndefined } from 'util';
 
 interface Comment {
   userId: string;
@@ -40,6 +42,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   comment: string;
   commentUsers: User[];
   hasLiked: boolean;
+  placeName: string;
   @ViewChild(IonInput, { static: false }) commentBox;
   private postsSubscription: Subscription;
   private eventsSubscription: Subscription;
@@ -47,7 +50,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   isLoading = true;
   update: boolean;
 
-  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController) { }
+  constructor(private postsService: PostsService, private eventsService: EventsService, private usersService: UsersService, private authService: AuthService, private route: ActivatedRoute, private navController: NavController, private alertController: AlertController, private modalController: ModalController, private placesService: PlacesService) { }
 
   ngOnInit() {
     this.isLoading = true;
@@ -70,11 +73,23 @@ export class PostDetailComponent implements OnInit, OnDestroy {
               this.hasLiked = post.likers.some(l => l === userId);
             }
 
-            this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
-              this.thisUser = thisUser;
-              this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
-                this.commentUsers = users;
-                this.isLoading = false;
+            this.placesService.getPlace(event.location).pipe(take(1)).subscribe(place => {
+
+              let placeName;
+              // For backwards compatibility
+              if (isUndefined(place)) {
+                placeName = event.location;
+              } else {
+                placeName = place.name;
+              }
+              this.placeName = placeName;
+              
+              this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
+                this.thisUser = thisUser;
+                this.usersService.fetchUsers().pipe(take(1)).subscribe(users => {
+                  this.commentUsers = users;
+                  this.isLoading = false;
+                });
               });
             });
           });
