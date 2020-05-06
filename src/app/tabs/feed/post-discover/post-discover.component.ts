@@ -29,13 +29,14 @@ import { isUndefined } from 'util';
   styleUrls: ['./post-discover.component.scss'],
 })
 export class PostDiscoverComponent implements OnInit {
-  loadedEvents: EventContent[] = [];
+  allEvents: EventContent[] = [];
   followedPosts: Post[] = [];
   displayedPosts: { post: Post, weight: number }[] = [];
   loadedPosts: { post: Post, weight: number }[] = [];
   loadedUsers: User[];
   private eventsSubscription: Subscription;
   isLoading = false;
+  followedEvents: EventContent[];
 
   constructor(private modalController: ModalController, private eventsService: EventsService, private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private router: Router) { }
 
@@ -49,9 +50,12 @@ export class PostDiscoverComponent implements OnInit {
     this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
       this.loadedUsers = allUsers;
       this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
-        this.loadedEvents = allEvents;
+        this.allEvents = allEvents;
+        this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+          this.followedEvents = allEvents.filter(e => e.followerIds.some(i => i === userId));
 
-        this.fetchAllPosts();
+          this.fetchAllPosts();
+        });
       });
     });
   }
@@ -73,38 +77,30 @@ export class PostDiscoverComponent implements OnInit {
 
           // Find every post that is posted by a friend and in a non-private event or that is under an event I follow
           this.followedPosts = allPosts.filter(p =>
-            (currentUser.friendIds.some(f => f === p.userId) && this.loadedEvents.some(e => !e.isPrivate && e.id === p.eventId))
-            || this.loadedEvents.some(e => e.id === p.eventId && e.followerIds.some(f => f === userId)));
+            (currentUser.friendIds.some(f => f === p.userId) && this.allEvents.some(e => !e.isPrivate && e.id === p.eventId))
+            || this.allEvents.some(e => e.id === p.eventId && e.followerIds.some(f => f === userId)));
 
-          // Return each post by followers of every event that I follow
-          // p = every post
-          // e = every event
-          // f = every follower of every event
-          // ef = every event I follow
-          // fe = every follower of an event I follow
-          allPosts.filter(p =>
-            this.loadedEvents.filter(e =>
-              e.followerIds.some(f =>
-                f === userId)).some(ef =>
-                  ef.followerIds.some(fe =>
-                    p.userId === fe)) && this.loadedEvents.some(e =>
-                      !e.isPrivate && p.eventId === e.id))
-            .forEach(post => {
-
-              // If the post has not already been added to the displayed posts array
-              if (!this.loadedPosts.some(p => p.post.id === post.id)) {
-
-                // If the post is not already in the users feed
-                if (!this.followedPosts.some(p => p.id === post.id)) {
-
-                  // Add it to the displayed posts array
-                  this.loadedPosts = this.loadedPosts.concat({ post: post, weight: 1 });
+          // For each event I follow
+          this.followedEvents.forEach(fe => {
+            // For each follower of this event
+            fe.followerIds.forEach(fi => {
+              // For each post by this user
+              allPosts.filter(ap => ap.userId == fi).forEach(post => {
+                // If the post has not already been added to the displayed posts array
+                if (!this.loadedPosts.some(p => p.post.id === post.id)) {
+                  // If the post is not already in the users feed && event the post is associated with is not private
+                  if (!this.followedPosts.some(p => p.id === post.id) && !this.allEvents.find(e => e.id === post.eventId).isPrivate) {
+                    // Add it to the displayed posts array
+                    this.loadedPosts = this.loadedPosts.concat({ post: post, weight: 1 });
+                  }
+                  // If the post has already been added to the displayed posts array, increment its weight
+                } else {
+                  this.loadedPosts.find(p => p.post.id === post.id).weight++;
                 }
-                // If the post has already been added to the displayed posts array, increment its weight
-              } else {
-                !this.loadedPosts.find(p => p.post.id === post.id).weight++;
-              }
-            });
+              })
+            })
+          })
+
           // Sort by post weight (how many times the post cropped up in the event => followers => posts search)
           // Puts posts the user is most likely to enjoy at the top
           this.loadedPosts = this.loadedPosts.sort((p1, p2) => {
@@ -112,7 +108,7 @@ export class PostDiscoverComponent implements OnInit {
           });
 
           this.displayedPosts = this.loadedPosts;
-
+          
           this.isLoading = false;
         });
 
@@ -150,7 +146,7 @@ export class PostDiscoverComponent implements OnInit {
             return { post: p, weight: 1 };
           });
 
-          this.displayedPosts = this.loadedPosts;
+        this.displayedPosts = this.loadedPosts;
 
         this.isLoading = false;
       });
@@ -169,7 +165,7 @@ export class PostDiscoverComponent implements OnInit {
             return { post: p, weight: 1 };
           });
 
-          this.displayedPosts = this.loadedPosts;
+        this.displayedPosts = this.loadedPosts;
 
         this.isLoading = false;
       });
@@ -194,8 +190,8 @@ export class PostDiscoverComponent implements OnInit {
 
   onSearch(event) {
     const searchValue = event.srcElement.value.toLowerCase();
-    
-    this.displayedPosts = this.loadedPosts.filter(p => p.post.caption.toLowerCase().includes(searchValue) || this.loadedEvents.some(e => e.name.toLowerCase().includes(searchValue) && e.id === p.post.eventId));
+
+    this.displayedPosts = this.loadedPosts.filter(p => p.post.caption.toLowerCase().includes(searchValue) || this.allEvents.some(e => e.name.toLowerCase().includes(searchValue) && e.id === p.post.eventId));
   }
 
   /**
@@ -219,8 +215,8 @@ export class PostDiscoverComponent implements OnInit {
    * @memberof PostDiscoverComponent
    */
   getEvent(id: string): EventContent {
-    if (this.loadedEvents) {
-      return this.loadedEvents.find(event => event.id === id);
+    if (this.allEvents) {
+      return this.allEvents.find(event => event.id === id);
     }
   }
 

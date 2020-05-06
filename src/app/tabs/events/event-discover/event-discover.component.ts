@@ -38,25 +38,24 @@ export class EventDiscoverComponent implements OnInit {
       this.eventsSubscription = this.eventsService.fetchEvents().subscribe(allEvents => {
         this.followedEvents = allEvents.filter(e => e.followerIds.some(i => i === userId));
 
-        // Return each event followed by someone who is also a follower of an event I follow
-        // e = every event
-        // f = every follower of every event
-        // le = every event I follow
-        // lef = every follower of every event I follow
-        allEvents.filter(e =>
-          e.followerIds.some(f =>
-            this.followedEvents.some(le =>
-              le.followerIds.some(lef =>
-                lef === f))) && !e.isPrivate)
-          .forEach(event => {
-            if (!this.loadedEvents.some(e => e.event.id === event.id)) {
-              if (!this.followedEvents.some(e => e.id === event.id)) {
-                this.loadedEvents = this.loadedEvents.concat({ event: event, weight: 1 });
-              }
-            } else {
-              this.loadedEvents.find(e => e.event.id === event.id).weight++;
-            }
-          });
+        // For each event I follow
+        this.followedEvents.forEach(le => {
+          // For each person that follows this event
+          le.followerIds.forEach(lef => {
+            // For each event this person follows
+            allEvents.filter(e => e.followerIds.some(fi => fi === lef)).forEach(event => {
+              // If event hasn't been found and added already
+              if (!this.loadedEvents.some(e => e.event.id === event.id)) {
+                // If event isn't already in my feed & event isn't private
+                if (!this.followedEvents.some(e => e.id === event.id) && !event.isPrivate) {
+                  this.loadedEvents = this.loadedEvents.concat({ event: event, weight: 1 });
+                }
+              } else {
+                this.loadedEvents.find(e => e.event.id === event.id).weight++;
+              }  
+            })
+          })
+        })
 
         this.loadedEvents = this.loadedEvents.sort((e1, e2) => {
           return e2.weight - e1.weight;
@@ -88,7 +87,7 @@ export class EventDiscoverComponent implements OnInit {
             return { event: e, weight: 1 };
           });
 
-          this.displayedEvents = this.loadedEvents;
+        this.displayedEvents = this.loadedEvents;
 
         this.isLoading = false;
       });
@@ -113,7 +112,7 @@ export class EventDiscoverComponent implements OnInit {
             return { event: e, weight: 1 };
           });
 
-          this.displayedEvents = this.loadedEvents;
+        this.displayedEvents = this.loadedEvents;
 
         this.isLoading = false;
       });
@@ -122,7 +121,7 @@ export class EventDiscoverComponent implements OnInit {
 
   onSearch(event) {
     const searchValue = event.srcElement.value.toLowerCase();
-    
+
     this.displayedEvents = this.loadedEvents.filter(e => e.event.name.toLowerCase().includes(searchValue) || e.event.location.toLowerCase().includes(searchValue));
   }
 
