@@ -131,6 +131,7 @@ export class FeedPage implements OnInit, OnDestroy {
               }
             })
             this.loadedPosts = this.loadedPosts.sort((p1, p2) => new Date(p1.posted).getTime() - new Date(p2.posted).getTime()).reverse();
+            this.isLoading = false;
           });
         });
       });
