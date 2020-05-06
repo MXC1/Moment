@@ -108,15 +108,5 @@ export class AuthService {
     Plugins.Storage.set({ key: 'authData', value: data });
   }
 
-  constructor(private http: HttpClient) {
-    // this.http.get<UserAuth>('https://mmnt-io.firebaseio.com/users.json').subscribe(resData => {
-    //   const fetchedUsers = [];
-    //   for (const key in resData) {
-    //     if (resData.hasOwnProperty(key)) {
-    //       fetchedUsers.push(resData.email, resData.username, resData.password);
-    //     }
-    //   }
-    //   this.users = fetchedUsers;
-    // });
-  }
+  constructor(private http: HttpClient) {  }
 }

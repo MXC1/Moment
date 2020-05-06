@@ -26,7 +26,7 @@ interface Notif {
 export class NotificationsComponent implements OnInit {
 
   loadedUsers: User[];
-  loadedEvents: EventContent[];
+  allEvents: EventContent[];
   loadedPosts: Post[];
 
   notifications: Notif[] = [];
@@ -37,14 +37,13 @@ export class NotificationsComponent implements OnInit {
     this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
       this.loadedUsers = allUsers;
       this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
-        this.loadedEvents = allEvents;
+        this.allEvents = allEvents;
         this.postsService.fetchPosts().pipe(take(1)).subscribe(allPosts => {
           this.loadedPosts = allPosts;
           this.authService.getUserId.pipe(take(1)).subscribe(userId => {
             this.usersService.getNotifications(userId).pipe(take(1)).subscribe(notifs => {
-              
-              this.notifications = notifs;
-              console.log(this.notifications);
+
+              this.notifications = notifs.reverse();
             });
           });
         });
@@ -56,23 +55,35 @@ export class NotificationsComponent implements OnInit {
     this.modalController.dismiss();
   }
 
-  getFromImage(notification: Notif) { 
+  getFromImage(notification: Notif) {
     if (notification.type === 'event') {
-      return this.loadedEvents.find(event => event.id === notification.from).headerImage;
+      if (this.allEvents.find(event => event.id === notification.from)) {
+        return this.allEvents.find(event => event.id === notification.from).headerImage;
+      }
     } else if (notification.type === 'post') {
-      return this.loadedPosts.find(post => post.id === notification.from).content;
+      if (this.loadedPosts.find(post => post.id === notification.from)) {
+        return this.loadedPosts.find(post => post.id === notification.from).content;
+      }
     } else if (notification.type === 'user') {
-      return this.loadedUsers.find(user => user.id === notification.from).image;
+      if (this.loadedUsers.find(user => user.id === notification.from)) {
+        return this.loadedUsers.find(user => user.id === notification.from).image;
+      }
     }
   }
 
   getFromName(notification: Notif) {
     if (notification.type === 'event') {
-      return this.loadedEvents.find(event => event.id === notification.from).name + " @ " + this.loadedEvents.find(event => event.id === notification.from).location;
+      if (this.allEvents.find(event => event.id === notification.from)) {
+        return this.allEvents.find(event => event.id === notification.from).name + " @ " + this.allEvents.find(event => event.id === notification.from).location;
+      }
     } else if (notification.type === 'post') {
-      return this.loadedPosts.find(post => post.id === notification.from).caption;
+      if (this.loadedPosts.find(post => post.id === notification.from)) {
+        return this.loadedPosts.find(post => post.id === notification.from).caption;
+      }
     } else if (notification.type === 'user') {
-      return this.loadedUsers.find(user => user.id === notification.from).username;
+      if (this.loadedUsers.find(user => user.id === notification.from)) {
+        return this.loadedUsers.find(user => user.id === notification.from).username;
+      }
     }
   }
 

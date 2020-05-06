@@ -131,7 +131,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   onDeletePost() {
     this.update = true;
-    this.postsService.deletePost(this.post.id);
+    this.postsService.deletePost(this.post.id).subscribe();
     this.closeModal();
   }
 

@@ -156,15 +156,15 @@ export class PostsService {
    * @memberof PostsService
    */
   deletePost(postId: string) {
-    return this.authService.getToken.pipe(take(1)).subscribe(token => {
+    return this.authService.getToken.pipe(take(1), switchMap(token => {
       return this.http.delete(`https://mmnt-io.firebaseio.com/posts/${postId}.json?auth=${token}`).pipe(take(1), switchMap(() => {
         return this.posts;
       }), take(1), tap(posts => {
         return this.posts.next(posts.filter(post => {
           return post.id !== postId;
         }));
-      })).subscribe();
-    });
+      }));
+    }));
   }
 
   /**

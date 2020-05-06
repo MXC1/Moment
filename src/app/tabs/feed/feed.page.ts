@@ -119,17 +119,18 @@ export class FeedPage implements OnInit, OnDestroy {
                 }
               });
 
-              // Check for posts under no-longer-followed events or users
-              this.loadedPosts.forEach(p => {
-                if (!followedPosts.some(post => post.id === p.id)) {
-                  // Remove it
-                  this.isLoading = true;
-                  this.loadedPosts = this.loadedPosts.filter(post => post.id !== p.id);
-                  this.isLoading = false;
-                }
-              })
-              this.loadedPosts = this.loadedPosts.sort((p1, p2) => new Date(p1.posted).getTime() - new Date(p2.posted).getTime()).reverse();
             });
+            // Check for posts under no-longer-followed events or users
+            this.loadedPosts.forEach(p => {
+              
+              if (!followedPosts.some(post => post.id === p.id)) {
+                // Remove it
+                this.isLoading = true;
+                this.loadedPosts = this.loadedPosts.filter(post => post.id !== p.id);
+                this.isLoading = false;
+              }
+            })
+            this.loadedPosts = this.loadedPosts.sort((p1, p2) => new Date(p1.posted).getTime() - new Date(p2.posted).getTime()).reverse();
           });
         });
       });

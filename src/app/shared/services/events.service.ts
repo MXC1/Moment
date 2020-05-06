@@ -109,7 +109,7 @@ export class EventsService {
           }
           posts.filter(p => p.eventId === eventId).forEach(p => {
             const postsService = new PostsService(this.http, this.authService, new UsersService(this.http, this.authService))
-            postsService.deletePost(p.id);
+            postsService.deletePost(p.id).subscribe();
           });
         });
       });
