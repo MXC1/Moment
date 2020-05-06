@@ -62,3 +62,8 @@ ion-fab-button {
   width: 75px;
   height: 75px;
 }
+
+.pac-container, .pac-item {
+  width: 90vw !important;
+  max-width: 70vw !important;
+}
