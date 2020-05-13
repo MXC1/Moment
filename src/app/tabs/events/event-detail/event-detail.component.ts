@@ -74,6 +74,9 @@ export class EventDetailComponent implements OnInit, OnDestroy {
               this.authService.getUserId.pipe(take(1)).subscribe(userId => {
                 this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
                   this.thisUser = thisUser;
+                  this.sortByRecent();
+                  console.log(this.eventPosts);
+                  
                   this.isLoading = false;
                 });
               });
@@ -91,6 +94,36 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       }).then(alertElement => {
         alertElement.present();
       });
+    });
+  }
+
+  onChangeSegment(event) {
+    switch (event.detail.value) {
+      case ("recent"): {
+        this.sortByRecent();
+        break;
+      }
+      
+      case ("likes"): {
+        this.sortByLikes();
+        break;
+      }
+    }
+  }
+
+  sortByRecent() {
+    this.eventPosts = this.eventPosts.sort((e1, e2) => new Date(e2.posted).getTime() - new Date(e1.posted).getTime());
+  }
+  
+  sortByLikes() {
+    this.eventPosts = this.eventPosts.sort((e1, e2) => {
+      let e1likes;
+      let e2likes;
+
+      e1likes = isUndefined(e1.likers) ? 0 : e1.likers.length;
+      e2likes = isUndefined(e2.likers) ? 0 : e2.likers.length;
+
+      return e2likes - e1likes;
     });
   }
 

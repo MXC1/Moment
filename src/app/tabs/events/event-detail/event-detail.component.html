@@ -97,6 +97,10 @@
       </ion-col>
     </ion-row>
     <ion-row style="padding-top:8px" *ngIf="!isLoading && eventPosts.length !== 0">
+      <ion-segment (ionChange)="onChangeSegment($event)" mode="ios">
+        <ion-segment-button value="recent" checked mode="ios">Recent</ion-segment-button>
+        <ion-segment-button value="likes" mode="ios">Likes</ion-segment-button>
+      </ion-segment>
       <ion-col size="4" *ngFor="let post of eventPosts" (click)="onPostDetail(post.id)">
         <app-content [content]="this.post" playable="false" square="square"></app-content>
       </ion-col>

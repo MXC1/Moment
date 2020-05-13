@@ -81,13 +81,14 @@ export class NewEventComponent implements OnInit {
     });
 
     google.maps.event.addListener(autocomplete, 'place_changed', () => {
+      
       this.place = new Place('',
-        autocomplete.getPlace().name,
-        autocomplete.getPlace().id,
-        autocomplete.getPlace().photos[0].getUrl({ maxWidth: 500, maxHeight: 500 }),
-        autocomplete.getPlace().rating,
-        autocomplete.getPlace().types[0],
-        autocomplete.getPlace().vicinity);
+      autocomplete.getPlace().name,
+      autocomplete.getPlace().id,
+      autocomplete.getPlace().photos[0].getUrl({ maxWidth: 500, maxHeight: 500 }),
+      autocomplete.getPlace().rating,
+      autocomplete.getPlace().types[0],
+      autocomplete.getPlace().vicinity);
     });
   }
 
@@ -99,7 +100,7 @@ export class NewEventComponent implements OnInit {
     const date = this.form.value.date;
 
     this.form.patchValue({ image: this.imageChooser.croppedImage });
-
+    
     if (!this.form.valid || this.place == undefined) {
       return;
     }

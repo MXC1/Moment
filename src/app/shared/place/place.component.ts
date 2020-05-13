@@ -6,6 +6,7 @@ import { EventsService } from '../services/events.service';
 import { EventContent } from '../models/event';
 import { ModalController } from '@ionic/angular';
 import { AuthService } from 'src/app/auth/auth.service';
+import { EventDetailComponent } from 'src/app/tabs/events/event-detail/event-detail.component';
 
 @Component({
   selector: 'app-place',
@@ -54,6 +55,12 @@ export class PlaceComponent implements OnInit {
 
   closeModal() {
     this.modalController.dismiss();
+  }
+
+  async onEventDetail(eventId: string) {
+    const onEventDetailModal = await this.modalController.create({ component: EventDetailComponent, componentProps: { eventId } });
+
+    onEventDetailModal.present();
   }
 
 }
