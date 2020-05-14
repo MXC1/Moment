@@ -10,7 +10,7 @@ import { FeedbackComponent } from 'src/app/shared/feedback/feedback.component';
 
 /**
  * Converts a base64 string to a Blob object
- * https://www.npmjs.com/package/b64-to-blob
+ * https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
  *
  * @param {*} b64Data
  * @param {string} [contentType='']

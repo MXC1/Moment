@@ -12,6 +12,8 @@ import { EventsService } from '../../../shared/services/events.service';
 import { NewEventComponent } from '../../events/new-event/new-event.component';
 import { IonicSelectableComponent } from 'ionic-selectable';
 
+// https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
   const byteArrays = [];

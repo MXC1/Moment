@@ -1,3 +1,6 @@
+// Code from:
+// https://www.udemy.com/course/ionic-2-the-practical-guide-to-building-ios-android-apps/
+
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const Busboy = require('busboy');
