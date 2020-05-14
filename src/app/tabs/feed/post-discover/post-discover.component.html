@@ -32,7 +32,7 @@
                   </ion-row>
                   <ion-row style="padding-top: 5px; padding-left: 10px">
                     <ion-label class="event-name" (click)="onEventDetail(post.post.eventId)"> {{ getEvent(post.post.eventId)?.name }},
-                      {{ getEvent(post.post.eventId)?.location }} </ion-label>
+                      {{ post.post.locationName }} </ion-label>
                   </ion-row>
                   <ion-row style="padding-top: 5px; padding-left: 10px; padding-bottom: 5px;">
                     <ion-label class="user-name" (click)="onClickUser(post.post.userId)">Posted by

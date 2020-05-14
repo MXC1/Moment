@@ -14,6 +14,8 @@ import { SegmentChangeEventDetail } from '@ionic/core';
 import { Router } from '@angular/router';
 import { EventDetailComponent } from '../../events/event-detail/event-detail.component';
 import { isUndefined } from 'util';
+import { PostExtra } from 'src/app/shared/models/post-extra';
+import { PlacesService } from 'src/app/shared/services/places.service';
 
 
 /**
@@ -30,15 +32,16 @@ import { isUndefined } from 'util';
 })
 export class PostDiscoverComponent implements OnInit {
   allEvents: EventContent[] = [];
-  followedPosts: Post[] = [];
-  displayedPosts: { post: Post, weight: number }[] = [];
-  loadedPosts: { post: Post, weight: number }[] = [];
-  loadedUsers: User[];
+  followedPosts: PostExtra[] = [];
+  displayedPosts: { post: PostExtra, weight: number }[] = [];
+  loadedPosts: { post: PostExtra, weight: number }[] = [];
+  allUsers: User[];
   private eventsSubscription: Subscription;
   isLoading = false;
   followedEvents: EventContent[];
+  thisUserId: string;
 
-  constructor(private modalController: ModalController, private eventsService: EventsService, private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private router: Router) { }
+  constructor(private modalController: ModalController, private eventsService: EventsService, private authService: AuthService, private usersService: UsersService, private postsService: PostsService, private router: Router, private placesService: PlacesService) { }
 
   /**
    * Load in all users and events and load popular posts by default
@@ -48,10 +51,11 @@ export class PostDiscoverComponent implements OnInit {
   ngOnInit() {
     this.isLoading = true;
     this.usersService.fetchUsers().pipe(take(1)).subscribe(allUsers => {
-      this.loadedUsers = allUsers;
+      this.allUsers = allUsers;
       this.eventsService.fetchEvents().pipe(take(1)).subscribe(allEvents => {
         this.allEvents = allEvents;
         this.authService.getUserId.pipe(take(1)).subscribe(userId => {
+          this.thisUserId = userId;
           this.followedEvents = allEvents.filter(e => e.followerIds.some(i => i === userId));
 
           this.fetchAllPosts();
@@ -90,8 +94,33 @@ export class PostDiscoverComponent implements OnInit {
                 if (!this.loadedPosts.some(p => p.post.id === post.id)) {
                   // If the post is not already in the users feed && event the post is associated with is not private
                   if (!this.followedPosts.some(p => p.id === post.id) && !this.allEvents.find(e => e.id === post.eventId).isPrivate) {
-                    // Add it to the displayed posts array
-                    this.loadedPosts = this.loadedPosts.concat({ post: post, weight: 1 });
+
+                    this.followedPosts.forEach(p => {
+                      p.user = this.allUsers.find(user => user.id === p.userId);
+                      p.event = this.allEvents.find(event => event.id === p.eventId);
+
+                      if (p.likers) {
+                        p.hasLiked = p.likers.some(l => l === userId);
+                      }
+
+                      this.placesService.getPlace(p.event.location).pipe(take(1)).subscribe(place => {
+
+                        let placeName;
+                        // For backwards compatibility
+                        if (isUndefined(place)) {
+                          placeName = p.event.location;
+                        } else {
+                          placeName = place.name;
+                        }
+                        p.locationName = placeName;
+
+
+                        // Add it to the displayed posts array
+                        this.loadedPosts = this.loadedPosts.concat({ post: post, weight: 1 });
+                      });
+
+                    });
+
                   }
                   // If the post has already been added to the displayed posts array, increment its weight
                 } else {
@@ -108,7 +137,7 @@ export class PostDiscoverComponent implements OnInit {
           });
 
           this.displayedPosts = this.loadedPosts;
-          
+
           this.isLoading = false;
         });
 
@@ -145,10 +174,33 @@ export class PostDiscoverComponent implements OnInit {
           }).map(p => {
             return { post: p, weight: 1 };
           });
+          
+          this.loadedPosts.forEach(p => {
+            p.post.user = this.allUsers.find(user => user.id === p.post.userId);
+            p.post.event = this.allEvents.find(event => event.id === p.post.eventId);
+  
+            if (p.post.likers) {
+              p.post.hasLiked = p.post.likers.some(l => l === this.thisUserId);
+            }
+  
+            this.placesService.getPlace(p.post.event.location).pipe(take(1)).subscribe(place => {
+  
+              
+              let placeName;
+              // For backwards compatibility
+              if (isUndefined(place)) {
+                placeName = p.post.event.location;
+              } else {
+                console.log(place);
+                placeName = place.name;
+              }
+              p.post.locationName = placeName;
+            });
+          })
 
-        this.displayedPosts = this.loadedPosts;
+          this.displayedPosts = this.loadedPosts;
 
-        this.isLoading = false;
+          this.isLoading = false;
       });
     });
   }
@@ -164,6 +216,29 @@ export class PostDiscoverComponent implements OnInit {
           .map(p => {
             return { post: p, weight: 1 };
           });
+
+          this.loadedPosts.forEach(p => {
+            p.post.user = this.allUsers.find(user => user.id === p.post.userId);
+            p.post.event = this.allEvents.find(event => event.id === p.post.eventId);
+  
+            if (p.post.likers) {
+              p.post.hasLiked = p.post.likers.some(l => l === this.thisUserId);
+            }
+  
+            this.placesService.getPlace(p.post.event.location).pipe(take(1)).subscribe(place => {
+  
+              
+              let placeName;
+              // For backwards compatibility
+              if (isUndefined(place)) {
+                placeName = p.post.event.location;
+              } else {
+                console.log(place);
+                placeName = place.name;
+              }
+              p.post.locationName = placeName;
+            });
+          })
 
         this.displayedPosts = this.loadedPosts;
 
@@ -202,8 +277,8 @@ export class PostDiscoverComponent implements OnInit {
    * @memberof PostDiscoverComponent
    */
   getUser(id: string): User {
-    if (this.loadedUsers) {
-      return this.loadedUsers.find(user => user.id === id);
+    if (this.allUsers) {
+      return this.allUsers.find(user => user.id === id);
     }
   }
 
