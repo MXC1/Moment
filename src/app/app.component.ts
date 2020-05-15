@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     if (!this.platform.is('mobile') || this.platform.is('desktop')) {
-      this.alertController.create({ header: 'Incorrect Device', message: 'It looks like you\'re trying to access this site from a desktop browser. Please use the browser on your phone.', backdropDismiss: false}).then(alertElement => {
+      this.alertController.create({ header: 'Incorrect Device', message: 'It looks like you\'re trying to access this site from a desktop browser. \n Please use the browser on your phone, or turn on developer tools in your browser to mimic mobile use.', backdropDismiss: false}).then(alertElement => {
         alertElement.present();
       })
       this.isMobile = false;
