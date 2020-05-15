@@ -191,7 +191,6 @@ export class PostDiscoverComponent implements OnInit {
               if (isUndefined(place)) {
                 placeName = p.post.event.location;
               } else {
-                console.log(place);
                 placeName = place.name;
               }
               p.post.locationName = placeName;
@@ -233,7 +232,6 @@ export class PostDiscoverComponent implements OnInit {
               if (isUndefined(place)) {
                 placeName = p.post.event.location;
               } else {
-                console.log(place);
                 placeName = place.name;
               }
               p.post.locationName = placeName;

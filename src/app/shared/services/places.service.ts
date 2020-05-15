@@ -32,9 +32,6 @@ export class PlacesService {
           }
         }
 
-        console.log(returnPlaces);
-
-
         return returnPlaces;
       }))
     }))

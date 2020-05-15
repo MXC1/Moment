@@ -75,8 +75,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
                 this.usersService.getUser(userId).pipe(take(1)).subscribe(thisUser => {
                   this.thisUser = thisUser;
                   this.sortByRecent();
-                  console.log(this.eventPosts);
-                  
                   this.isLoading = false;
                 });
               });
